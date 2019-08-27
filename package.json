@@ -1,0 +1,27 @@
+{
+  "name": "datadrop",
+  "version": "1.0.0",
+  "main": "datadrop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:IESN-IG/DataDrop.git"
+  },
+  "author": "HunteRoi <etu33784@henallux.be>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IESN-IG/DataDrop/issues"
+  },
+  "homepage": "https://github.com/IESN-IG/DataDrop#readme",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "dotenv-flow": "^0.1.0",
+    "enmap": "^4.3.3",
+    "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0"
+  }
+}
