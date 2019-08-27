@@ -13,7 +13,7 @@ fs.readdir('./events/', (err, files) => {
     if (!file.endsWith('.js')) return;
     const evt = require(`./events/${file}`);
     let evtName = file.split('.')[0];
-    console.log(`Loaded event '${evtName}'`);
+    console.log(`Évent '${evtName}' chargé`);
     client.on(evtName, evt.bind(null, client));
   });
 });
@@ -24,7 +24,7 @@ fs.readdir('./commands/', async (err, files) => {
       if (!file.endsWith('.js')) return;
       let props = require(`./commands/${file}`);
       let cmdName = file.split('.')[0];
-      console.log(`Loaded command '${cmdName}'`);
+      console.log(`Commande '${cmdName}' chargée`);
       client.commands.set(cmdName, props);
     });
   });
