@@ -18,5 +18,6 @@ module.exports = {
     ig2Emote: '2⃣',
     ig3Emote: '3⃣',
     alumniEmote: '🎓',
-    tutorEmote: '📚'
+    tutorEmote: '📚',
+    announcementEmote: '📢'
 };

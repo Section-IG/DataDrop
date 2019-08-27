@@ -1,6 +1,6 @@
 const { rolesChannelid,
-    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid,
-    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote } = require('../config');
+    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid, announcementRoleid,
+    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote } = require('../config');
 
 module.exports = async (client, messageReaction, user) => {
 
@@ -14,7 +14,8 @@ module.exports = async (client, messageReaction, user) => {
     const ig3Role = message.guild.roles.get(ig3Roleid);
     const alumniRole = message.guild.roles.get(alumniRoleid);
     const tutorRole = message.guild.roles.get(tutorRoleid);
-    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote];
+    const announcementRole = message.guild.roles.get(announcementRoleid);
+    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote];
    
     if (emotes.includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
         switch (messageReaction.emoji.name) {
@@ -32,6 +33,9 @@ module.exports = async (client, messageReaction, user) => {
                 break;
             case tutorEmote:
                 member.removeRole(tutorRole).catch(console.error);
+                break;
+            case announcementEmote:
+                member.addRole(announcementRole).catch(console.error);
                 break;
             default:
                 break;
