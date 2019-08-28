@@ -1,8 +1,11 @@
-exports.run = async (client, message, args) => {
-    message.channel.send("Pinging...")
-      .then(m => m.edit(`Client Ping: ${m.createdTimestamp - message.createdTimestamp} ms | API Ping: ${client.pings[0]} ms`));
-};
+module.exports = {
+    name: 'ping',
+    description: 'Pong!',
+    args: false,
+    guildOnly: false,
 
-exports.help = { 
-    name: 'ping'
-};
+    async execute(client, message, args) {
+        message.channel.send("Pinging...")
+            .then(m => m.edit(`Client Ping: ${m.createdTimestamp - message.createdTimestamp} ms | API Ping: ${client.pings[0]} ms`));
+    }
+}
