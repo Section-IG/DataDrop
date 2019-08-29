@@ -9,7 +9,7 @@ module.exports = {
     guildOnly: true,
     ownerOnly: true,
 
-    async execute(client, message, args) {
+    async execute(client, log, message, args) {
         await message.delete().catch(_ => {});
     
         const ig1Role = message.guild.roles.get(ig1Roleid);

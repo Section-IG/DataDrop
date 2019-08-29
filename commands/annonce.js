@@ -2,13 +2,13 @@ const { owner, announcementChannelid, announcementRoleid } = require('../config'
 const { RichEmbed } = require('discord.js');
 
 module.exports = {
-    name: 'announce',
-    description: 'Envoie une annonce dans le canal des annonces en mentionnant le rôle des annonces.',
+    name: 'annonce',
+    description: 'Envoie une annonce dans le canal des annonces en mentionnant le rôle des annonces',
     args: true,
     usage: '<message>',
     guildOnly: true,
     
-    async execute(client, message, args) {
+    execute(client, log, message, args) {
         const announcementChannel = message.guild.channels.get(announcementChannelid);
         const announcementRole = message.guild.roles.get(announcementRoleid);
     

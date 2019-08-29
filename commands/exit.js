@@ -2,12 +2,12 @@ const { owner } = require('../config');
 
 module.exports = {
 	name: 'exit',
-    description: 'Stops the bot.',
+    description: 'Arrête le bot',
     args: false,
     guildOnly: false,
     ownerOnly: true,
 
-	async execute(client, message, args) {
+	execute(client, log, message, args) {
         if (message.author.id === owner) process.exit();
     }
 }

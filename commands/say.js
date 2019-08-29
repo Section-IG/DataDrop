@@ -6,8 +6,8 @@ module.exports = {
     usage: '[channel] <message>',
     guidOnly: true,
     
-	execute(message, args) {
-        var response = '';
+	execute(client, log, message, args) {
+        let response = '';
         const channelid = getChannelFromMention(args[0]);
         const channel = message.client.channels.get(channelid);
 

@@ -2,7 +2,7 @@ const { rolesChannelid,
     ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid, announcementRoleid,
     ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote } = require('../config');
 
-module.exports = async (client, messageReaction, user) => {
+module.exports = async (client, log, messageReaction, user) => {
 
     const message = messageReaction.message;
     const channel = message.guild.channels.get(rolesChannelid);
@@ -20,22 +20,22 @@ module.exports = async (client, messageReaction, user) => {
     if (emotes.includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
         switch (messageReaction.emoji.name) {
             case ig1Emote:
-                member.removeRole(ig1Role).catch(console.error);
+                member.removeRole(ig1Role).catch(log.error);
                 break;
             case ig2Emote:
-                member.removeRole(ig2Role).catch(console.error);
+                member.removeRole(ig2Role).catch(log.error);
                 break;
             case ig3Emote:
-                member.removeRole(ig3Role).catch(console.error);
+                member.removeRole(ig3Role).catch(log.error);
                 break;
             case alumniEmote:
-                member.removeRole(alumniRole).catch(console.error);
+                member.removeRole(alumniRole).catch(log.error);
                 break;
             case tutorEmote:
-                member.removeRole(tutorRole).catch(console.error);
+                member.removeRole(tutorRole).catch(log.error);
                 break;
             case announcementEmote:
-                member.addRole(announcementRole).catch(console.error);
+                member.addRole(announcementRole).catch(log.error);
                 break;
             default:
                 break;

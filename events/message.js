@@ -1,6 +1,7 @@
+const { Collection } = require('discord.js');
 const { prefix } = require('../config');
 
-module.exports = (client, message) => {
+module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -8,7 +9,7 @@ module.exports = (client, message) => {
     const command = client.commands.get(commandName) || client.commands.first(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
-    console.log(`${message.author.user.tag} (${message.author.id}) a utilisé "${command.name}" dans #${message.channel.name} (${message.channel.id})`);
+    log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" dans #${message.channel.name} (${message.channel.id})`);
     
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply('Je ne peux pas exécuter cette commande en privé!');
@@ -25,7 +26,7 @@ module.exports = (client, message) => {
     }
 
     if (client.cooldowns && !client.cooldowns.has(command.name)) {
-        client.cooldowns.set(command.name, new Discord.Collection());
+        client.cooldowns.set(command.name, new Collection());
     }
 
     const now = Date.now();
@@ -46,9 +47,9 @@ module.exports = (client, message) => {
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     try {
-        command.execute(client, message, args);
+        command.execute(client, log, message, args);
     } catch (error) {
-        console.error(error);
+        log.error(error);
         message.reply('Une erreur est apparue en essayant cette commande.');
     }
 };
