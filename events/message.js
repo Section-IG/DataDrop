@@ -1,5 +1,5 @@
 const { Collection } = require('discord.js');
-const { prefix } = require('../config');
+const { prefix, adminRoleid, owner} = require('../config');
 
 module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -9,7 +9,7 @@ module.exports = (client, log, message) => {
     const command = client.commands.get(commandName) || client.commands.first(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
-    log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" dans #${message.channel.name} (${message.channel.id})`);
+    log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" dans #${message.channel.type === 'text' ? message.channel.name : 'privé'} (${message.channel.id})`);
     
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply('Je ne peux pas exécuter cette commande en privé!');
@@ -28,6 +28,9 @@ module.exports = (client, log, message) => {
     if (client.cooldowns && !client.cooldowns.has(command.name)) {
         client.cooldowns.set(command.name, new Collection());
     }
+
+    if (command.adminOnly && !message.member.roles.get(adminRoleid)) return;
+    if (command.ownerOnly && message.author.id !== ownerId) return;
 
     const now = Date.now();
     const timestamps = client.cooldowns.get(command.name);
@@ -50,6 +53,6 @@ module.exports = (client, log, message) => {
         command.execute(client, log, message, args);
     } catch (error) {
         log.error(error);
-        message.reply('Une erreur est apparue en essayant cette commande.');
+        message.reply(':x: **Oups!** - Une erreur est apparue en essayant cette commande. Reporte-le à un membre du Staff s\'il te plaît!');
     }
 };
