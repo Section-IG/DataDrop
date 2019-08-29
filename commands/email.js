@@ -27,7 +27,7 @@ module.exports = {
                 }
 
                 const subcommandName = args[1].toLowerCase();
-                let subcommand = subcommands.firstKey(subcommandName);
+                let subcommand = subcommands.get(subcommandName);
                 if (!subcommand) {
                     msg = 'Cette sous-commande n\'existe pas.';
                     break;
