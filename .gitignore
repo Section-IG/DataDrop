@@ -62,4 +62,4 @@ typings/
 .next
 
 # custom
-emails.json
+emails.js
