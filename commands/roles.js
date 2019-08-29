@@ -5,7 +5,6 @@ const { ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid, announcement
 module.exports = {
     name: 'roles',
     description: 'Sends the embed in the roles channel to trigger the reaction role management.',
-    args: false,
     guildOnly: true,
     ownerOnly: true,
 
@@ -27,7 +26,7 @@ module.exports = {
             ${ig3Emote} - ${ig3Role.toString()}
             ${alumniEmote} - ${alumniRole.toString()}
             ${tutorEmote} - ${tutorRole.toString()}
-            ${announcementEmote} - ${announceRole.toString()} (Note : retire le rôle quand la réaction est ajoutée)
+            ${announcementEmote} - ${announceRole.toString()} (note : retire le rôle quand la réaction est ajoutée)
     
             Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.
             `)

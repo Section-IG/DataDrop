@@ -2,6 +2,7 @@ const { Collection } = require('discord.js');
 const { people } = require('../emails');
 const { removeDiacritics, paginate } = require('../utils/utils');
 
+// TODO: rendre la gestion des sous-commandes plus génériques
 const subcommands = new Collection([
     ['help', { description: 'Affiche l\'aide d\'une sous-commande' }],
     ['liste', { description: 'Affiche tous les emails', usage:'[numéro de page]' }],
@@ -13,7 +14,6 @@ module.exports = {
                 +'\n**Sous-commandes:**\n'
                 +`${subcommands.map(x => x.name).join(', ')}`,
     usage: '<nom>',
-    guildOnly: false,
     args: true,
 
     execute(client, log, message, args) {
@@ -26,18 +26,18 @@ module.exports = {
                 }
 
                 const subcommandName = args[1].toLowerCase();
-                let subcommand = undefined;
-                if (!this.subcommands.firstKey(subcommandName)) {
+                let subcommand = subcommands.firstKey(subcommandName);
+                if (!subcommand) {
                     return message.channel.send('Cette sous-commande n\'existe pas.');
-                } else {
-                    subcommand = this.subcommands.firstKey(subcommandName);
                 }
 
+                // TODO: utiliser un RichEmbed à la place des messages normaux
                 const data = [`**Nom:** ${subcommandName}`];
                 if (subcommand.description) data.push(`**Description:** ${subcommand.description}`);
                 if (subcommand.usage) data.push(`**Usage:** \`${prefix}email ${subcommand.name} ${subcommand.usage}\``);
                 
-                return message.channel.send(data, { split: true });
+                msg = data.join('\n');
+                break;
 
             case 'liste':
                 msg = generateMessage(people, args[1]);
@@ -65,7 +65,7 @@ module.exports = {
                 }
         }
         
-        return message.channel.send(msg);
+        return message.channel.send(msg, {split:true});
     }
 }
 

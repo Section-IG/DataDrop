@@ -3,7 +3,6 @@ const { rolesChannelid,
     ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote } = require('../config');
 
 module.exports = async (client, log, messageReaction, user) => {
-
     const message = messageReaction.message;
     const channel = message.guild.channels.get(rolesChannelid);
     const member = message.guild.members.get(user.id);
