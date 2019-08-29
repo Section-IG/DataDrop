@@ -3,6 +3,8 @@ require('dotenv-flow').config();
 module.exports = {
     owner: process.env.OWNER,
     prefix: process.env.PREFIX,
+    version: 'Local-v1.0.0',
+    botName: 'IESN Bot',
 
     announcementChannelid: '360117467550318593',
     announcementRoleid: '364008970966269952',

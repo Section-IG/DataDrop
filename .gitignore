@@ -42,8 +42,9 @@ typings/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
+# eslint
 .eslintcache
+.eslintrc.json
 
 # Optional REPL history
 .node_repl_history
@@ -61,4 +62,4 @@ typings/
 .next
 
 # custom
-emails.json
+emails.js

@@ -1,10 +1,13 @@
 const { owner } = require('../config');
 
-exports.run = async (client, message, args) => {
-    if (message.author.id === owner)
-        process.exit();
-};
+module.exports = {
+	name: 'exit',
+    description: 'Arrête le bot',
+    args: false,
+    guildOnly: false,
+    ownerOnly: true,
 
-exports.help = { 
-    name: 'exit'
-};
+	execute(client, log, message, args) {
+        if (message.author.id === owner) process.exit();
+    }
+}
