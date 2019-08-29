@@ -20,11 +20,11 @@ module.exports = {
             return message.author.send(data, { split: true })
                 .then(() => {
                     if (message.channel.type === 'dm') return;
-                    message.reply('Je vous ai envoyé les informations demandées en DM.');
+                    message.channel.send('Je vous ai envoyé les informations demandées en DM.');
                 })
                 .catch(error => {
                     log.error(`Erreur lors de l'envoi d'un DM à ${message.author.tag}.\n`, error);
-                    message.reply('Je ne peux pas vous envoyer de DM. Avez-vous activé l\'option?');
+                    message.channel.send('Je ne peux pas vous envoyer de DM. Avez-vous activé l\'option?');
                 });
         }
 

@@ -12,7 +12,7 @@ module.exports = {
     name: 'email',
     description: 'Affiche une liste de mails selon les paramètres entrés.'
                 +'\n**Sous-commandes:**\n'
-                +`${subcommands.map(x => x.name).join(', ')}`,
+                +`${subcommands.map(x => x[0]).join(', ')}`,
     usage: '<nom>',
     args: true,
 
@@ -22,13 +22,15 @@ module.exports = {
         switch(args[0].toLowerCase()) {
             case 'help': 
                 if (!args[1]) {
-                    return message.reply('Tu as oublié de spécifier la sous-commande!');
+                    msg = 'Tu as oublié de spécifier la sous-commande!';
+                    break;
                 }
 
                 const subcommandName = args[1].toLowerCase();
-                let subcommand = subcommands.firstKey(subcommandName);
+                let subcommand = subcommands.get(subcommandName);
                 if (!subcommand) {
-                    return message.channel.send('Cette sous-commande n\'existe pas.');
+                    msg = 'Cette sous-commande n\'existe pas.';
+                    break;
                 }
 
                 // TODO: utiliser un RichEmbed à la place des messages normaux
