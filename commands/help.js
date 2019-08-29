@@ -31,7 +31,9 @@ module.exports = {
         const name = args[0].toLowerCase();
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
-        if (!command) return message.reply('Ce n\'est pas une commande valide.');
+        if (!command) {
+            return message.channel.send('Ce n\'est pas une commande valide.');
+        }
 
         // TODO: utiliser un RichEmbed à la place des messages normayux
         data.push(`**Nom:** ${command.name}`);
