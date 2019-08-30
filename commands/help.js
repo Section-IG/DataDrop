@@ -1,4 +1,5 @@
-const prefix = process.env.PREFIX;
+const {prefix} = require('../config');
+const { RichEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'help',
@@ -6,42 +7,50 @@ module.exports = {
 	aliases: ['commandes'],
 	usage: '[commande]',
     cooldown: 5,
-    
-	execute(client, log, message, args) {
-		const data = [];
-        const { commands } = message.client;
+};
 
-        if (!args.length) {
-            data.push('Voici une liste des commandes:');
-            data.push(commands.map(command => command.name).join(', '));
-            data.push(`\nUtilisez \`${prefix}help [commande]\` pour recevoir les informations spécifiques d'uen commande!`);
+module.exports.execute = (client, log, message, args) => {
+    const data = [];
+    const { commands } = message.client;
+    let msg = undefined;
 
-            //TODO: envoyer le message dans le canal courant et non en DM
-            return message.author.send(data, { split: true })
-                .then(() => {
-                    if (message.channel.type === 'dm') return;
-                    message.channel.send('Je vous ai envoyé les informations demandées en DM.');
-                })
+    if (!args.length) {
+        data.push(`Utilisez \`${prefix}${module.exports.name} [commande]\` pour lire le message d'aide sur une commande spécifique.\n`);
+        data.push('Commandes disponibles :');
+        data.push(`- ${commands.map(command => command.name).join('\n- ')}`);
+
+        msg = new RichEmbed()
+            .setTitle('Liste des commandes')
+            .setColor('RANDOM')
+            .setDescription(data.join('\n'));
+
+        if (message.channel.type === 'dm') {
+            return message.author.send(msg)
                 .catch(error => {
                     log.error(`Erreur lors de l'envoi d'un DM à ${message.author.tag}.\n`, error);
-                    message.channel.send('Je ne peux pas vous envoyer de DM. Avez-vous activé l\'option?');
                 });
+        } else {
+            return message.channel.send(msg);
         }
+    }
 
-        const name = args[0].toLowerCase();
-        const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+    const name = args[0].toLowerCase();
+    const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
-        if (!command) {
-            return message.channel.send('Ce n\'est pas une commande valide.');
-        }
+    if (!command) {
+        return message.channel.send('Ce n\'est pas une commande valide.');
+    }
 
-        // TODO: utiliser un RichEmbed à la place des messages normayux
-        data.push(`**Nom:** ${command.name}`);
-        if (command.aliases) data.push(`**Alias:** ${command.aliases.join(', ')}`);
-        if (command.description) data.push(`**Description:** ${command.description}`);
-        if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
-        data.push(`**Cooldown:** ${command.cooldown || 3} seconde(s)`);
+    data.push(`**Nom:** ${command.name}`);
+    if (command.aliases) data.push(`**Alias:** ${command.aliases.join(', ')}`);
+    if (command.description) data.push(`**Description:** ${command.description}`);
+    if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
+    data.push(`**Cooldown:** ${command.cooldown || 3} seconde(s)`);
 
-        message.channel.send(data.join('\n'), { split: true });
-	},
+    msg = new RichEmbed()
+        .setTitle(`Aide pour '${command.name}'`)
+        .setColor('RANDOM')
+        .setDescription(data.join('\n'));
+
+    message.channel.send(msg);
 };
