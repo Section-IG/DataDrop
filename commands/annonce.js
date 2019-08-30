@@ -1,4 +1,4 @@
-const { owner, announcementChannelid, announcementRoleid } = require('../config');
+const { announcementChannelid, announcementRoleid } = require('../config');
 const { RichEmbed } = require('discord.js');
 
 module.exports = {
