@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
     people: [
         {
             firstname: 'Tinaël',
@@ -289,6 +289,11 @@ module.exports = {
             firstname: 'Accueil',
             lastname: 'Hénallux',
             emails: ['info.iesn@henallux.be']
+        },
+        {
+            firstname: 'Comité IG',
+            lastname: 'Hénallux',
+            emails: ['ighenallux@gmail.com']
         },
     ]
 };
