@@ -15,7 +15,7 @@ module.exports.execute = (client, log, message, args) => {
     let msg = undefined;
 
     if (!args.length) {
-        data.push(`Utilisez \`${prefix}${module.exports.name} [commande]\` pour recevoir les informations spécifiques d'uen commande!\n`);
+        data.push(`Utilisez \`${prefix}${module.exports.name} [commande]\` pour lire le message d'aide sur une commande spécifique.\n`);
         data.push('Commandes disponibles :');
         data.push(`- ${commands.map(command => command.name).join('\n- ')}`);
 
@@ -24,16 +24,14 @@ module.exports.execute = (client, log, message, args) => {
             .setColor('RANDOM')
             .setDescription(data.join('\n'));
 
-        //TODO: envoyer le message dans le canal courant et non en DM
-        return message.author.send(msg)
-            .then(() => {
-                if (message.channel.type === 'dm') return;
-                message.channel.send('Je vous ai envoyé les informations demandées en DM.');
-            })
-            .catch(error => {
-                log.error(`Erreur lors de l'envoi d'un DM à ${message.author.tag}.\n`, error);
-                message.channel.send('Je ne peux pas vous envoyer de DM. Avez-vous activé l\'option?');
-            });
+        if (message.channel.type === 'dm') {
+            return message.author.send(msg)
+                .catch(error => {
+                    log.error(`Erreur lors de l'envoi d'un DM à ${message.author.tag}.\n`, error);
+                });
+        } else {
+            return message.channel.send(msg);
+        }
     }
 
     const name = args[0].toLowerCase();
