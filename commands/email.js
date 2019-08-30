@@ -35,7 +35,6 @@ function generateMessage(people, page = 1) {
     return msg;
 }
 
-// TODO: rendre la gestion des sous-commandes plus génériques
 module.exports = {
     subcommands: new Collection([
         ['help', { description: 'Affiche l\'aide d\'une sous-commande' }],
