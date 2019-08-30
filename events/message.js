@@ -9,7 +9,7 @@ module.exports = (client, log, message) => {
     const command = client.commands.get(commandName) || client.commands.first(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
-    log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" dans #${message.channel.type === 'text' ? message.channel.name : 'privé'} (${message.channel.id})`);
+    log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" ${message.channel.type === 'text' ? `dans #${message.channel.name} (${message.channel.id})` : 'en DM'}`);
     
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply('Je ne peux pas exécuter cette commande en privé!');
