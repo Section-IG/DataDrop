@@ -15,7 +15,7 @@ module.exports = {
     
         const embed = new RichEmbed()
             .setAuthor('Annonce', 'http://i.imgur.com/zcGyun6.png')
-            .setColor(0xdd9323) // orange
+            .setColor('ORANGE')
             .setDescription(args.join(' '))
             .setFooter(message.member.user.tag, message.member.user.avatarUrl)
             .setTimestamp();

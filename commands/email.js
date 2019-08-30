@@ -1,4 +1,4 @@
-const { Collection } = require('discord.js');
+const { Collection, RichEmbed } = require('discord.js');
 const { people } = require('../emails');
 const { removeDiacritics, paginate } = require('../utils/utils');
 const { prefix } = require('../config');
@@ -51,8 +51,8 @@ module.exports.description = 'Affiche une liste de mails selon les paramètres e
                                 +`${module.exports.subcommands.keyArray().join(', ')}`;
 
 module.exports.execute = (client, log, message, args) => {
-    this = module.exports;
     let msg = undefined;
+    let options = {split:true};
 
     switch(args[0].toLowerCase()) {
         case 'help': 
@@ -66,19 +66,20 @@ module.exports.execute = (client, log, message, args) => {
                 return message.channel.send('Cette sous-commande n\'existe pas.');
             }
 
-            // TODO: utiliser un RichEmbed à la place des messages normaux
             let data = [`**Nom:** ${subcommandName}`];
             if (subcommand.description)
             {
                 data.push(`**Description:** ${subcommand.description}`);
             }
             if (subcommand.usage) {
-                console.log(`**Usage:** \`${prefix}${this.name} ${subcommandName} ${subcommand.usage}\``);
-                data.push(`**Usage:** \`${prefix}${this.name} ${subcommandName} ${subcommand.usage}\``);
-                console.log(data);
+                data.push(`**Usage:** \`${prefix}${module.exports.name} ${subcommandName} ${subcommand.usage}\``);
             }
 
-            msg = data.join('\n');
+            options = undefined;
+            msg = new RichEmbed()
+                .setTitle(`Aide pour '${subcommandName}'`)
+                .setColor('PURPLE')
+                .setDescription(data.join('\n'));
 
             break;
 
@@ -104,9 +105,12 @@ module.exports.execute = (client, log, message, args) => {
             if (matched.size === 0) {
                 msg = ":x: **Oups!** - Il semblerait qu'il n'y ait personne de ce nom enregistré dans la base de données. \nSi vous pensez que ceci est une erreur, vous pouvez contacter un membre du Staff.";
             } else {
-                msg = generateMessage([...matched]);
+                msg = new RichEmbed()
+                    .setTitle('Emails correspondant à vos critères')
+                    .setColor('RANDOM')
+                    .setDescription(generateMessage([...matched]));
             }
     }
     
-    return message.channel.send(msg, {split:true});
+    return message.channel.send(msg, options);
 };
