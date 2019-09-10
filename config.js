@@ -17,6 +17,7 @@ module.exports = {
     ig3Roleid: '353210727978237952',
     alumniRoleid: '487225405967695873',
     tutorRoleid: '362219691319492609',
+    driveManagerRoleid: '361786695034863617',
 
     ig1Emote: '1⃣',
     ig2Emote: '2⃣',
@@ -24,6 +25,8 @@ module.exports = {
     alumniEmote: '🎓',
     tutorEmote: '📚',
     announcementEmote: '📢',
+    driveManagerEmote: '📝',
     
-    ok_hand:'👌'
+    ok_hand:'👌',
+    zeroWidthSpace:'​',
 };
