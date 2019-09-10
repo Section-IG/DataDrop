@@ -1,18 +1,18 @@
 const { Collection } = require('discord.js');
-const { prefix, adminRoleid, owner} = require('../config');
+const { prefix, adminRoleid, ownerId} = require('../config');
 
 module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
-    const command = client.commands.get(commandName) || client.commands.first(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
     log.info(`${message.author.tag} (${message.author.id}) a utilisé "${command.name}" ${message.channel.type === 'text' ? `dans #${message.channel.name} (${message.channel.id})` : 'en DM'}`);
     
     if (command.guildOnly && message.channel.type !== 'text') {
-        return message.reply('Je ne peux pas exécuter cette commande en privé!');
+        return message.reply('Je ne peux pas exécuter cette commande en dehors d\'une guilde!');
     }
 
     if (command.args && !args.length) {

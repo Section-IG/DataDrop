@@ -29,7 +29,7 @@ fs.readdir('./commands/', async (err, files) => {
   if (err) return console.error;
   files.forEach(file => {
     if (!file.endsWith('.js')) return;
-    let props = require(`./commands/${file}`);
+    const props = require(`./commands/${file}`);
     let cmdName = file.split('.')[0];
     log.info(`Commande '${cmdName}' chargée`);
     client.commands.set(cmdName, props);
