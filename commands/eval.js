@@ -1,9 +1,10 @@
-const { ownerId, zeroWidthSpace } = require('../config');
+﻿const { ownerId, zeroWidthSpace } = require('../config');
 
 module.exports = {
     name: 'eval',
     description: 'Évalue du code Javascript.',
     ownerOnly: true,
+    args: true,
 
 	execute(client, log, message, args) {
         // double check sur l'identité juste pour la sécurité
