@@ -6,8 +6,8 @@ module.exports = {
     ownerOnly: true,
 
 	execute(client, log, message, args) {
-        message.channel.send(ok_hand);
         log.info('Arrêt en cours...');
+        message.channel.send(ok_hand);
         process.exit();
     }
 }
