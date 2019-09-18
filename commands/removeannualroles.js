@@ -1,4 +1,4 @@
-const { ig1Roleid, ig2Roleid, ig3Roleid, tutorRoleid, driveManagerRoleid, ok_hand } = require('../config');
+const { ig1Roleid, ig2Roleid, ig3Roleid, tuteurRoleid, driveManagerRoleid, ok_hand } = require('../config');
 
 module.exports = {
     name: 'removeannualroles',
@@ -12,20 +12,22 @@ module.exports = {
         const ig1RoleMembers = Array.from(message.guild.roles.get(ig1Roleid).members.values());
         const ig2RoleMembers = Array.from(message.guild.roles.get(ig2Roleid).members.values());
         const ig3RoleMembers = Array.from(message.guild.roles.get(ig3Roleid).members.values());
-        const tutorRoleMembers = Array.from(message.guild.roles.get(tutorRoleid).members.values());
+        const tuteurRoleMembers = Array.from(message.guild.roles.get(tuteurRoleid).members.values());
         const driveManagerRoleMembers = Array.from(message.guild.roles.get(driveManagerRoleid).members.values());
 
+        // TODO: to optimize
         let members = new Map();
-        for (let member of [].concat(ig1RoleMembers, ig2RoleMembers, ig3RoleMembers,tutorRoleMembers,driveManagerRoleMembers)) {
+        for (let member of [].concat(ig1RoleMembers, ig2RoleMembers, ig3RoleMembers, tuteurRoleMembers, driveManagerRoleMembers)) {
             if (!members.has(member)) {
                 members.set(member.id, member);
             }
         }
         members = [...members.values()];
-
+        
         for (let member of members) {
-            member.removeRoles([ig1Roleid, ig2Roleid, ig3Roleid, tutorRoleid, driveManagerRoleid]);
+            member.removeRoles([ig1Roleid, ig2Roleid, ig3Roleid, tuteurRoleid, driveManagerRoleid]);
         }
+        //
 
         log.info("Tous les rôles annuels ont été purgés.");
         return message.channel.send(ok_hand);

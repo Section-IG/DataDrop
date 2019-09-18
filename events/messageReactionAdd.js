@@ -1,6 +1,6 @@
 const { rolesChannelid,
-    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid, announcementRoleid,
-    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote } = require('../config');
+    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, annoncesRoleid,
+    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote } = require('../config');
 
 module.exports = async (client, log, messageReaction, user) => {
     const message = messageReaction.message;
@@ -12,31 +12,40 @@ module.exports = async (client, log, messageReaction, user) => {
     const ig2Role = message.guild.roles.get(ig2Roleid);
     const ig3Role = message.guild.roles.get(ig3Roleid);
     const alumniRole = message.guild.roles.get(alumniRoleid);
-    const tutorRole = message.guild.roles.get(tutorRoleid);
-    const announcementRole = message.guild.roles.get(announcementRoleid);
-    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote];
+    const tuteurRole = message.guild.roles.get(tuteurRoleid);
+    const annoncesRole = message.guild.roles.get(annoncesRoleid);
+    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote];
    
     if (emotes.includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
+        
         switch (messageReaction.emoji.name) {
             case ig1Emote:
                 member.addRole(ig1Role).catch(log.error);
+                log.info(`Le rôle <${ig1Role.name}> a été donné à <${member.user.tag}>`);
                 break;
             case ig2Emote:
                 member.addRole(ig2Role).catch(log.error);
+                log.info(`Le rôle <${ig2Role.name}> a été donné à <${member.user.tag}>`);
                 break;
             case ig3Emote:
                 member.addRole(ig3Role).catch(log.error);
+                log.info(`Le rôle <${ig3Role.name}> a été donné à <${member.user.tag}>`);
                 break;
             case alumniEmote:
                 member.addRole(alumniRole).catch(log.error);
+                log.info(`Le rôle <${alumniRole.name}> a été donné à <${member.user.tag}>`);
                 break;
-            case tutorEmote:
-                member.addRole(tutorRole).catch(log.error);
+            case tuteurEmote:
+                member.addRole(tuteurRole).catch(log.error);
+                log.info(`Le rôle <${tuteurRole.name}> a été donné à <${member.user.tag}>`);
                 break;
-            case announcementEmote:
-                member.removeRole(announcementRole).catch(log.error);
+            case annoncesEmote:
+                member.removeRole(annoncesRole).catch(log.error);
+                log.info(`Le rôle <${annoncesRole.name}> a été retiré de <${member.user.tag}>`);
                 break;
+            
             default:
+                messageReaction.remove(member);
                 break;
         }
     }

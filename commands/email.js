@@ -3,7 +3,7 @@ const { people } = require('../emails');
 const { removeDiacritics, paginate } = require('../utils/utils');
 const { prefix } = require('../config');
 
-// TODO : add pagination through message reaction
+// TODO: add pagination through message reaction
 function generateMessage(people, page = 1) {
     if (people === undefined || (people.length && people.length === 0)) return '';
     
