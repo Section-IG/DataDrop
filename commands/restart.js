@@ -1,4 +1,4 @@
-﻿const {ok_hand} = require('../config');
+﻿const { ok_hand } = require('../config');
 
 module.exports = {
 	name: 'restart',
