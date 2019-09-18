@@ -22,7 +22,7 @@ module.exports = {
 
             data.content = clean(evaled);
         } catch (err) {
-            data.content = `\`// An error occured\`\n\n${clean(err)}`;
+            data.content = `// An error occured\n\n${clean(err)}`;
         } finally {
             message.channel.send(data.content, data.options);
         }

@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
-const { ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tutorRoleid, announcementRoleid,
-        ig1Emote, ig2Emote, ig3Emote, alumniEmote, tutorEmote, announcementEmote} = require('../config');
+const { ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, annoncesRoleid,
+        ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote} = require('../config');
 
 module.exports = {
     name: 'roles',
@@ -15,8 +15,8 @@ module.exports = {
         const ig2Role = message.guild.roles.get(ig2Roleid);
         const ig3Role = message.guild.roles.get(ig3Roleid);
         const alumniRole = message.guild.roles.get(alumniRoleid);
-        const tutorRole = message.guild.roles.get(tutorRoleid);
-        const announceRole = message.guild.roles.get(announcementRoleid);
+        const tuteurRole = message.guild.roles.get(tuteurRoleid);
+        const annoncesRole = message.guild.roles.get(annoncesRoleid);
     
         const embed = new RichEmbed()
             .setTitle('Réagissez à ce message avec la réaction correspondante pour vous attribuer/retirer le rôle souhaité!')
@@ -25,8 +25,8 @@ module.exports = {
             ${ig2Emote} - ${ig2Role.toString()}
             ${ig3Emote} - ${ig3Role.toString()}
             ${alumniEmote} - ${alumniRole.toString()}
-            ${tutorEmote} - ${tutorRole.toString()}
-            ${announcementEmote} - ${announceRole.toString()} (note : retire le rôle quand la réaction est ajoutée)
+            ${tuteurEmote} - ${tuteurRole.toString()}
+            ${annoncesEmote} - ${annoncesRole.toString()} (note : retire le rôle quand la réaction est ajoutée)
     
             Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.
             `)
@@ -37,8 +37,8 @@ module.exports = {
             await msg.react(ig2Emote);
             await msg.react(ig3Emote);
             await msg.react(alumniEmote);
-            await msg.react(tutorEmote);
-            await msg.react(announcementEmote);
+            await msg.react(tuteurEmote);
+            await msg.react(annoncesEmote);
         })
     }
 }
