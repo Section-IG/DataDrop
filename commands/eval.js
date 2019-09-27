@@ -6,7 +6,7 @@ module.exports = {
     ownerOnly: true,
     args: true,
 
-	execute(client, log, message, args) {
+    execute(client, log, message, args) {
         // double check sur l'identité juste pour la sécurité
         if (message.author.id !== ownerId) return;
 
