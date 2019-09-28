@@ -6,7 +6,7 @@ module.exports = {
     ownerOnly: true,
     args: true,
 
-	execute(client, log, message, args) {
+    execute(client, log, message, args) {
         // double check sur l'identité juste pour la sécurité
         if (message.author.id !== ownerId) return;
 
@@ -22,7 +22,7 @@ module.exports = {
 
             data.content = clean(evaled);
         } catch (err) {
-            data.content = `\`// An error occured\`\n\n${clean(err)}`;
+            data.content = `// An error occured\n\n${clean(err)}`;
         } finally {
             message.channel.send(data.content, data.options);
         }

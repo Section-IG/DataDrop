@@ -1,4 +1,4 @@
-const {prefix} = require('../config');
+const { prefix } = require('../config');
 const { RichEmbed } = require('discord.js');
 
 module.exports = {

@@ -8,23 +8,27 @@ module.exports = {
 
     adminRoleid: '360850813914185738',
 
-    announcementChannelid: '360117467550318593',
-    announcementRoleid: '364008970966269952',
-
+    informationsChannelid: '288666915314991107',
+    faqChannelid: '360126831376203778',
+    comiteigcestquoiChannelid: '506564987914027008',
+    tutoratChannelid: '362235459017113602',
     rolesChannelid: '522843160594874368',
+    annoncesChannelid: '360117467550318593',
+
+    annoncesRoleid: '364008970966269952',
     ig1Roleid: '353210852700061696',
     ig2Roleid: '353210788271357954',
     ig3Roleid: '353210727978237952',
     alumniRoleid: '487225405967695873',
-    tutorRoleid: '362219691319492609',
+    tuteurRoleid: '362219691319492609',
     driveManagerRoleid: '361786695034863617',
 
     ig1Emote: '1⃣',
     ig2Emote: '2⃣',
     ig3Emote: '3⃣',
     alumniEmote: '🎓',
-    tutorEmote: '📚',
-    announcementEmote: '📢',
+    tuteurEmote: '📚',
+    annoncesEmote: '📢',
     driveManagerEmote: '📝',
     
     ok_hand:'👌',
