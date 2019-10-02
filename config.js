@@ -14,6 +14,7 @@ module.exports = {
     tutoratChannelid: '362235459017113602',
     rolesChannelid: '522843160594874368',
     annoncesChannelid: '360117467550318593',
+    optionsChannelid: '628864027321303049',
 
     annoncesRoleid: '364008970966269952',
     ig1Roleid: '353210852700061696',
@@ -22,6 +23,8 @@ module.exports = {
     alumniRoleid: '487225405967695873',
     tuteurRoleid: '362219691319492609',
     driveManagerRoleid: '361786695034863617',
+    optionDatascienceRoleid: '628864182695100416',
+    optionSmartcityRoleid: '628864262403653651',
 
     ig1Emote: '1⃣',
     ig2Emote: '2⃣',
@@ -30,7 +33,9 @@ module.exports = {
     tuteurEmote: '📚',
     annoncesEmote: '📢',
     driveManagerEmote: '📝',
-    
+    smartcityEmote: '🏘',
+    datascienceEmote: '📊',
+
     ok_hand:'👌',
     zeroWidthSpace:'​',
 };
