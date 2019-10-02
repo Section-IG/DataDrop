@@ -1,10 +1,11 @@
-const { rolesChannelid,
-    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, annoncesRoleid,
-    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote } = require('../config');
+const { rolesChannelid, optionsChannelid,
+    ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, annoncesRoleid, optionDatascienceRoleid, optionSmartcityRoleid,
+    ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote, smartcityEmote, datascienceEmote } = require('../config');
 
 module.exports = async (client, log, messageReaction, user) => {
     const message = messageReaction.message;
-    const channel = message.guild.channels.get(rolesChannelid);
+    const rolesChannel = message.guild.channels.get(rolesChannelid);
+    const optionsChannel = message.guild.channels.get(optionsChannelid);
     const member = message.guild.members.get(user.id);
     if (member.user.bot) return;
     
@@ -14,9 +15,12 @@ module.exports = async (client, log, messageReaction, user) => {
     const alumniRole = message.guild.roles.get(alumniRoleid);
     const tuteurRole = message.guild.roles.get(tuteurRoleid);
     const annoncesRole = message.guild.roles.get(annoncesRoleid);
-    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote];
+    const optionDatascienceRole = message.guild.roles.get(optionDatascienceRoleid);
+    const optionSmartcityRole = message.guild.roles.get(optionSmartcityRoleid);
+
+    const emotes = [ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote, smartcityEmote, datascienceEmote];
    
-    if (emotes.includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
+    if (emotes.includes(messageReaction.emoji.name) && (message.channel.id === rolesChannel.id || message.channel.id === optionsChannel.id)) {
         switch (messageReaction.emoji.name) {
             case ig1Emote:
                 member.removeRole(ig1Role).catch(log.error);
@@ -43,6 +47,15 @@ module.exports = async (client, log, messageReaction, user) => {
                 log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}>`);
                 break;
                 
+            case smartcityEmote:
+                member.removeRole(optionSmartcityRole).catch(log.error);
+                log.info(`Le rôle <${optionSmartcityRole.name}> a été retiré de <${member.user.tag}>`);
+                break;
+            case datascienceEmote:
+                member.removeRole(optionDatascienceRole).catch(log.error);
+                log.info(`Le rôle <${optionDatascienceRole.name}> a été retiré de <${member.user.tag}>`);
+                break;
+            
             default:
                 break;
         }
