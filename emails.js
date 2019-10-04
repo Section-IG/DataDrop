@@ -281,6 +281,11 @@
             emails: ['anne.gustin@henallux.be']
         },
         {
+            firstname: 'Jean-Marc',
+            lastname: 'Richir',
+            emails: ['jean-marc.richir@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
@@ -294,6 +299,6 @@
             firstname: 'Comité IG',
             lastname: 'Hénallux',
             emails: ['ighenallux@gmail.com']
-        },
+        }
     ]
 };
