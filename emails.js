@@ -286,6 +286,11 @@
             emails: ['jean-marc.richir@henallux.be']
         },
         {
+            firstname: 'Thibaud',
+            lastname: 'Stevens',
+            emails: ['thibaud.stevens@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
