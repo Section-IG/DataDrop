@@ -58,7 +58,7 @@
         {
             firstname: 'Anne-Sophie',
             lastname: 'Vilret',
-            emails: ['annesophie.vilret@henallux.be']
+            emails: ['anne-sophie.vilret@henallux.be']
         },
         {
             firstname: 'Christine',
@@ -153,7 +153,7 @@
         {
             firstname: 'Jean-Marc',
             lastname: 'Van Gyseghem',
-            emails: ['jeanmarc.vangyseghem@henallux.be']
+            emails: ['jean-marc.vangyseghem@henallux.be']
         },
         {
             firstname: 'Oleg',
@@ -168,7 +168,7 @@
         {
             firstname: 'Jean-Luc',
             lastname: 'Nicks',
-            emails: ['jeanluc.nicks@henallux.be']
+            emails: ['jean-luc.nicks@henallux.be']
         },
         {
             firstname: 'Alexandre',
@@ -193,7 +193,7 @@
         {
             firstname: 'Marie-France',
             lastname: 'Forain',
-            emails: ['mariefrance.forain@henallux.be']
+            emails: ['marie-france.forain@henallux.be']
         },
         {
             firstname: 'Marvin',
@@ -208,7 +208,7 @@
         {
             firstname: 'Jean-Marc',
             lastname: 'Poncelet',
-            emails: ['jeanmarc.poncelet@henallux.be']
+            emails: ['jean-marc.poncelet@henallux.be']
         },
         {
             firstname: 'Fabian',
@@ -248,7 +248,7 @@
         {
             firstname: 'Jean-Benoît',
             lastname: 'Hubin',
-            emails: ['jeanbenoit.hubin@henallux.be']
+            emails: ['jean-benoit.hubin@henallux.be']
         },
         {
             firstname: 'Zoé',
@@ -289,6 +289,11 @@
             firstname: 'Thibaud',
             lastname: 'Stevens',
             emails: ['thibaud.stevens@henallux.be']
+        },
+        {
+            firstname: 'Thomas',
+            lastname: 'Denis',
+            emails: ['thomas.denis@henallux.be']
         },
         {
             firstname: 'Conseil Étudiant',
