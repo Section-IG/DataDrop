@@ -296,6 +296,21 @@
             emails: ['thomas.denis@henallux.be']
         },
         {
+            firstname: 'Céline',
+            lastname: 'Delhaye',
+            emails: ['celine.delhaye@henallux.be']
+        },
+        {
+            firstname: 'Arnaud',
+            lastname: 'Tillieux',
+            emails: ['arnaud.tillieux@henallux.be']
+        },
+        {
+            firstname: 'Quentin',
+            lastname: 'Vaguet',
+            emails: ['quentin.vaguet@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
