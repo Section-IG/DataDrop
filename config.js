@@ -6,7 +6,9 @@ module.exports = {
     version: process.env.VERSION,
     botName: 'IESN Bot',
 
+    communitymanagerRoleid: '288659580064366592',
     adminRoleid: '360850813914185738',
+    deleguesRoleid: '288659613732306944',
 
     informationsChannelid: '288666915314991107',
     faqChannelid: '360126831376203778',
