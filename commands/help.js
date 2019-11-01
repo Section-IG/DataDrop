@@ -6,7 +6,6 @@ module.exports = {
     description: 'Liste toutes les commandes disponibles ou les informations d\'une commande fournie en paramètres',
 	aliases: ['commandes'],
 	usage: '[commande]',
-    cooldown: 5,
 };
 
 module.exports.execute = (client, log, message, args) => {

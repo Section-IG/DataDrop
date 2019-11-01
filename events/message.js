@@ -1,8 +1,12 @@
 const { Collection } = require('discord.js');
-const { prefix, adminRoleid, ownerId} = require('../config');
+const { prefix, communitymanagerRoleid, adminRoleid, deleguesRoleid, ownerId} = require('../config');
 
 module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+    const isAuthorized = () => {
+        return message.author.id === ownerId || message.member.roles.get(communitymanagerRoleid) || message.member.roles.get(adminRoleid);
+    };
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
@@ -25,29 +29,7 @@ module.exports = (client, log, message) => {
         return message.channel.send(reply);
     }
 
-    if (client.cooldowns && !client.cooldowns.has(command.name)) {
-        client.cooldowns.set(command.name, new Collection());
-    }
-
-    if (command.adminOnly && !message.member.roles.get(adminRoleid)) return;
-    if (command.ownerOnly && message.author.id !== ownerId) return;
-
-    const now = Date.now();
-    const timestamps = client.cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-
-    if (timestamps.has(message.author.id)) {
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-        if (now < expirationTime) {
-            //const timeLeft = (expirationTime - now) / 1000;
-            //return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
-            return message.delete();
-	    }
-    }
-
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    if ((command.adminOnly || command.ownerOnly) && !isAuthorized()) return;
 
     try {
         command.execute(client, log, message, args);
