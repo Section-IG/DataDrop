@@ -16,7 +16,7 @@ module.exports = {
             .setAuthor('Annonce', 'http://i.imgur.com/zcGyun6.png')
             .setColor('ORANGE')
             .setDescription(args.join(' '))
-            .setFooter(message.member.user.tag, message.member.user.avatarUrl)
+            .setFooter(message.member.user.tag, message.member.user.avatarURL)
             .setTimestamp();
             
         annoncesRole.setMentionable(true);
