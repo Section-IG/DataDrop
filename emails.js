@@ -311,6 +311,11 @@
             emails: ['quentin.vaguet@henallux.be']
         },
         {
+            firstname: 'Flore',
+            lastname: 'Andrien',
+            emails: ['flore.andrien@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
