@@ -1,16 +1,10 @@
 const { Client, Collection } = require('discord.js');
-const Enmap = require('enmap');
-const Utils = require('./utils/utils');
-const StructuredLog = require('structured-log');
 const fs = require('fs');
 require('dotenv-flow').config();
 
-const log = StructuredLog.configure()
-  .writeTo(new StructuredLog.ConsoleSink({includeProperties:true, includeTimestamps:true}))
-  .minLevel.information()
-  .create();
+const log = require('./utils/Logger');
 const client = new Client();
-client.commands = new Enmap();
+client.commands = new Collection();
 client.cooldowns = new Collection();
 
 // TODO: refactor 12 & 23 (dry principle)
@@ -36,4 +30,4 @@ fs.readdir('./commands/', async (err, files) => {
   });
 });
 
-client.login(); // discordjs automatically loads CLIENT_TOKEN from .env file
+client.login(); // discordjs automatically loads DISCORD_TOKEN from .env file
