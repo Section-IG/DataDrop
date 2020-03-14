@@ -1,5 +1,5 @@
 const { Collection } = require('discord.js');
-const { prefix, communitymanagerRoleid, adminRoleid, deleguesRoleid, ownerId} = require('../config');
+const { prefix, communitymanagerRoleid, adminRoleid, ownerId} = require('../config');
 
 module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
