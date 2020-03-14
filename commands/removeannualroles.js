@@ -9,11 +9,11 @@ module.exports = {
 	execute(client, log, message, args) {
         log.info("Purge des rôles annuels en cours...");
 
-        const ig1RoleMembers = Array.from(message.guild.roles.get(ig1Roleid).members.values());
-        const ig2RoleMembers = Array.from(message.guild.roles.get(ig2Roleid).members.values());
-        const ig3RoleMembers = Array.from(message.guild.roles.get(ig3Roleid).members.values());
-        const tuteurRoleMembers = Array.from(message.guild.roles.get(tuteurRoleid).members.values());
-        const driveManagerRoleMembers = Array.from(message.guild.roles.get(driveManagerRoleid).members.values());
+        const ig1RoleMembers = Array.from(message.guild.roles.cache.get(ig1Roleid).members.cache.values());
+        const ig2RoleMembers = Array.from(message.guild.roles.cache.get(ig2Roleid).members.cache.values());
+        const ig3RoleMembers = Array.from(message.guild.roles.cache.get(ig3Roleid).members.cache.values());
+        const tuteurRoleMembers = Array.from(message.guild.roles.cache.get(tuteurRoleid).members.cache.values());
+        const driveManagerRoleMembers = Array.from(message.guild.roles.cache.get(driveManagerRoleid).members.cache.values());
 
         // TODO: to optimize
         let members = new Map();

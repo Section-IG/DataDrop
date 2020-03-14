@@ -5,7 +5,7 @@ module.exports = (client, log, message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const isAuthorized = () => {
-        return message.author.id === ownerId || message.member.roles.get(communitymanagerRoleid) || message.member.roles.get(adminRoleid);
+        return message.author.id === ownerId || message.member.roles.cache.get(communitymanagerRoleid) || message.member.roles.cache.get(adminRoleid);
     };
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);

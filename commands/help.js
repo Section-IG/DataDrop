@@ -1,5 +1,5 @@
 const { prefix } = require('../config');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'help',
@@ -18,7 +18,7 @@ module.exports.execute = (client, log, message, args) => {
         data.push('Commandes disponibles :');
         data.push(`- ${commands.map(command => command.name).join('\n- ')}`);
 
-        msg = new RichEmbed()
+        msg = new MessageEmbed()
             .setTitle('Liste des commandes')
             .setColor('RANDOM')
             .setDescription(data.join('\n'));
@@ -46,7 +46,7 @@ module.exports.execute = (client, log, message, args) => {
     if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
     data.push(`**Cooldown:** ${command.cooldown || 3} seconde(s)`);
 
-    msg = new RichEmbed()
+    msg = new MessageEmbed()
         .setTitle(`Aide pour '${command.name}'`)
         .setColor('RANDOM')
         .setDescription(data.join('\n'));

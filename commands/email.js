@@ -1,4 +1,4 @@
-const { Collection, RichEmbed } = require('discord.js');
+const { Collection, MessageEmbed } = require('discord.js');
 const { people } = require('../emails');
 const { removeDiacritics, paginate } = require('../utils/utils');
 const { prefix } = require('../config');
@@ -23,7 +23,7 @@ function generateMessage(people, page = 1) {
     if (paginatedCollection.currentPage < 0 || paginatedCollection.totalPages < paginatedCollection.currentPage) {
         msg = ":x: **Oups!** - Il semblerait que vous ayez entré un nombre incorrect. \nSi vous pensez que ceci est une erreur, vous pouvez contacter un membre du Staff.";;
     } else {
-        msg = new RichEmbed()
+        msg = new MessageEmbed()
             .setAuthor(`Emails correspondant à vos critères ${paginatedCollection.currentPage}/${paginatedCollection.totalPages}`, 'https://i.imgur.com/Gl37dXV.png')
             .setColor('RANDOM');
         for (let paginatedItem of paginatedCollection.data) {
@@ -72,7 +72,7 @@ module.exports.execute = (client, log, message, args) => {
                 data.push(`**Usage:** \`${prefix}${module.exports.name} ${subcommandName} ${subcommand.usage}\``);
             }
 
-            msg = new RichEmbed()
+            msg = new MessageEmbed()
                 .setTitle(`Aide pour '${subcommandName}'`)
                 .setColor('PURPLE')
                 .setDescription(data.join('\n'));
