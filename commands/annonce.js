@@ -1,5 +1,5 @@
 const { annoncesChannelid, annoncesRoleid } = require('../config');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'annonce',
@@ -10,9 +10,9 @@ module.exports = {
     adminOnly: true,
     
     execute(client, log, message, args) {
-        const annoncesChannel = message.guild.channels.get(annoncesChannelid);
-        const annoncesRole = message.guild.roles.get(annoncesRoleid);
-        const embed = new RichEmbed()
+        const annoncesChannel = message.guild.channels.cache.get(annoncesChannelid);
+        const annoncesRole = message.guild.roles.cache.get(annoncesRoleid);
+        const embed = new MessageEmbed()
             .setAuthor('Annonce', 'http://i.imgur.com/zcGyun6.png')
             .setColor('ORANGE')
             .setDescription(args.join(' '))

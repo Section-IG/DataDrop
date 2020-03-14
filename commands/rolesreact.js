@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, annoncesRoleid, optionDatascienceRoleid, optionSmartcityRoleid,
         ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, annoncesEmote, smartcityEmote, datascienceEmote,
         rolesChannelid, optionsChannelid } = require('../config');
@@ -9,22 +9,22 @@ module.exports = {
     ownerOnly: true,
 
     async execute(client, log, message, args) {
-        const rolesChannel = message.guild.channels.get(rolesChannelid);
-        const optionsChannel = message.guild.channels.get(optionsChannelid);
+        const rolesChannel = message.guild.channels.cache.get(rolesChannelid);
+        const optionsChannel = message.guild.channels.cache.get(optionsChannelid);
     
-        const ig1Role = message.guild.roles.get(ig1Roleid);
-        const ig2Role = message.guild.roles.get(ig2Roleid);
-        const ig3Role = message.guild.roles.get(ig3Roleid);
-        const alumniRole = message.guild.roles.get(alumniRoleid);
-        const tuteurRole = message.guild.roles.get(tuteurRoleid);
-        const annoncesRole = message.guild.roles.get(annoncesRoleid);
-        const optionSmartcityRole = message.guild.roles.get(optionSmartcityRoleid);
-        const optionDatascienceRole = message.guild.roles.get(optionDatascienceRoleid);
+        const ig1Role = message.guild.roles.cache.get(ig1Roleid);
+        const ig2Role = message.guild.roles.cache.get(ig2Roleid);
+        const ig3Role = message.guild.roles.cache.get(ig3Roleid);
+        const alumniRole = message.guild.roles.cache.get(alumniRoleid);
+        const tuteurRole = message.guild.roles.cache.get(tuteurRoleid);
+        const annoncesRole = message.guild.roles.cache.get(annoncesRoleid);
+        const optionSmartcityRole = message.guild.roles.cache.get(optionSmartcityRoleid);
+        const optionDatascienceRole = message.guild.roles.cache.get(optionDatascienceRoleid);
     
         const title = 'Réagissez à ce message avec la réaction correspondante pour vous attribuer/retirer le rôle souhaité!';
         const color = 0xdd9323;
 
-        const embedGeneralRoles = new RichEmbed()
+        const embedGeneralRoles = new MessageEmbed()
             .setTitle(title)
             .setDescription(`
             ${ig1Emote} - ${ig1Role.toString()}
@@ -37,7 +37,7 @@ module.exports = {
             Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.
             `)
             .setColor(color);
-        const embedOptionRoles = new RichEmbed()
+        const embedOptionRoles = new MessageEmbed()
             .setTitle(title)
             .setDescription(`
             ${smartcityEmote} - ${optionSmartcityRole.toString()}

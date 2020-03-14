@@ -3,7 +3,7 @@
         {
             firstname: 'Tinaël',
             lastname: 'Devresse',
-            emails: ['tinael.devresse.01@student.henallux.be']
+            emails: ['tinael.devresse.01@student.henallux.be', 'tinael.devresse@mic-belgique.be']
         },
         {
             firstname: 'Samuël',
