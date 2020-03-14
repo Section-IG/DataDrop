@@ -1,4 +1,4 @@
-const { au1Roleid, au2Roleid, au3Roleid, tuteurRoleid, driveManagerRoleid, ok_hand } = require('../config');
+const { au1Roleid, au2Roleid, au3Roleid, ok_hand } = require('../config');
 
 module.exports = {
     name: 'removeannualroles',
@@ -12,12 +12,10 @@ module.exports = {
         const au1RoleMembers = Array.from(message.guild.roles.cache.get(au1Roleid).members.cache.values());
         const au2RoleMembers = Array.from(message.guild.roles.cache.get(au2Roleid).members.cache.values());
         const au3RoleMembers = Array.from(message.guild.roles.cache.get(au3Roleid).members.cache.values());
-        const tuteurRoleMembers = Array.from(message.guild.roles.cache.get(tuteurRoleid).members.cache.values());
-        const driveManagerRoleMembers = Array.from(message.guild.roles.cache.get(driveManagerRoleid).members.cache.values());
 
         // TODO: to optimize
         let members = new Map();
-        for (let member of [].concat(au1RoleMembers, au2RoleMembers, au3RoleMembers, tuteurRoleMembers, driveManagerRoleMembers)) {
+        for (let member of [].concat(au1RoleMembers, au2RoleMembers, au3RoleMembers)) {
             if (!members.has(member)) {
                 members.set(member.id, member);
             }
@@ -25,7 +23,7 @@ module.exports = {
         members = [...members.values()];
 
         for (let member of members) {
-            member.removeRoles([au1Roleid, au2Roleid, au3Roleid, tuteurRoleid, driveManagerRoleid]);
+            member.removeRoles([au1Roleid, au2Roleid, au3Roleid]);
         }
         //
 
