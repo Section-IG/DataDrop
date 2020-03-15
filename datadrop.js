@@ -1,8 +1,12 @@
 const { Client, Collection } = require('discord.js');
 const fs = require('fs');
-require('dotenv-flow').config();
+const { Logger, LogEventLevel } = require('@hunteroi/advanced-logger');
+require('dotenv-flow').config({ silent: true });
 
-const log = require('./utils/Logger');
+const log = new Logger({
+  minLevel: LogEventLevel[(process.env.MIN_LEVEL || 'info').toLowerCase()],
+  includeTimestamp: true
+});
 const client = new Client();
 client.commands = new Collection();
 client.cooldowns = new Collection();
