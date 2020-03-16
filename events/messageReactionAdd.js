@@ -1,5 +1,4 @@
-const { rolesChannelid, optionsChannelid,
-    au1Roleid, au2Roleid, au3Roleid, annoncesRoleid, au1Emote, au2Emote, au3Emote, annoncesEmote } = require('../config');
+const { rolesChannelid, au1Roleid, au2Roleid, au3Roleid, annoncesRoleid, au1Emote, au2Emote, au3Emote, annoncesEmote } = require('../config');
 
 module.exports = async (client, log, messageReaction, user) => {
     const message = messageReaction.message;
