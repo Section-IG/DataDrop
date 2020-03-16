@@ -27,7 +27,7 @@ module.exports = {
             ${au3Emote} - ${au3Role.toString()}
             ${annoncesEmote} - ${annoncesRole.toString()} (note : retire le rôle quand la réaction est ajoutée)
     
-            Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.
+            Les Professeurs doivent notifier un Admin/Community Manager pour avoir leur rôle.
             `)
             .setColor(color);
 

@@ -1,5 +1,5 @@
 const { zeroWidthSpace, annoncesRoleid, informationsChannelid, rolesChannelid, annoncesChannelid } = require('../config');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = (client, log, member) => {
     const annoncesRole = member.guild.roles.cache.get(annoncesRoleid);
@@ -23,7 +23,7 @@ module.exports = (client, log, member) => {
         }
     ];
 
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
         .setColor('117da3')
         .setThumbnail('https://cdn.discordapp.com/icons/288659194737983489/6d9aa353290265c6587ac75fd4247f71.png')
         .setTitle('Salut toi!')
