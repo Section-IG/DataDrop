@@ -1,4 +1,4 @@
-require('dotenv-flow').config();
+require('dotenv-flow').config({ silent: true });
 
 module.exports = {
     ownerId: process.env.OWNER,
@@ -17,6 +17,11 @@ module.exports = {
     rolesChannelid: '522843160594874368',
     annoncesChannelid: '360117467550318593',
     optionsChannelid: '628864027321303049',
+
+    salleDeClasseChannelname: 'Salle de classe',
+    salleDeClasseBloc1Channelid: '689136656158425089',
+    salleDeClasseBloc2Channelid: '689088178493194389',
+    salleDeClasseBloc3Channelid: '689137020421013654',
 
     annoncesRoleid: '364008970966269952',
     ig1Roleid: '353210852700061696',
@@ -38,6 +43,6 @@ module.exports = {
     smartcityEmote: '🏘',
     datascienceEmote: '📊',
 
-    ok_hand:'👌',
-    zeroWidthSpace:'​',
+    ok_hand: '👌',
+    zeroWidthSpace: '​',
 };
