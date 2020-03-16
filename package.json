@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/IESN-IG/DataDrop#readme",
   "dependencies": {
+    "@hunteroi/advanced-logger": "0.0.2",
     "chalk": "^3.0.0",
     "discord.js": "^12.0.2",
     "dotenv-flow": "^3.1.0",
