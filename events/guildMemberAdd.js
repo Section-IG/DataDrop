@@ -1,5 +1,5 @@
 const { zeroWidthSpace, annoncesRoleid, informationsChannelid, faqChannelid, comiteigcestquoiChannelid, tutoratChannelid, rolesChannelid, annoncesChannelid } = require('../config');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = (client, log, member) => {
     const annoncesRole = member.guild.roles.cache.get(annoncesRoleid);
@@ -10,7 +10,7 @@ module.exports = (client, log, member) => {
             value: zeroWidthSpace
         },
         {
-            name: '1. Change ton pseudo', 
+            name: '1. Change ton pseudo',
             value: `Sur Discord, tu peux changer ton pseudo sur un serveur uniquement. Pour cela, fais un clic-droit sur ton icône depuis le serveur et sélectionne **Changer de pseudo**.`
         },
         {
@@ -18,12 +18,12 @@ module.exports = (client, log, member) => {
             value: zeroWidthSpace
         },
         {
-            name: '2. Lis les canaux importants', 
+            name: '2. Lis les canaux importants',
             value: `En arrivant, tu peux être un peu perdu. C'est normal, il y a beaucoup de choses à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux se trouvant dans la catégorie **Informations** :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${comiteigcestquoiChannelid}>\n  - <#${tutoratChannelid}>\n  - <#${rolesChannelid}>\n  - <#${annoncesChannelid}>`
         }
     ];
 
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
         .setColor('117da3')
         .setThumbnail('https://cdn.discordapp.com/icons/288659194737983489/6d9aa353290265c6587ac75fd4247f71.png')
         .setTitle('Salut toi!')
