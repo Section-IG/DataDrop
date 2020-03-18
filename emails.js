@@ -316,6 +316,11 @@
             emails: ['flore.andrien@henallux.be']
         },
         {
+            firstname: 'Dorothée',
+            lastname: 'Klein',
+            emails: ['dorothee.klein@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
