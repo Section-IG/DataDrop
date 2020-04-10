@@ -2,7 +2,7 @@ const { Collection } = require('discord.js');
 const { prefix, communitymanagerRoleid, adminRoleid, deleguesRoleid, ownerId} = require('../config');
 
 module.exports = (client, log, message) => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()) || message.author.bot) return;
 
     const isAuthorized = () => {
         return message.author.id === ownerId || message.member.roles.cache.get(communitymanagerRoleid) || message.member.roles.cache.get(adminRoleid);

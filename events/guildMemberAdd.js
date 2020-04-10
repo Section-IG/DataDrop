@@ -11,7 +11,7 @@ module.exports = (client, log, member) => {
         },
         {
             name: '1. Change ton pseudo',
-            value: `Sur Discord, tu peux changer ton pseudo sur un serveur uniquement. Pour cela, fais un clic-droit sur ton icône depuis le serveur et sélectionne **Changer de pseudo**.`
+            value: `Sur Discord, tu peux changer ton pseudo sur chaque serveur (tu as donc un pseudo différent par serveur!). Pour cela, fais un clic-droit sur l'icône du serveur en question et sélectionne **Changer le pseudo**.`
         },
         {
             name: zeroWidthSpace,
@@ -19,7 +19,7 @@ module.exports = (client, log, member) => {
         },
         {
             name: '2. Lis les canaux importants',
-            value: `En arrivant, tu peux être un peu perdu. C'est normal, il y a beaucoup de choses à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux se trouvant dans la catégorie **Informations** :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${comiteigcestquoiChannelid}>\n  - <#${tutoratChannelid}>\n  - <#${rolesChannelid}>\n  - <#${annoncesChannelid}>`
+            value: `En arrivant, tu vas être un peu perdu. C'est normal, il y a beaucoup de choses et c'est pas forcément simple à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux listés ci-dessous :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${comiteigcestquoiChannelid}>\n  - <#${tutoratChannelid}>\n  - <#${rolesChannelid}>\n  - <#${annoncesChannelid}>`
         }
     ];
 
