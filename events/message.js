@@ -1,14 +1,17 @@
-const { Collection } = require('discord.js');
-const { prefix, communitymanagerRoleid, adminRoleid, deleguesRoleid, ownerId} = require('../config');
+const { prefix, communitymanagerRoleid, adminRoleid, ownerId} = require('../config');
+
+const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 module.exports = (client, log, message) => {
-    if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()) || message.author.bot) return;
+    if (message.author.bot) return;
 
-    const isAuthorized = () => {
-        return message.author.id === ownerId || message.member.roles.cache.get(communitymanagerRoleid) || message.member.roles.cache.get(adminRoleid);
-    };
-
-    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const lowerCasedContent = message.content.toLowerCase();
+    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+    log.info(prefixRegex.toString());
+    if (!prefixRegex.test(lowerCasedContent)) return;
+    const [, matchedPrefix] = message.content.match(prefixRegex);
+   
+    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
@@ -23,13 +26,14 @@ module.exports = (client, log, message) => {
         let reply = `Vous n'avez pas donné d'arguments, ${message.author}!`;
 
         if (command.usage) {
-            reply += `\nL'utilisation correcte de cette commande est : \`${prefix}${command.name} ${command.usage}\``;
+            reply += `\nL'utilisation correcte de cette commande est : \`${matchedPrefix}${command.name} ${command.usage}\``;
         }
 
         return message.channel.send(reply);
     }
 
-    if ((command.adminOnly || command.ownerOnly) && !isAuthorized()) return;
+    const isAuthorized = message.author.id === ownerId || message.member.roles.cache.get(communitymanagerRoleid) || message.member.roles.cache.get(adminRoleid);
+    if ((command.adminOnly || command.ownerOnly) && !isAuthorized) return;
 
     try {
         command.execute(client, log, message, args);
