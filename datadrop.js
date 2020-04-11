@@ -5,7 +5,7 @@ require('dotenv-flow').config({ silent: true });
 
 const log = new Logger({
   minLevel: LogEventLevel[(process.env.MIN_LEVEL || 'info').toLowerCase()],
-  includeTimestamp: true
+  includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP)
 });
 const client = new Client();
 client.commands = new Collection();
