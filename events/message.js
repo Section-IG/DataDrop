@@ -7,7 +7,6 @@ module.exports = (client, log, message) => {
 
     const lowerCasedContent = message.content.toLowerCase();
     const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
-    log.info(prefixRegex.toString());
     if (!prefixRegex.test(lowerCasedContent)) return;
     const [, matchedPrefix] = message.content.match(prefixRegex);
    
