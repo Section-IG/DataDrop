@@ -57,7 +57,7 @@ module.exports = async (client, log, messageReaction, user) => {
                 break;
             
             default:
-                messageReaction.remove(member).catch(log.error);
+                messageReaction.users.remove(member).catch(log.error);
                 break;
         }
     }
