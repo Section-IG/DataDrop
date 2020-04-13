@@ -17,10 +17,12 @@ module.exports = {
     au1Roleid: '688078414992769088',
     au2Roleid: '688078414464417886',
     au3Roleid: '688078412027527175',
+    alumniRoleid: '688078416003727377',
 
     au1Emote: '1⃣',
     au2Emote: '2⃣',
     au3Emote: '3⃣',
+    alumniEmote: '🎓',
     annoncesEmote: '📢',
 
     ok_hand:'👌',
