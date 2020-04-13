@@ -1,4 +1,6 @@
-const { rolesChannelid, au1Roleid, au2Roleid, au3Roleid, annoncesRoleid, au1Emote, au2Emote, au3Emote, annoncesEmote } = require('../config');
+const { rolesChannelid, 
+        au1Roleid, au2Roleid, au3Roleid, alumniRoleid, annoncesRoleid, 
+        au1Emote, au2Emote, au3Emote, alumniEmote, annoncesEmote } = require('../config');
 
 module.exports = async (client, log, messageReaction, user) => {
     const message = messageReaction.message;
@@ -9,9 +11,10 @@ module.exports = async (client, log, messageReaction, user) => {
     const au1Role = message.guild.roles.cache.get(au1Roleid);
     const au2Role = message.guild.roles.cache.get(au2Roleid);
     const au3Role = message.guild.roles.cache.get(au3Roleid);
+    const alumniRole = message.guild.roles.cache.get(alumniRoleid);
     const annoncesRole = message.guild.roles.cache.get(annoncesRoleid);
 
-    const emotes = [au1Emote, au2Emote, au3Emote, annoncesEmote];
+    const emotes = [au1Emote, au2Emote, au3Emote, alumniEmote, annoncesEmote];
    
     if (emotes.includes(messageReaction.emoji.name) && message.channel.id === rolesChannel.id) {
         switch (messageReaction.emoji.name) {
@@ -27,13 +30,17 @@ module.exports = async (client, log, messageReaction, user) => {
                 member.roles.add(au3Role).catch(log.error);
                 log.info(`Le rôle <${au3Role.name}> a été donné à <${member.user.tag}>`);
                 break;
+            case alumniEmote:
+                member.roles.add(alumniRole).catch(log.error);
+                log.info(`Le rôle <${alumniRole.name}> a été donné à <${member.user.tag}>`);
+                break;
             case annoncesEmote:
                 member.roles.remove(annoncesRole).catch(log.error);
                 log.info(`Le rôle <${annoncesRole.name}> a été retiré de <${member.user.tag}>`);
                 break;
-            
+
             default:
-                messageReaction.remove(member).catch(log.error);
+                messageReaction.users.remove(member).catch(log.error);
                 break;
         }
     }
