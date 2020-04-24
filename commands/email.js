@@ -1,6 +1,6 @@
 const { Collection, MessageEmbed } = require('discord.js');
 const { people } = require('../emails');
-const { removeDiacritics, paginate } = require('../utils/utils');
+const { paginate } = require('../utils/utils');
 const { prefix } = require('../config');
 
 // TODO: add pagination through message reaction
@@ -87,11 +87,10 @@ module.exports.execute = (client, log, message, args) => {
             const matched = new Set();
 
             for (let i = 0; i < args.length; i++) {
-                let matchingPeople = people
-                    .filter(person => `${removeDiacritics(person.firstname)} ${removeDiacritics(person.lastname)}`
-                                        .toLowerCase()
-                                        .includes(removeDiacritics(args[i]).toLowerCase())
-                    );
+                let matchingPeople = people.filter((person) =>
+                    `${person.firstname.removeDiacritics()} ${person.lastname.removeDiacritics()}`.toLowerCase()
+                    .includes(args[i].toLowerCase().removeDiacritics())
+                );
                     
                 for (let item of matchingPeople) {
                     matched.add(item);

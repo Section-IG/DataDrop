@@ -1,16 +1,4 @@
-const { diacriticsMap } = require('./defaultDiacriticsRemovalMap');
-
 module.exports = {
-    removeDiacritics: str => {
-        var letters = str.split("");
-        var newStr = "";
-        for(var i=0; i< letters.length; i++) {
-            var letter = letters[i];
-            newStr += letter in diacriticsMap ? diacriticsMap[letter] : letter;
-        }
-        return newStr;
-    },
-
     paginate: (collection, page_number = 1, page_size = 10) => {
         const currentPage = parseInt(page_number);
         const perPage = parseInt(page_size);
@@ -35,5 +23,5 @@ module.exports = {
             totalPages: Math.ceil(collection.length / perPage),
             data: paginatedItems
         };
-    },
+    }
 }

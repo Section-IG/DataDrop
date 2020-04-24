@@ -2,6 +2,7 @@ const { Client, Collection } = require('discord.js');
 const fs = require('fs');
 const { Logger, LogEventLevel } = require('@hunteroi/advanced-logger');
 require('dotenv-flow').config({ silent: true });
+require('./utils/objectExtension');
 
 const log = new Logger({
   minLevel: LogEventLevel[(process.env.MIN_LEVEL || 'info').toLowerCase()],
