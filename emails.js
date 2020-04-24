@@ -321,6 +321,11 @@
             emails: ['dorothee.klein@henallux.be']
         },
         {
+            firstname: 'Martin',
+            lastname: 'Polson',
+            emails: ['martin.polson@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
