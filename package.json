@@ -18,8 +18,10 @@
   "homepage": "https://github.com/IESN-IG/DataDrop#readme",
   "dependencies": {
     "@hunteroi/advanced-logger": "0.0.3",
+    "@keyv/sqlite": "^2.0.2",
     "discord.js": "^12.2.0",
-    "dotenv-flow": "^3.1.0"
+    "dotenv-flow": "^3.1.0",
+    "keyv": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
