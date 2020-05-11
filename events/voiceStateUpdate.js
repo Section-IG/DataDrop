@@ -1,9 +1,7 @@
-const { salleDeClasseChannelname, salleDeClasseBloc1Channelid, salleDeClasseBloc2Channelid, salleDeClasseBloc3Channelid } = require('../config');
+const { salleDeClasseChannelname } = require('../config');
 
 module.exports = async (client, log, oldState, newState) => {
-    const classrooms = [salleDeClasseBloc1Channelid, salleDeClasseBloc2Channelid, salleDeClasseBloc3Channelid];
-
-    if ((!oldState.channelID && newState.channelID) || !classrooms.includes(oldState.channelID)) return;
+    if ((!oldState.channelID && newState.channelID) || !client.classrooms.includes(oldState.channelID)) return;
 
     const classroomChannel = await client.channels.fetch(oldState.channelID);
     const classroomChannelMembers = Array.from(classroomChannel.members.values());
