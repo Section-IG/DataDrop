@@ -9,7 +9,7 @@ module.exports = (client, log) => {
     optionsChannel.messages.fetch({limit: 10})
         .then(collected => log.info(collected.size + ' messages récupérés dans '+optionsChannel.id))
 
-    client.classrooms = client.channels.cache.filter(c => c.type === 'voice' && c.name === salleDeClasseChannelname).map(c => c.id).array();
+    client.classrooms = client.channels.cache.filter(c => c.type === 'voice' && c.name.toLowerCase() === salleDeClasseChannelname.toLowerCase()).map(c => c.id);
     
     client.user.setUsername(botName);
     client.user.setActivity(version);

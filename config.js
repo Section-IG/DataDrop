@@ -18,7 +18,7 @@ module.exports = {
     annoncesChannelid: '360117467550318593',
     optionsChannelid: '628864027321303049',
 
-    salleDeClasseChannelname: 'Salle de classe',
+    salleDeClasseChannelname: 'Salle de Classe',
 
     annoncesRoleid: '364008970966269952',
     ig1Roleid: '353210852700061696',
