@@ -1,4 +1,4 @@
-const { rolesChannelid, optionsChannelid, version, botName } = require('../config');
+const { salleDeClasseChannelname, rolesChannelid, optionsChannelid, version, botName } = require('../config');
 
 module.exports = (client, log) => {
     const rolesChannel = client.channels.cache.get(rolesChannelid);
@@ -9,6 +9,8 @@ module.exports = (client, log) => {
     optionsChannel.messages.fetch({limit: 10})
         .then(collected => log.info(collected.size + ' messages récupérés dans '+optionsChannel.id))
 
+    client.classrooms = client.channels.cache.filter(c => c.type === 'voice' && c.name.toLowerCase() === salleDeClasseChannelname.toLowerCase()).map(c => c.id);
+    
     client.user.setUsername(botName);
     client.user.setActivity(version);
 
