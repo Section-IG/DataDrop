@@ -29,7 +29,7 @@ module.exports = {
       members = [...members.values()];
 
       for (let member of members) {
-        member.removeRoles([ig1Roleid, ig2Roleid, ig3Roleid, optionSmartcityRoleid, optionDatascienceRoleid, tuteurRoleid, driveManagerRoleid]);
+        member.roles.remove([ig1Roleid, ig2Roleid, ig3Roleid, optionSmartcityRoleid, optionDatascienceRoleid, tuteurRoleid, driveManagerRoleid], "New school year");
       }
 
 	    const rolesChannel = client.channels.cache.get(rolesChannelid);
