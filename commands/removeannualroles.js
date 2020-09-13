@@ -36,7 +36,7 @@ module.exports = {
     	const optionsChannel = client.channels.cache.get(optionsChannelid);
     	rolesChannel.messages.fetch({ limit: 10 })
         .then(async collected => {
-          for (const msg of collected) {
+          for (const msg of [...collected.values()]) {
             await msg.reactions.removeAll();
             await msg.react(ig1Emote);
             await msg.react(ig2Emote);
@@ -49,7 +49,7 @@ module.exports = {
         .catch(log.error);
     	optionsChannel.messages.fetch({limit: 10})
         .then(async collected => {
-          for (const msg of collected)  {
+          for (const msg of [...collected.values()])  {
             await msg.reactions.removeAll();
             await msg.react(smartcityEmote);
             await msg.react(datascienceEmote);
