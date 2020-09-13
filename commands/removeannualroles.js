@@ -35,22 +35,26 @@ module.exports = {
 	const rolesChannel = client.channels.cache.get(rolesChannelid);
     	const optionsChannel = client.channels.cache.get(optionsChannelid);
     	rolesChannel.messages.fetch({ limit: 10 })
-        	.then(async collected => for (const msg of collected) {
-		    await msg.reactions.removeAll();
-		    await msg.react(ig1Emote);
-		    await msg.react(ig2Emote);
-		    await msg.react(ig3Emote);
-		    await msg.react(alumniEmote);
-		    await msg.react(tuteurEmote);
-		    await msg.react(annoncesEmote);
+        	.then(async collected => {
+			for (const msg of collected) {
+			    await msg.reactions.removeAll();
+			    await msg.react(ig1Emote);
+			    await msg.react(ig2Emote);
+			    await msg.react(ig3Emote);
+			    await msg.react(alumniEmote);
+			    await msg.react(tuteurEmote);
+			    await msg.react(annoncesEmote);
+			}
 		})
         	.catch(log.error);
     	optionsChannel.messages.fetch({limit: 10})
-		.then(async collected => for (const msg of collected)  {
-			await msg.reactions.removeAll();
-	    		await msg.react(smartcityEmote);
-			await msg.react(datascienceEmote);
-        	})
+		.then(async collected => {
+			for (const msg of collected)  {
+				await msg.reactions.removeAll();
+				await msg.react(smartcityEmote);
+				await msg.react(datascienceEmote);
+			}
+		})
 		.catch(log.error);
 	//
 	    
