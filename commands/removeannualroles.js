@@ -1,5 +1,5 @@
 const { ig1Roleid, ig2Roleid, ig3Roleid, alumniRoleid, tuteurRoleid, optionDatascienceRoleid, optionSmartcityRoleid, driveManagerRoleid,
-        ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, smartcityEmote, datascienceEmote, ok_hand,
+        ig1Emote, ig2Emote, ig3Emote, alumniEmote, tuteurEmote, smartcityEmote, datascienceEmote, ok_hand, annoncesEmote,
         rolesChannelid, optionsChannelid } = require('../config');
 
 module.exports = {
