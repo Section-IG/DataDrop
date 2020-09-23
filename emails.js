@@ -326,9 +326,34 @@
             emails: ['martin.polson@henallux.be']
         },
         {
+            firstname: 'Nicolas',
+            lastname: 'Melchior',
+            emails: ['nicolas.melchior@henallux.be']
+        },
+        {
+            firstname: 'Benjamin',
+            lastname: 'Georges',
+            emails: ['benjamin.georges@henallux.be']
+        },
+        {
+            firstname: 'Lisa',
+            lastname: 'Trapletti',
+            emails: ['lisa.trapletti@henallux.be']
+        },
+        {
+            firstname: 'Secrétariat Étudiant',
+            lastname: 'Hénallux',
+            emails: ['secretu.iesn@henallux.be']
+        },
+        {
             firstname: 'Conseil Étudiant',
             lastname: 'Hénallux',
             emails: ['cehenallux@gmail.com']
+        },
+        {
+            firstname: 'Service Technique',
+            lastname: 'IESN',
+            emails: ['service.technique.campus.iesn@henallux.be']
         },
         {
             firstname: 'Accueil',
