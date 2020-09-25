@@ -331,6 +331,16 @@
             emails: ['nicolas.melchior@henallux.be']
         },
         {
+            firstname: 'Benjamin',
+            lastname: 'Georges',
+            emails: ['benjamin.georges@henallux.be']
+        },
+        {
+            firstname: 'Lisa',
+            lastname: 'Trapletti',
+            emails: ['lisa.trapletti@henallux.be']
+        },
+        {
             firstname: 'Secrétariat Étudiant',
             lastname: 'Hénallux',
             emails: ['secretu.iesn@henallux.be']
