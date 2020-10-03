@@ -2,18 +2,18 @@ const { Client, Collection } = require('discord.js');
 const fs = require('fs');
 const { Logger, LogEventLevel } = require('@hunteroi/advanced-logger');
 require('dotenv-flow').config({ silent: true });
-const discordLogs = require('discord-logs');
+const addDiscordLogsFramework = require('discord-logs');
 
 const log = new Logger({
   minLevel: LogEventLevel[(process.env.MIN_LEVEL || 'info').toLowerCase()],
   includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP)
 });
 const client = new Client();
-discordLogs(client);
+addDiscordLogsFramework(client);
+
 client.commands = new Collection();
 client.cooldowns = new Collection();
-
-client.colearningChannels = new Collection();
+client.dynamicVoiceChannels = new Collection();
 
 // TODO: refactor 12 & 23 (dry principle)
 fs.readdir('./events/', (err, files) => {

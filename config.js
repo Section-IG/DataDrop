@@ -17,8 +17,10 @@ module.exports = {
     rolesChannelid: '522843160594874368',
     annoncesChannelid: '360117467550318593',
     optionsChannelid: '628864027321303049',
-    colearningChannelid : '?',
-    // Before pushing these changes we need to create a co-learning voice channel
+    
+    dynamicVoiceChannelsids: [
+        "?"
+    ],
 
     salleDeClasseChannelname: 'Salle de Classe',
 
