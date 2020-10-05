@@ -1,7 +1,7 @@
-const { dynamicVoiceChannelsids } = require("../config.js");
+const { dynamicVoiceChannelids } = require("../config.js");
 
 module.exports = async (client, log, member, channel) => {
-    if (dynamicVoiceChannelsids.includes(channel.id)) {
+    if (dynamicVoiceChannelids.includes(channel.id)) {
         log.info("Member wants to create a dynamic voice channel");
         let newChannel;
 
@@ -9,7 +9,7 @@ module.exports = async (client, log, member, channel) => {
         // try catch to delete the channel if it exists but the creation failed
         try {
             newChannel = await channel.clone();
-            //Should the new channel have a new name? What should it be?
+            newChannel.setName(`Salle de ${member.nickname}`);
             newChannel.overwritePermissions([{
                 id: member.id,
                 allow: [

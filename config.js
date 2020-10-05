@@ -18,10 +18,13 @@ module.exports = {
     annoncesChannelid: '360117467550318593',
     optionsChannelid: '628864027321303049',
     
-    dynamicVoiceChannelsids: [
-        "?"
+    dynamicVoiceChannelids: [
+        '619190601383936000', // co-learning common-profs-étu
+        '762381363532922892', // salon public IG1
+        '762381732615684157', // salon public IG2,
+        '762381873720066098', // salon public IG3,
+        '762382057157558352' // vocal entertainment
     ],
-
     salleDeClasseChannelname: 'Salle de Classe',
 
     annoncesRoleid: '364008970966269952',
