@@ -25,7 +25,6 @@ module.exports = {
         '762381873720066098', // salon public IG3,
         '762382057157558352' // vocal entertainment
     ],
-    salleDeClasseChannelname: 'Salle de Classe',
 
     annoncesRoleid: '364008970966269952',
     ig1Roleid: '353210852700061696',
