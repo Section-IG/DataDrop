@@ -18,6 +18,7 @@ module.exports = {
     annoncesChannelid: '360117467550318593',
     optionsChannelid: '628864027321303049',
     
+    dynamicVoiceChannelPrefix: '[DRoom]',
     dynamicVoiceChannelids: [
         '619190601383936000', // co-learning common-profs-étu
         '762381363532922892', // salon public IG1
