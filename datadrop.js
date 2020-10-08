@@ -13,7 +13,7 @@ addDiscordLogsFramework(client);
 
 client.commands = new Collection();
 client.cooldowns = new Collection();
-client.dynamicVoiceChannels = new Collection();
+client.dynamicChannels = new Collection();
 
 // TODO: refactor 12 & 23 (dry principle)
 fs.readdir('./events/', (err, files) => {

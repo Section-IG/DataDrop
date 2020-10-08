@@ -1,7 +1,7 @@
-const { dynamicVoiceChannelids } = require('../config.js');
+const { staticTriggerChannelids } = require('../config.js');
 
 module.exports = async (client, log, member, oldChannel, newChannel) => {
-  if (dynamicVoiceChannelids.includes(newChannel.id)) {
+  if (staticTriggerChannelids.includes(newChannel.id)) {
     client.emit('voiceChannelJoin', member, newChannel);
   }
   
