@@ -1,16 +1,17 @@
-const { dynamicVoiceChannelPrefix, dynamicVoiceChannelids } = require('../config.js');
+const { dynamicChannelPrefix, staticTriggerChannelids } = require('../config.js');
 
 module.exports = async (client, log, member, channel) => {
-  if (dynamicVoiceChannelids.includes(channel.id)) {
+  if (staticTriggerChannelids.includes(channel.id)) {
     await new Promise((resolve) => setTimeout(resolve, 2500)); // sleep to prevent overuse
 
-    log.info(`Member <${member.nickname}> (${member.id}) wants to create a dynamic voice channel`);
+    log.info(`Le membre <${member.nickname}> (${member.id}) a lancé la création d'un canal vocal dynamique`);
     
     let newChannel;
     try {
       const newOptions = {
-        name: `${dynamicVoiceChannelPrefix} ${member.nickname}`,
+        name: `${dynamicChannelPrefix} ${member.nickname}`,
         parent: channel.parentID,
+        type: 'voice',
         permissionOverwrites: [{
           id: member.id,
           allow: ['MANAGE_CHANNELS'],
@@ -18,7 +19,7 @@ module.exports = async (client, log, member, channel) => {
         }]
       };
       newChannel = await channel.clone(newOptions);
-      client.dynamicVoiceChannels.set(newChannel.id, newChannel);
+      client.dynamicChannels.set(newChannel.id, { authorId: member.id, voiceChannel: newChannel });
 
       await member.voice.setChannel(newChannel);
     } catch (e) {
