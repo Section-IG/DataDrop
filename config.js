@@ -26,10 +26,10 @@ module.exports = {
 
   rolesChannelid: '522843160594874368',
   ig1: {
-    channelid: '',
+    channelid: '764241363452690472',
     roleid: '353210852700061696',
     emote: '1⃣',
-    groupsRoleids: [
+    groups: [
       { roleid: '764219521069350922', emote: '🇦' }, //A
       { roleid: '764219569115365406', emote: '🇧' }, //B
       { roleid: '764219610676461580', emote: '🇨' }, //C
@@ -39,10 +39,10 @@ module.exports = {
     ],
   },
   ig2: {
-    channelid: '',
+    channelid: '764241472534085662',
     roleid: '353210788271357954',
     emote: '2⃣',
-    groupsRoleids: [
+    groups: [
       { roleid: '764219968803176480', emote: '🇦' }, //A
       { roleid: '764220013653393528', emote: '🇧' }, //B
       { roleid: '764220029671440434', emote: '🇨' }, //C
