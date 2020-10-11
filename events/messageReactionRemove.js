@@ -21,7 +21,7 @@ module.exports = async (client, log, messageReaction, user) => {
   const globalEmotes = [ig1, ig2, ig3, alumni, tutor, announce].map(r => r.emote);
   const ig1Emotes = ig1.groups.map(r => r.emote);
   const ig2Emotes = ig2.groups.map(r => r.emote);
-  const ig3Emotes = ig3.groups.map(r => r.emote);
+  const ig3Emotes = ig3.groups.map(r => r.emote).concat(['🏘', '📊']);
 
   if (message.channel.id === rolesChannelid && globalEmotes.includes(messageReaction.emoji.name)) {
     switch (messageReaction.emoji.name) {

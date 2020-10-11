@@ -21,7 +21,7 @@ module.exports = async (client, log, messageReaction, user) => {
   const globalEmotes = [ig1, ig2, ig3, alumni, tutor, announce].map(r => r.emote);
   const ig1Emotes = ig1.groups.map(r => r.emote);
   const ig2Emotes = ig2.groups.map(r => r.emote);
-  const ig3Emotes = ig3.groups.map(r => r.emote);
+  const ig3Emotes = ig3.groups.map(r => r.emote).concat(['🏘', '📊']);
 
   if (message.channel.id === rolesChannelid && globalEmotes.includes(messageReaction.emoji.name)) {
     switch (messageReaction.emoji.name) {
@@ -55,7 +55,6 @@ module.exports = async (client, log, messageReaction, user) => {
     switch (true) {
       case isFirstYear:
         index = ig1Emotes.indexOf(messageReaction.emoji.name);
-        console.log(index);
         if (index !== -1) level = ig1.groups[index];
         break;
       case isSecondYear:
