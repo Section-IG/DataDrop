@@ -1,13 +1,15 @@
 const {
   dynamicChannelPrefix,
   rolesChannelid,
-  optionsChannelid,
+  ig1,
+  ig2,
+  ig3,
   version,
   botName,
 } = require('../config');
 
 module.exports = (client, log) => {
-  cacheChannels(client, log);
+  cacheRolesChannels(client, log);
   handleDynamicChannels(client, log);
 
   client.user.setUsername(botName);
@@ -43,15 +45,15 @@ function handleDynamicChannels(client, log) {
     .filter(dChannelInfo => dChannelInfo.voiceChannel.members.size > 0);
 }
 
-function cacheChannels(client, log) {
-  client.channels.cache
-    .get(rolesChannelid)
-    .messages.fetch({ limit: 10 })
-    .then(collected => log.info(collected.size + ' messages récupérés dans ' + rolesChannelid))
-    .catch(log.error);
+async function cacheRolesChannels(client, log) {
+  const channelids = [ig1, ig2, ig3].map(r => r.channelid).concat(rolesChannelid);
 
-  client.channels.cache
-    .get(optionsChannelid)
-    .messages.fetch({ limit: 10 })
-    .then(collected => log.info(collected.size + ' messages récupérés dans ' + optionsChannelid));
+  for (const channelid of channelids) {
+    client.channels
+      .fetch(channelid)
+      .then(channel => channel.messages.fetch({ limit: 10 })
+        .then(collected => log.info(`${collected.size} messages récupérés dans ${channel.parent.name}-${channel.name} (${channelid})`))
+        .catch(log.error))
+      .catch(log.error);
+  }
 }
