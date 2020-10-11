@@ -8,12 +8,12 @@ module.exports = {
 
   communitymanagerRoleid: '288659580064366592',
   adminRoleid: '360850813914185738',
-  deleguesRoleid: '288659613732306944',
+  delegatesRoleid: '288659613732306944',
 
   informationsChannelid: '288666915314991107',
   faqChannelid: '360126831376203778',
-  comiteigcestquoiChannelid: '506564987914027008',
-  tutoratChannelid: '362235459017113602',
+  igcomiteeeChannelid: '506564987914027008',
+  tutoringChannelid: '362235459017113602',
 
   dynamicChannelPrefix: '[DRoom]',
   staticTriggerChannelids: [
@@ -61,7 +61,7 @@ module.exports = {
     roleid: '487225405967695873',
     emote: '🎓',
   },
-  tuteur: {
+  tutor: {
     roleid: '362219691319492609',
     emote: '📚',
   },
