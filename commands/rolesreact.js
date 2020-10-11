@@ -7,17 +7,17 @@ module.exports = {
   ownerOnly: true,
 
   async execute(client, log, message, args) {
-    /*await generateAndSendEmbed(
+    await generateAndSendEmbed(
       message,
       rolesChannelid,
       [ig1, ig2, ig3, alumni, tutor, driveManager, announce],
       ["", "", "", "", "", "", "(note : retire le rôle quand la réaction est ajoutée)"],
       'Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.'
-    );*/
+    );
 
     await generateAndSendEmbed(message, ig1.channelid, ig1.groups);
     await generateAndSendEmbed(message, ig2.channelid, ig2.groups);
-    //await generateAndSendEmbed(message, ig3.channelid, ig3.groups);
+    await generateAndSendEmbed(message, ig3.channelid, ig3.groups);
 
     return message.channel.send(ok_hand);
   },
