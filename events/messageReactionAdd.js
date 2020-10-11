@@ -63,7 +63,11 @@ module.exports = async (client, log, messageReaction, user) => {
         break;
       case isThirdYear:
         index = ig3Emotes.indexOf(messageReaction.emoji.name);
-        if (index !== -1) level = ig3.groups[index];
+        if (index !== -1) {
+          if (index === 2) index = 0; // 🏘
+          if (index === 3) index = 1; // 📊
+          level = ig3.groups[index];
+        }
         break;
 
       default:
