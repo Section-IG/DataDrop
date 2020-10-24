@@ -11,12 +11,7 @@ module.exports = async (client, log, member, channel) => {
       const newOptions = {
         name: `${dynamicChannelPrefix} ${member.nickname}`,
         parent: channel.parentID,
-        type: 'voice',
-        permissionOverwrites: [{
-          id: member.id,
-          allow: ['MANAGE_CHANNELS'],
-          type: 'member'
-        }]
+        type: 'voice'
       };
       newChannel = await channel.clone(newOptions);
       client.dynamicChannels.set(newChannel.id, { authorId: member.id, voiceChannel: newChannel });
