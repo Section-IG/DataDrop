@@ -4,12 +4,12 @@ module.exports = async (client, log, member, channel) => {
   if (staticTriggerChannelids.includes(channel.id)) {
     await new Promise((resolve) => setTimeout(resolve, 2500)); // sleep to prevent overuse
 
-    log.info(`Le membre <${member.nickname}> (${member.id}) a lancé la création d'un canal vocal dynamique`);
+    log.info(`Le membre <${member.displayName}> (${member.id}) a lancé la création d'un canal vocal dynamique`);
     
     let newChannel;
     try {
       const newOptions = {
-        name: `${dynamicChannelPrefix} ${member.nickname}`,
+        name: `${dynamicChannelPrefix} ${member.displayName}`,
         parent: channel.parentID,
         type: 'voice',
         permissionOverwrites: [{
