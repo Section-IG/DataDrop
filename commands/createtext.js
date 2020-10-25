@@ -2,7 +2,7 @@ const { dynamicChannelPrefix } = require('../config.js');
 
 module.exports = {
   name: 'createtext',
-  description: 'Crée un canal texte temporaire lié au canal vocal temporaire et au créateur de ce dernier.',
+  description: 'Crée un canal texte temporaire lié au canal vocal temporaire et au leader de ce dernier.',
 
   async execute(client, log, message, args) {
     const voiceChannel = message.member.voice.channel;
@@ -12,11 +12,11 @@ module.exports = {
       
       if (dChannelInfo.authorId !== message.author.id) return;
 
-      log.info(`Le membre <${message.member.nickname}> (${message.member.id}) a lancé la création d'un canal écrit dynamique`);
+      log.info(`Le membre <${message.member.displayName}> (${message.member.id}) a lancé la création d'un canal écrit dynamique`);
       
       if (!dChannelInfo.textChannel) {
         const newOptions = {
-          name: `${dynamicChannelPrefix}_${message.member.nickname}`,
+          name: `${dynamicChannelPrefix}_${message.member.displayName}`,
           parent: voiceChannel.parentID,
           type: 'text',
           permissionOverwrites: [{
