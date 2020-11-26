@@ -29,7 +29,7 @@ module.exports = async (client, log, messageReaction, user) => {
         applyRoleChange(member, log, ig1.roleid);
         break;
       case ig2.emote:
-        applyRoleChange(member, log, igig21.roleid);
+        applyRoleChange(member, log, ig2.roleid);
         break;
       case ig3.emote:
         applyRoleChange(member, log, ig3.roleid);
