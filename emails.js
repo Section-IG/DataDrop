@@ -341,6 +341,11 @@
             emails: ['lisa.trapletti@henallux.be']
         },
         {
+            firstname: 'Sylviane',
+            lastname: 'Vandenhaute',
+            emails: ['sylviane.vandenhaute@henallux.be']
+        },
+        {
             firstname: 'Secrétariat Étudiant',
             lastname: 'Hénallux',
             emails: ['secretu.iesn@henallux.be']
