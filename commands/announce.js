@@ -10,7 +10,7 @@ module.exports = {
   guildOnly: true,
   adminOnly: true,
 
-  execute(client, log, message, args) {
+  async execute(client, log, message, args) {
     const annoncesChannel = message.guild.channels.cache.get(announce.channelid);
     const annoncesRole = message.guild.roles.cache.get(announce.roleid);
     const embed = new MessageEmbed({
@@ -26,6 +26,9 @@ module.exports = {
       }
     }).setTimestamp();
 
-    annoncesChannel.send(annoncesRole.toString(), embed);
+    const announceMessage = await annoncesChannel.send(annoncesRole.toString(), embed);
+    if (annoncesChannel.type === 'news') {
+      await announceMessage.crosspost();
+    }
   }
 };
