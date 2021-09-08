@@ -9,6 +9,7 @@ module.exports = {
   communitymanagerRoleid: '288659580064366592',
   adminRoleid: '360850813914185738',
   delegatesRoleid: '288659613732306944',
+  professorRoleid: '360457051417083907',
 
   informationsChannelid: '288666915314991107',
   faqChannelid: '360126831376203778',
