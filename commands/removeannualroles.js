@@ -19,7 +19,7 @@ module.exports = {
   async execute(client, log, message, args) {
     log.info('Purge des rôles annuels en cours...');
    
-    const guildRoles = await constructRolesArray();
+    const guildRoles = await constructRolesArray(message);
     const members = constructMembersArray(guildRoles);
     removeRolesFromMembers(members, guildRoles);
 
@@ -30,7 +30,7 @@ module.exports = {
   },
 };
 
-async function constructRolesArray() {  
+async function constructRolesArray(message) {
   const roles = [ig1, ig2, ig3, alumni, tutor, driveManager, announce];
   const guildRoles = [];
 
@@ -38,8 +38,8 @@ async function constructRolesArray() {
     const role = await message.guild.roles.fetch(roles[i].roleid);
     guildRoles.push(role);
 
-    if (role.groups) {
-      const groupGuildRoles = await constructRolesArray(role.groups);
+    if (roles[i].groups) {
+      const groupGuildRoles = await constructRolesArray(message, role.groups);
       guildRoles.push(...groupGuildRoles);
     }
   }
