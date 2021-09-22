@@ -3,7 +3,7 @@
         {
             firstname: 'Tinaël',
             lastname: 'Devresse',
-            emails: ['tinael.devresse.01@student.henallux.be', 'tinael.devresse@mic-belgique.be']
+            emails: ['tinael.devresse@henallux.be', 'tinael.devresse@capyx.be']
         },
         {
             firstname: 'Samuël',
@@ -344,6 +344,11 @@
             firstname: 'Sylviane',
             lastname: 'Vandenhaute',
             emails: ['sylviane.vandenhaute@henallux.be']
+        },
+        {
+            firstname: 'Fabienne',
+            lastname: 'Foguenne',
+            emails: ['fabienne.foguenne@henallux.be']
         },
         {
             firstname: 'Secrétariat Étudiant',
