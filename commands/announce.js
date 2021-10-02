@@ -11,8 +11,6 @@ module.exports = {
   adminOnly: true,
 
   async execute(client, log, message, args) {
-    const annoncesChannel = message.guild.channels.cache.get(announce.channelid);
-    const annoncesRole = message.guild.roles.cache.get(announce.roleid);
     const embed = new MessageEmbed({
       author: {
         name: 'Annonce',
@@ -26,9 +24,21 @@ module.exports = {
       }
     }).setTimestamp();
 
-    const announceMessage = await annoncesChannel.send(annoncesRole.toString(), embed);
-    if (annoncesChannel.type === 'news') {
-      await announceMessage.crosspost();
+    await message.reply("Ceci est une preview de l'annonce. Tapez 'yes' pour l'envoyer ou tout autre chose pour annuler.", embed);
+    const collected = await message.channel.awaitMessages(m => m.author.id === message.author.id, { max: 1, time: 30000 });
+    const confirmation = collected && collected.first();
+    if (confirmation && confirmation.content.toLowerCase() === 'yes') {
+      const annoncesChannel = message.guild.channels.cache.get(announce.channelid);
+      const annoncesRole = message.guild.roles.cache.get(announce.roleid);
+      const announceMessage = await annoncesChannel.send(annoncesRole.toString(), embed);
+      if (annoncesChannel.type === 'news') {
+        await announceMessage.crosspost();
+      }
+
+      message.channel.send('Annonce envoyée!');
+    }
+    else {
+      message.channel.send('Annonce annulée!');
     }
   }
 };
