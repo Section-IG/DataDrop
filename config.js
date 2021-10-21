@@ -14,7 +14,6 @@ module.exports = {
 	informationsChannelid: '288666915314991107',
 	faqChannelid: '360126831376203778',
 	igcomiteeeChannelid: '506564987914027008',
-	tutoringChannelid: '362235459017113602',
 
 	dynamicChannelPrefix: '[DRoom]',
 	staticTriggerChannelids: [
