@@ -1,33 +1,33 @@
 {
-  "name": "datadrop",
-  "version": "1.4.2",
-  "main": "datadrop.js",
-  "scripts": {
-    "start": "nodemon datadrop.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com:IESN-IG/DataDrop.git"
-  },
-  "author": "HunteRoi <etu33784@henallux.be>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/IESN-IG/DataDrop/issues"
-  },
-  "homepage": "https://github.com/IESN-IG/DataDrop#readme",
-  "dependencies": {
-    "@hunteroi/advanced-logger": "0.0.2",
-    "chalk": "^3.0.0",
-    "discord-logs": "^1.7.7",
-    "discord.js": "^12.5.3",
-    "dotenv-flow": "^3.1.0",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.28",
-    "node-fetch": "^2.6.1",
-    "nodemon": "^2.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^6.8.0"
-  }
+	"name": "datadrop",
+	"version": "1.5.0",
+	"main": "datadrop.js",
+	"scripts": {
+		"start": "nodemon datadrop.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com:IESN-IG/DataDrop.git"
+	},
+	"author": "HunteRoi <me@tinaeldevresse.eu>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/IESN-IG/DataDrop/issues"
+	},
+	"homepage": "https://github.com/IESN-IG/DataDrop#readme",
+	"dependencies": {
+		"@hunteroi/advanced-logger": "0.0.2",
+		"chalk": "^3.0.0",
+		"discord-logs": "^1.7.7",
+		"discord.js": "^12.5.3",
+		"dotenv-flow": "^3.1.0",
+		"moment": "^2.24.0",
+		"moment-timezone": "^0.5.28",
+		"node-fetch": "^2.6.1",
+		"nodemon": "^2.0.2"
+	},
+	"devDependencies": {
+		"eslint": "^6.8.0"
+	}
 }
