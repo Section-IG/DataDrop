@@ -1,4 +1,4 @@
-import { Configuration } from "./models/Configuration";
+import { Configuration } from './models/Configuration';
 
 const config: Configuration = {
 	ownerId: process.env.OWNER,

@@ -1,20 +1,26 @@
-import { Snowflake } from "discord.js";
+import { Snowflake } from 'discord.js';
 
-interface SpecialRoleConfiguration {
+export interface SpecialRoleConfiguration {
     roleid: Snowflake;
     emote: string;
 }
 
-interface GroupConfiguration {
+export interface GroupConfiguration {
     roleid: Snowflake;
     emote: string;
 }
 
-interface YearConfiguration {
+export interface YearConfiguration {
     channelid: Snowflake;
     roleid: Snowflake;
     emote: string;
     groups: GroupConfiguration[];
+}
+
+export interface AnnounceConfiguration {
+    channelid: Snowflake;
+    roleid: Snowflake;
+    emote: string;
 }
 
 export interface Configuration {
@@ -44,11 +50,7 @@ export interface Configuration {
     tutor: SpecialRoleConfiguration;
     driveManager: SpecialRoleConfiguration;
 
-    announce: {
-        channelid: Snowflake;
-        roleid: Snowflake;
-        emote: string;
-    };
+    announce: AnnounceConfiguration;
 
     ok_hand: string;
     zeroWidthSpace: string;
