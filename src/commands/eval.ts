@@ -13,7 +13,7 @@ module.exports = {
         // double check sur l'identité juste pour la sécurité
         if (message.author.id !== config.ownerId) return;
 
-        let content = ''
+        let content = '';
         try {
             const code = args.join(' ');
             let evaled = eval(code);

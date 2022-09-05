@@ -49,7 +49,7 @@ export class DatadropClient extends Client {
                 const fileName = file.split('.')[0];
                 callback(fileName, props.default);
             }
-        })
+        });
     }
 
     start() {

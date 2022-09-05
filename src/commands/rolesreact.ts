@@ -28,7 +28,7 @@ module.exports = {
   },
 };
 
-async function generateAndSendEmbed(message: Message, channelId: Snowflake, roles: (YearConfiguration | SpecialRoleConfiguration | AnnounceConfiguration)[], notes: string[] = [], descriptionFooter: string = '') {
+async function generateAndSendEmbed(message: Message, channelId: Snowflake, roles: (YearConfiguration | SpecialRoleConfiguration | AnnounceConfiguration)[], notes: string[] = [], descriptionFooter = '') {
   if (!message.guild) return;
   if (!channelId) throw new Error('Channelid cannot be null');
   if (!roles || !Array.isArray(roles) || roles.length === 0) throw new Error('Roles cannot be null or empty');
@@ -46,7 +46,7 @@ async function generateAndSendEmbed(message: Message, channelId: Snowflake, role
   await sendEmbedToCorrespondingChannel(embed, channel as TextChannel, emotes);
 }
 
-function generateEmbed(roles: Role[], emotes: string[], notes: string[] = [], descriptionFooter: string = '') {
+function generateEmbed(roles: Role[], emotes: string[], notes: string[] = [], descriptionFooter = '') {
   if (!roles) throw new Error('Roles cannot be null');
   if (!emotes) throw new Error('Emotes cannot be null');
   if (!Array.isArray(notes) && !descriptionFooter) {

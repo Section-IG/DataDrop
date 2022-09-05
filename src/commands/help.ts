@@ -50,9 +50,9 @@ module.exports = {
 
     try {
       if (message.channel.type === ChannelType.DM)
-        await message.author.send({ embeds: [embed] });
+        {await message.author.send({ embeds: [embed] });}
       else
-        await message.channel.send({ embeds: [embed] });
+        {await message.channel.send({ embeds: [embed] });}
     } catch (err) {
       log.error(`Erreur durant l'envoi du message d'aide pour ${message.author.username}:\n` + err);
     }

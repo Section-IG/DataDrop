@@ -44,11 +44,11 @@ module.exports = async (client: DatadropClient, log: Logger, member: GuildMember
 
 	try {
 		if (annoncesRole) {
-			await member.roles.add(annoncesRole)
+			await member.roles.add(annoncesRole);
 			log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
 
-		await member.send({ embeds: [embed] })
+		await member.send({ embeds: [embed] });
 		log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
 	} catch (err) {
 		console.error(err);

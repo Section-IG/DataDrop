@@ -84,7 +84,7 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
   }
 };
 
-async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove: boolean = false) {
+async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove = false) {
   if (remove) {
     await member.roles.remove(roleid).catch(log.error);
   } else {
