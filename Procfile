@@ -1,1 +1,0 @@
-worker: node datadrop.js
