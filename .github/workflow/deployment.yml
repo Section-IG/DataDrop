@@ -1,0 +1,21 @@
+name: Continuous Delivery
+'on':
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy bot to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: '${{ secrets.SSH_HOST }}'
+          username: '${{ secrets.SSH_USERNAME }}'
+          key: '${{ secrets.SSH_KEY }}'
+          port: '${{ secrets.SSH_PORT }}'
+          script: |
+            cd ${{secrets.APP_PATH}}
+            git pull origin master
+            yarn install --production
+            pm2 restart ${{secrets.APP_NAME}}
