@@ -20,7 +20,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setAuthor({
 				name: 'Annonce',
-				iconURL: 'http://i.imgur.com/zcGyun6.png'
+				iconURL: 'https://i.imgur.com/zcGyun6.png'
 			})
 			.setColor(Colors.Orange)
 			.setDescription(args.join(' '))
