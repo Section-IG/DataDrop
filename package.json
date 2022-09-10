@@ -22,7 +22,7 @@
 		"@hunteroi/advanced-logger": "^0.0.3",
 		"chalk": "^5.0.1",
 		"discord-api-types": "^0.37.5",
-		"discord-logs": "^2.0.1",
+		"discord-logs": "^2.2.1",
 		"discord.js": "^14.3.0",
 		"dotenv-flow": "^3.2.0",
 		"moment": "^2.29.4",

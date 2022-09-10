@@ -137,17 +137,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.14.tgz#0fe081752a3333392d00586d815485a17c2cf3c9"
   integrity sha512-6bbDaETVi8oyIARulOE9qF1/Qdi/23z6emrUh0fNJRUmjznqrixD4MpGDdgOFk5Xb0m2H6Xu42JGdvAxaJR/wA==
 
-"@types/node@^14.0.1":
-  version "14.18.26"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.26.tgz#239e19f8b4ea1a9eb710528061c1d733dc561996"
-  integrity sha512-0b+utRBSYj8L7XAp0d+DX7lI4cSmowNaaTkk6/1SKzbKkG+doLuPusB9EOvzLJ8ahJSk03bTLIL6cWaEd4dBKA==
-
-"@types/ws@^7.2.1":
-  version "7.4.7"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.7.tgz#f7c390a36f7a0679aa69de2d501319f4f8d9b702"
-  integrity sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==
-  dependencies:
-    "@types/node" "*"
+"@types/node@^18.7.11":
+  version "18.7.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.16.tgz#0eb3cce1e37c79619943d2fd903919fc30850601"
+  integrity sha512-EQHhixfu+mkqHMZl1R2Ovuvn47PUw18azMJOTwSZr9/fhzHNGXAJ0ma0dayRVchprpCj0Kc1K1xKoWaATWF1qg==
 
 "@types/ws@^8.5.3":
   version "8.5.3"
@@ -420,13 +413,13 @@ discord-api-types@^0.37.3, discord-api-types@^0.37.5:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.5.tgz#e67d41d942913f0165fd1c075ac8c83428c48c67"
   integrity sha512-RhzoX02jw2M+n/AU5K74KTM4J8Sn3ZImUJvoA4lh+SDcrqi1ddSjrafciF4bECj4rPc2vHwoyyTNgbUwE8vbpA==
 
-discord-logs@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/discord-logs/-/discord-logs-2.0.1.tgz#14a803f6d58666b624dfaf908fa6fae37a5b474a"
-  integrity sha512-Dof1JOxeeQnzAw5Em8oJwUg3Bk217VRn7q8lAfjPaNwQ88+y6PpdBItREylnxsuzoBs5aNwJ3pCwNAhU7LM6GQ==
+discord-logs@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/discord-logs/-/discord-logs-2.2.1.tgz#5711bca4ad6c4573c05797632203980a0d3de3cf"
+  integrity sha512-VTNe/uRcfdLDLBLf1Taaj3OYU1GLWTAVEcCPC/xZqZd1X4D3DXW1qYJWxoyx3yqiJZ4rwQ3A0bPIFryIdniKrQ==
   dependencies:
-    "@types/node" "^14.0.1"
-    "@types/ws" "^7.2.1"
+    "@types/node" "^18.7.11"
+    "@types/ws" "^8.5.3"
 
 discord.js@^14.3.0:
   version "14.3.0"
