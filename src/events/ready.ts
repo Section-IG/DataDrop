@@ -11,7 +11,7 @@ module.exports = async (client: DatadropClient, log: Logger) => {
   await client.user?.setUsername(botName);
   client.user?.setActivity({ name: version });
 
-  log.info(`Connecté en tant que ${client.user?.tag}!`);
+  log.info(`Connecté en tant que ${client.user?.tag}, version ${version}!`);
 };
 
 async function handleDynamicChannels(client: DatadropClient, log: Logger) {
