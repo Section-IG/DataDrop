@@ -1,13 +1,20 @@
 {
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "env": {
         "node": true,
         "es6": true
     },
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2017,
         "sourceType": "module"
     },
+    "plugins": [
+        "@typescript-eslint"
+    ],
     "rules": {
         "no-console": "off",
         "no-unused-vars": "off",
@@ -17,6 +24,7 @@
         "no-labels": "error",
         "no-lone-blocks": "error",
         "no-useless-return": "off",
-        "semi": "error"
+        "semi": "error",
+        "eol-last": ["error", "always"]
     }
 }

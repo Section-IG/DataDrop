@@ -1,20 +1,23 @@
-const {
-  rolesChannelid,
-  ig1,
-  ig2,
-  ig3,
-  alumni,
-  tutor,
-  announce
-} = require('../config');
+import { GuildMember, MessageReaction, Snowflake, User } from 'discord.js';
+import { Logger } from '@hunteroi/advanced-logger';
+import { DatadropClient } from '../datadrop';
+import config from '../config';
 
-module.exports = async (client, log, messageReaction, user) => {
+module.exports = async (client: DatadropClient, log: Logger, messageReaction: MessageReaction, user: User) => {
+  const {
+    rolesChannelid,
+    ig1,
+    ig2,
+    ig3,
+    alumni,
+    tutor,
+    announce
+  } = config;
+
   const message = messageReaction.message;
-  if (message.author.id !== client.user.id) return;
+  if (message.author!.id !== client.user!.id || user.bot || !message.guild) return;
 
   const member = await message.guild.members.fetch(user.id);
-  if (member.user.bot) return;
-
   const channelids = [ig1, ig2, ig3].map(r => r.channelid).concat(rolesChannelid);
   if (!channelids.includes(message.channel.id)) return;
 
@@ -23,8 +26,9 @@ module.exports = async (client, log, messageReaction, user) => {
   const ig2Emotes = ig2.groups.map(r => r.emote);
   const ig3Emotes = ig3.groups.map(r => r.emote).concat(['🏘', '📊']);
 
-  if (message.channel.id === rolesChannelid && globalEmotes.includes(messageReaction.emoji.name)) {
-    switch (messageReaction.emoji.name) {
+  const emojiName = messageReaction.emoji.name as string;
+  if (message.channel.id === rolesChannelid && globalEmotes.includes(emojiName)) {
+    switch (emojiName) {
       case ig1.emote:
         applyRoleChange(member, log, ig1.roleid);
         break;
@@ -49,21 +53,21 @@ module.exports = async (client, log, messageReaction, user) => {
   else {
     let index;
     let level;
-    const isFirstYear = message.channel.id === ig1.channelid && ig1Emotes.includes(messageReaction.emoji.name);
-    const isSecondYear = message.channel.id === ig2.channelid && ig2Emotes.includes(messageReaction.emoji.name);
-    const isThirdYear = message.channel.id === ig3.channelid && ig3Emotes.includes(messageReaction.emoji.name);
+    const isFirstYear = message.channel.id === ig1.channelid && ig1Emotes.includes(emojiName);
+    const isSecondYear = message.channel.id === ig2.channelid && ig2Emotes.includes(emojiName);
+    const isThirdYear = message.channel.id === ig3.channelid && ig3Emotes.includes(emojiName);
 
     switch (true) {
       case isFirstYear:
-        index = ig1Emotes.indexOf(messageReaction.emoji.name);
+        index = ig1Emotes.indexOf(emojiName);
         if (index !== -1) level = ig1.groups[index];
         break;
-      case isSecondYear: 
-        index = ig2Emotes.indexOf(messageReaction.emoji.name);
+      case isSecondYear:
+        index = ig2Emotes.indexOf(emojiName);
         if (index !== -1) level = ig2.groups[index];
         break;
       case isThirdYear:
-        index = ig3Emotes.indexOf(messageReaction.emoji.name);
+        index = ig3Emotes.indexOf(emojiName);
         if (index !== -1) {
           if (index === 2) index = 0; // 🏘
           if (index === 3) index = 1; // 📊
@@ -74,15 +78,15 @@ module.exports = async (client, log, messageReaction, user) => {
     }
     if (index === null || index === undefined || index === -1 || !level) return;
 
-    applyRoleChange(member, log, level.roleid);
+    await applyRoleChange(member, log, level.roleid);
   }
 };
 
-function applyRoleChange(member, log, roleid, remove = true) {
+async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove = true) {
   if (remove) {
-    member.roles.remove(roleid).catch(log.error);
+    await member.roles.remove(roleid).catch(log.error);
   } else {
-    member.roles.add(roleid).catch(log.error);
+    await member.roles.add(roleid).catch(log.error);
   }
   log.info(`Le rôle <${roleid}> a été ${remove ? 'retiré de' : 'ajouté à'} <${member.user.tag}>`);
 }

@@ -1,6 +1,6 @@
-require('dotenv-flow').config({ silent: true });
+import { Configuration } from './models/Configuration';
 
-module.exports = {
+const config: Configuration = {
 	ownerId: process.env.OWNER,
 	prefix: process.env.PREFIX,
 	version: process.env.VERSION,
@@ -13,7 +13,7 @@ module.exports = {
 
 	informationsChannelid: '288666915314991107',
 	faqChannelid: '360126831376203778',
-	igcomiteeeChannelid: '506564987914027008',
+	igcomiteeChannelid: '506564987914027008',
 
 	dynamicChannelPrefix: '[DRoom]',
 	staticTriggerChannelids: [
@@ -78,3 +78,5 @@ module.exports = {
 	ok_hand: '👌',
 	zeroWidthSpace: '​',
 };
+
+export default config;

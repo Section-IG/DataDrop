@@ -1,4 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+import { Logger } from '@hunteroi/advanced-logger';
+import { EmbedBuilder, Message } from 'discord.js';
+import { DatadropClient } from '../datadrop';
 
 const people = [
 	{
@@ -17,17 +19,17 @@ module.exports = {
 	description:
 		"Affiche un message concernant l'envoi d'email à un.e professeur.e ou aux organisations étudiantes.",
 
-	async execute(client, log, message, args) {
-		const embed = new MessageEmbed()
+	async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
+		const embed = new EmbedBuilder()
 			.setTitle(`Emails`)
-			.setColor('RANDOM')
+			.setColor('Random')
 			.setDescription(
 				`Si tu souhaites envoyer un email à un.e professeur.e, Outlook possède un système de recherche automatique dans l'annuaire de l'Hénallux! Tape donc simplement son nom/son prénom et Outlook fera le reste!\n\nPour ce qui est des contacts étudiants, voici leurs emails!`
 			);
-		people.forEach((person) =>
-			embed.addField(person.name, person.emails.join(', '), true)
+		embed.addFields(
+			people.map(p => ({ name: p.name, value: p.emails.join(', '), inline: true }))
 		);
 
-		message.channel.send(embed);
-	},
+		await message.channel.send({ embeds: [embed] });
+	}
 };
