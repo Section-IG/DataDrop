@@ -17,6 +17,6 @@ jobs:
           script: |
             cd ${{secrets.APP_PATH}}
             git pull origin master
-            yarn install --production
+            yarn install
             yarn run build
             pm2 restart ${{secrets.APP_NAME}} --update-env
