@@ -18,4 +18,5 @@ jobs:
             cd ${{secrets.APP_PATH}}
             git pull origin master
             yarn install --production
-            pm2 restart ${{secrets.APP_NAME}}
+            yarn run build
+            pm2 restart ${{secrets.APP_NAME}} --update-env
