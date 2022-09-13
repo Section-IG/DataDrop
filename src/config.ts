@@ -1,13 +1,13 @@
 import { Configuration } from './models/Configuration';
 import { version } from "package";
 
-const environment = (process.env.ENV || process.env.NODE_ENV || 'Dev.');
-const formattedEnvironment = `${environment.charAt(0).toUpperCase()}${environment.slice(1).toLowerCase()}`;
+const environment = (process.env.NODE_ENV || 'development');
+const formattedEnvironment = `${environment.charAt(0).toUpperCase()}${environment.slice(1, 4).toLowerCase()}`;
 
 const config: Configuration = {
 	ownerId: process.env.OWNER,
 	prefix: process.env.PREFIX,
-	version: `${formattedEnvironment.slice(0, 4)}-v${version}`,
+	version: `${formattedEnvironment}-v${version}`,
 	botName: 'IG Bot',
 
 	communitymanagerRoleid: '288659580064366592',
