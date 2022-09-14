@@ -5,6 +5,6 @@ module.exports = {
     output: "./logs/out.log",
     error: "./logs/err.log",
     log: "./logs/combined.outerr.log",
-    log_date_format: "DD-MM-YYYY HH:mm:ss",
+    log_date_format: "DD-MM-YYYY HH:mm:ss.SSS",
   }]
 };
