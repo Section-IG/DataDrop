@@ -19,4 +19,4 @@ jobs:
             git pull origin master
             yarn install
             yarn run build
-            pm2 restart ${{secrets.APP_NAME}} --update-env
+            NODE_ENV=production pm2 restart ${{secrets.APP_NAME}} --update-env
