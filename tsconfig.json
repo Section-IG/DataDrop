@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "CommonJS",
+    "moduleResolution": "node",
     "rootDir": ".",
     "outDir": "./build",
     "strict": true,
@@ -10,9 +11,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@package": ["package.json"]
-    }
+    "baseUrl": "."
   }
 }
