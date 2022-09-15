@@ -48,6 +48,9 @@ module.exports = async (client: DatadropClient, log: Logger, member: GuildMember
 			log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
 
+		if (member.user.bot)
+			return;
+
 		await member.send({ embeds: [embed] });
 		log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
 	} catch (err) {
