@@ -24,7 +24,7 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
   const globalEmotes = [ig1, ig2, ig3, alumni, tutor, announce].map(r => r.emote);
   const ig1Emotes = ig1.groups.map(r => r.emote);
   const ig2Emotes = ig2.groups.map(r => r.emote);
-  const ig3Emotes = ig3.groups.map(r => r.emote).concat(['🏘', '📊']);
+  const ig3Emotes = ig3.groups.map(r => r.emote);
 
   const emojiName = messageReaction.emoji.name as string;
   if (message.channel.id === rolesChannelid && globalEmotes.includes(emojiName)) {
@@ -68,12 +68,9 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
         break;
       case isThirdYear:
         index = ig3Emotes.indexOf(emojiName);
-        if (index !== -1) {
-          if (index === 2) index = 0; // 🏘
-          if (index === 3) index = 1; // 📊
-          level = ig3.groups[index];
-        }
+        if (index !== -1) level = ig3.groups[index];
         break;
+
       default: break;
     }
     if (index === null || index === undefined || index === -1 || !level) return;

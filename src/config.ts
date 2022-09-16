@@ -57,7 +57,8 @@ const config: Configuration = {
 		emote: '3⃣',
 		groups: [
 			{ roleid: '628864262403653651', emote: '🇦' }, //A
-			{ roleid: '628864182695100416', emote: '🇧' }, //B
+			{ roleid: '1020254818410954762', emote: '🇧' }, //B
+			{ roleid: '628864182695100416', emote: '🇨' }, //C
 		],
 	},
 	alumni: {
