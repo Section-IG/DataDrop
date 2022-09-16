@@ -4,6 +4,9 @@ import { DatadropClient } from '../datadrop';
 import config from '../config';
 
 module.exports = async (client: DatadropClient, log: Logger, member: GuildMember) => {
+	if (member.user.bot)
+		return;
+
 	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = config;
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
@@ -47,9 +50,6 @@ module.exports = async (client: DatadropClient, log: Logger, member: GuildMember
 			await member.roles.add(annoncesRole);
 			log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
-
-		if (member.user.bot)
-			return;
 
 		await member.send({ embeds: [embed] });
 		log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
