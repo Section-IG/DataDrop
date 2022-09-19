@@ -30,22 +30,22 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
   if (message.channel.id === rolesChannelid && globalEmotes.includes(emojiName)) {
     switch (emojiName) {
       case ig1.emote:
-        applyRoleChange(member, log, ig1.roleid);
+        await applyRoleChange(member, log, ig1.roleid);
         break;
       case ig2.emote:
-        applyRoleChange(member, log, ig2.roleid);
+        await applyRoleChange(member, log, ig2.roleid);
         break;
       case ig3.emote:
-        applyRoleChange(member, log, ig3.roleid);
+        await applyRoleChange(member, log, ig3.roleid);
         break;
       case alumni.emote:
-        applyRoleChange(member, log, alumni.roleid);
+        await applyRoleChange(member, log, alumni.roleid);
         break;
       case tutor.emote:
-        applyRoleChange(member, log, tutor.roleid);
+        await applyRoleChange(member, log, tutor.roleid);
         break;
       case announce.emote:
-        applyRoleChange(member, log, announce.roleid, false);
+        await applyRoleChange(member, log, announce.roleid, false);
         break;
       default: return;
     }
