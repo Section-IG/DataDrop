@@ -2,7 +2,7 @@ import { MessageReaction, User } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
 import { DatadropClient } from '../datadrop';
 import config from '../config';
-import {applyRoleChange} from '../helpers';
+import { applyRoleChange } from '../helpers';
 
 module.exports = async (client: DatadropClient, log: Logger, messageReaction: MessageReaction, user: User) => {
   const {
