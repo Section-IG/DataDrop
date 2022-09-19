@@ -1,7 +1,6 @@
 import { GuildMember, Snowflake } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
 
-
 export async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove: boolean) {
   if (remove) {
     await member.roles.remove(roleid).catch(log.error);
