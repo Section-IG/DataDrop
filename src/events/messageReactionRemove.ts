@@ -1,7 +1,8 @@
-import { GuildMember, MessageReaction, Snowflake, User } from 'discord.js';
+import { MessageReaction, User } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
 import { DatadropClient } from '../datadrop';
 import config from '../config';
+import {applyRoleChange} from "../helpers";
 
 module.exports = async (client: DatadropClient, log: Logger, messageReaction: MessageReaction, user: User) => {
   const {
@@ -30,19 +31,19 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
   if (message.channel.id === rolesChannelid && globalEmotes.includes(emojiName)) {
     switch (emojiName) {
       case ig1.emote:
-        await applyRoleChange(member, log, ig1.roleid);
+        await applyRoleChange(member, log, ig1.roleid, true);
         break;
       case ig2.emote:
-        await applyRoleChange(member, log, ig2.roleid);
+        await applyRoleChange(member, log, ig2.roleid, true);
         break;
       case ig3.emote:
-        await applyRoleChange(member, log, ig3.roleid);
+        await applyRoleChange(member, log, ig3.roleid, true);
         break;
       case alumni.emote:
-        await applyRoleChange(member, log, alumni.roleid);
+        await applyRoleChange(member, log, alumni.roleid, true);
         break;
       case tutor.emote:
-        await applyRoleChange(member, log, tutor.roleid);
+        await applyRoleChange(member, log, tutor.roleid, true);
         break;
       case announce.emote:
         await applyRoleChange(member, log, announce.roleid, false);
@@ -75,15 +76,6 @@ module.exports = async (client: DatadropClient, log: Logger, messageReaction: Me
     }
     if (index === null || index === undefined || index === -1 || !level) return;
 
-    await applyRoleChange(member, log, level.roleid);
+    await applyRoleChange(member, log, level.roleid, true);
   }
 };
-
-async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove = true) {
-  if (remove) {
-    await member.roles.remove(roleid).catch(log.error);
-  } else {
-    await member.roles.add(roleid).catch(log.error);
-  }
-  log.info(`Le rôle <${roleid}> a été ${remove ? 'retiré de' : 'ajouté à'} <${member.user.tag}>`);
-}
