@@ -1,5 +1,5 @@
-import {GuildMember, Snowflake} from "discord.js";
-import {Logger} from "@hunteroi/advanced-logger";
+import {GuildMember, Snowflake} from 'discord.js';
+import {Logger} from '@hunteroi/advanced-logger';
 
 
 export async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove: boolean) {
