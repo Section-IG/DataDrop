@@ -25,6 +25,8 @@
         "no-lone-blocks": "error",
         "no-useless-return": "off",
         "semi": "error",
-        "eol-last": ["error", "always"]
+        "eol-last": ["error", "always"],
+        "quotes": ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
+        "object-curly-spacing": ["error", "always", { "arraysInObjects": true, "objectsInObjects": true }]
     }
 }
