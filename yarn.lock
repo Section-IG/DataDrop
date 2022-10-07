@@ -78,10 +78,10 @@
     chalk "^3.0.0"
     moment "^2.24.0"
 
-"@hunteroi/discord-selfrole@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@hunteroi/discord-selfrole/-/discord-selfrole-2.1.0.tgz#349ed705ab7b4afb71ddd9018cc247a3d463a4ed"
-  integrity sha512-AU/L1QvwAcbU0vkPYJMayp/fKvoItLjJi83yVKou/567kFwr0vzICMbmROrseprYHuA/XVTMnCoZqDgMSB5xpA==
+"@hunteroi/discord-selfrole@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@hunteroi/discord-selfrole/-/discord-selfrole-2.1.2.tgz#e4aa3e48fe3281862d7fc69a0b2a155bc77e72d7"
+  integrity sha512-86WnwKRjdWegVHG/OwISfo7VvP9ouVaQMupTYKGmVpPQ8YUiPrJqAyo7S3XR+1vudC4tquntZAmuYFD1RgXEjA==
   dependencies:
     discord.js "^14.5.0"
 

@@ -20,7 +20,7 @@
 	"homepage": "https://github.com/IESN-IG/DataDrop#readme",
 	"dependencies": {
 		"@hunteroi/advanced-logger": "^0.0.3",
-		"@hunteroi/discord-selfrole": "^2.1.0",
+		"@hunteroi/discord-selfrole": "^2.1.2",
 		"chalk": "^5.0.1",
 		"discord-api-types": "^0.37.5",
 		"discord-logs": "^2.2.1",
