@@ -1,4 +1,4 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import * as fs from 'fs';
@@ -26,6 +26,11 @@ export class DatadropClient extends Client {
             deleteAfterUnregistration: false,
             useReactions: true,
         });
+        this.#listenToSelfRoleEvents();
+        addDiscordLogsFramework(this);
+    }
+
+    #listenToSelfRoleEvents(): void {
         this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, nbRoles: number, maxRoles: number) => {
             if (!(reaction instanceof ButtonInteraction)) {
                 try {
@@ -36,7 +41,12 @@ export class DatadropClient extends Client {
                 }
             }
         });
-        addDiscordLogsFramework(this);
+        this.selfRoleManager.on(SelfRoleManagerEvents.messageRetrieve, (msg: Message) => {
+            const channel = msg.channel as GuildTextBasedChannel;
+            log.info(`Message récupéré dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => log.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => log.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
     }
 
     #bindEvents(): void {
