@@ -1,11 +1,13 @@
-import { Channel, ChannelType, OverwriteType, TextChannel, VoiceChannel } from 'discord.js';
+import { Channel, ChannelType, OverwriteType, VoiceChannel, GuildEmoji, ReactionEmoji, Role, roleMention, bold } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
+import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
+
 import { DatadropClient } from '../datadrop';
 import config from '../config';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
   const { version, botName } = config;
-  await cacheRolesChannels(client, log);
+  await registerRolesChannels(client);
   await handleDynamicChannels(client, log);
 
   await client.user?.setUsername(botName);
@@ -13,6 +15,52 @@ module.exports = async (client: DatadropClient, log: Logger) => {
 
   log.info(`Connecté en tant que ${client.user?.tag}, version ${version}!`);
 };
+
+async function registerRolesChannels(client: DatadropClient): Promise<void> {
+  const { rolesChannelid, ig1, ig2, ig3, alumni, tutor, announce } = config;
+  const format = (rte: RoleToEmojiData) =>
+    `${rte.emoji} - ${rte.role instanceof Role ? rte.role : roleMention(rte.role)}${rte.smallNote ? ` (${rte.smallNote})` : ''}`;
+  const message = {
+    options: {
+      sendAsEmbed: true,
+      format,
+      descriptionPrefix: bold(
+        'Réagissez à ce message avec la réaction correspondante pour vous attribuer/retirer le rôle souhaité!'
+      )
+    }
+  };
+
+  await Promise.all([
+    client.selfRoleManager.registerChannel(rolesChannelid, {
+      rolesToEmojis: [
+        ...([ig1, ig2, ig3, alumni, tutor].map(cfg => ({ role: cfg.roleid, emoji: cfg.emote }))),
+        {
+          role: announce.roleid,
+          emoji: announce.emote,
+          removeOnReact: true,
+          smallNote: 'note : retire le rôle quand la réaction est ajoutée',
+        },
+      ],
+      message: {
+        ...message,
+        options: {
+          ...message.options,
+          descriptionSuffix:
+            '\nLes Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.'
+        }
+      },
+    }),
+    ...([ig1, ig2, ig3].map(({ channelid, groups }) =>
+      client.selfRoleManager.registerChannel(channelid, {
+        rolesToEmojis: groups.map((group) => ({
+          role: group.roleid,
+          emoji: group.emote,
+        })),
+        message,
+        maxRolesAssigned: 1
+      }))),
+  ]);
+}
 
 async function handleDynamicChannels(client: DatadropClient, log: Logger) {
   const { dynamicChannelPrefix } = config;
@@ -43,27 +91,4 @@ async function handleDynamicChannels(client: DatadropClient, log: Logger) {
       }
     })
     .filter(dChannelInfo => dChannelInfo.voiceChannel.members.size > 0);
-}
-
-async function cacheRolesChannels(client: DatadropClient, log: Logger) {
-  const {
-    rolesChannelid,
-    ig1,
-    ig2,
-    ig3
-  } = config;
-  const channelids = [ig1, ig2, ig3].map(r => r.channelid).concat(rolesChannelid);
-
-  for (const channelid of channelids) {
-    try {
-      const channel = await client.channels.fetch(channelid);
-      if (!channel) continue;
-
-      const textChannel = channel as TextChannel;
-      const collectedMessages = await textChannel.messages.fetch({ limit: 10 });
-      log.info(`${collectedMessages.size} messages récupérés dans ${textChannel.parent!.name}-${textChannel.name} (${channelid})`);
-    } catch (err) {
-      console.error(err);
-    }
-  }
 }
