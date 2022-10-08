@@ -1,6 +1,6 @@
-import { bold, Client, ClientOptions, Collection, Snowflake } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
-import { SelfRoleManager } from '@hunteroi/discord-selfrole';
+import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import * as fs from 'fs';
 import * as path from 'path';
 import addDiscordLogsFramework from 'discord-logs';
@@ -24,12 +24,17 @@ export class DatadropClient extends Client {
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
             deleteAfterUnregistration: false,
-            descriptionPrefix: bold(
-                'Réagissez à ce message avec la réaction correspondante pour vous attribuer/retirer le rôle souhaité!'
-            ),
-            descriptionSuffix:
-                'Les Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.',
             useReactions: true,
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, nbRoles: number, maxRoles: number) => {
+            if (!(reaction instanceof ButtonInteraction)) {
+                try {
+                    await member.send({ content: `Tu ne peux pas t'assigner plus de ${maxRoles} rôle${(maxRoles > 1 ? 's' : '')} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${(nbRoles > 1 ? 's' : '')}` });
+                } catch { /** ignore */ }
+                finally {
+                    await reaction.users.remove(member);
+                }
+            }
         });
         addDiscordLogsFramework(this);
     }

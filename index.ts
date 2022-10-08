@@ -12,8 +12,7 @@ const client = new DatadropClient({
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.Guilds,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.GuildIntegrations,
+        GatewayIntentBits.DirectMessages
     ]
 });
 
