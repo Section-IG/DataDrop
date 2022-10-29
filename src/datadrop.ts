@@ -1,9 +1,10 @@
 import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
-import * as fs from 'fs';
 import * as path from 'path';
 import addDiscordLogsFramework from 'discord-logs';
+
+import { readFilesFrom } from './helpers';
 
 const minLevel: string = process.env.MIN_LEVEL || 'info';
 const log = new Logger({
@@ -52,7 +53,7 @@ export class DatadropClient extends Client {
     #bindEvents(): void {
         const eventDirectory = path.join(__dirname, 'events');
         log.debug(`Chargement de ${eventDirectory}`);
-        this.#readFilesFrom(eventDirectory, (eventName: string, props: any) => {
+        readFilesFrom(eventDirectory, (eventName: string, props: any) => {
             log.info(`Event '${eventName}' chargé`);
             this.on(eventName, props.bind(null, this, log));
         });
@@ -61,21 +62,9 @@ export class DatadropClient extends Client {
     #bindCommands(): void {
         const commandDirectory = path.join(__dirname, 'commands');
         log.debug(`Chargement de ${commandDirectory}`);
-        this.#readFilesFrom(commandDirectory, (commandName: string, props: any) => {
+        readFilesFrom(commandDirectory, (commandName: string, props: any) => {
             log.info(`Commande '${commandName}' chargée`);
             this.commands.set(commandName, props);
-        });
-    }
-
-    #readFilesFrom(path: string, callback: (name: string, props: any) => void): void {
-        fs.readdir(path, async (err, files) => {
-            if (err) return console.error;
-            for (const file of files) {
-                if (!file.endsWith('.js')) return;
-                const props = await import(`${path}/${file}`);
-                const fileName = file.split('.')[0];
-                callback(fileName, props.default);
-            }
         });
     }
 

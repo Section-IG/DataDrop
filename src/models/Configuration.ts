@@ -48,7 +48,6 @@ export interface Configuration {
 
     alumni: SpecialRoleConfiguration;
     tutor: SpecialRoleConfiguration;
-    driveManager: SpecialRoleConfiguration;
 
     announce: AnnounceConfiguration;
 

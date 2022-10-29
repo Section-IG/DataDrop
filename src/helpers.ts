@@ -1,11 +1,13 @@
-import { GuildMember, Snowflake } from 'discord.js';
-import { Logger } from '@hunteroi/advanced-logger';
+import * as fs from 'fs';
 
-export async function applyRoleChange(member: GuildMember, log: Logger, roleid: Snowflake, remove: boolean) {
-  if (remove) {
-    await member.roles.remove(roleid).catch(log.error);
-  } else {
-    await member.roles.add(roleid).catch(log.error);
-  }
-  log.info(`Le rôle <${roleid}> a été ${remove ? 'retiré de' : 'ajouté à'} <${member.user.tag}>`);
+export function readFilesFrom(path: string, callback: (name: string, props: any) => void): void {
+    fs.readdir(path, async (err, files) => {
+        if (err) return console.error;
+        for (const file of files) {
+            if (!file.endsWith('.js')) return;
+            const props = await import(`${path}/${file}`);
+            const fileName = file.split('.')[0];
+            callback(fileName, props.default);
+        }
+    });
 }

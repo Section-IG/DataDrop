@@ -46,7 +46,7 @@ async function registerRolesChannels(client: DatadropClient): Promise<void> {
         options: {
           ...message.options,
           descriptionSuffix:
-            '\nLes Professeurs, les Délégués, les Gestionnaires de Drive et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.'
+            '\nLes Professeurs, les Délégués et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.'
         }
       },
     }),

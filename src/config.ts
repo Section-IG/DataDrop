@@ -69,10 +69,6 @@ const config: Configuration = {
 		roleid: '362219691319492609',
 		emote: '📚',
 	},
-	driveManager: {
-		roleid: '361786695034863617',
-		emote: '📝',
-	},
 	announce: {
 		channelid: '360117467550318593',
 		roleid: '364008970966269952',
