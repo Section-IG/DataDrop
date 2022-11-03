@@ -1,4 +1,4 @@
-import { Channel, ChannelType, OverwriteType, VoiceChannel, GuildEmoji, ReactionEmoji, Role, roleMention, bold } from 'discord.js';
+import { Role, roleMention, bold, Snowflake } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
@@ -8,7 +8,7 @@ import config from '../config';
 module.exports = async (client: DatadropClient, log: Logger) => {
   const { version, botName } = config;
   await registerRolesChannels(client);
-  await handleDynamicChannels(client, log);
+  await registerDynamicChannels(client);
 
   await client.user?.setUsername(botName);
   client.user?.setActivity({ name: version });
@@ -62,33 +62,14 @@ async function registerRolesChannels(client: DatadropClient): Promise<void> {
   ]);
 }
 
-async function handleDynamicChannels(client: DatadropClient, log: Logger) {
-  const { dynamicChannelPrefix } = config;
-  client.channels.cache
-    .filter((c: Channel) => c.type === ChannelType.GuildVoice && c.name.includes(dynamicChannelPrefix))
-    .map((c: Channel) => c as VoiceChannel)
-    .forEach((c: VoiceChannel) => {
-      const author = c.permissionOverwrites.cache.find(po => po.type === OverwriteType.Member);
-      if (author) {
-        client.dynamicChannels.set(c.id, {
-          authorId: author.id,
-          voiceChannel: c,
-          textChannel: c.parent!.children.cache.find(c => c.type === ChannelType.GuildText && c.permissionOverwrites.cache.some(po => po.type === OverwriteType.Member && po.id === author.id))
-        });
-      }
-    });
-
-  client.dynamicChannels = client.dynamicChannels
-    .each(async dChannelInfo => {
-      if (dChannelInfo.voiceChannel.members.size === 0) {
-        await dChannelInfo.voiceChannel.delete();
-        log.info(`Plus d'utilisateurs dans <${dChannelInfo.voiceChannel.name}> (${dChannelInfo.voiceChannel.id}). Canal supprimé.`);
-
-        if (dChannelInfo.textChannel) {
-          await dChannelInfo.textChannel.delete();
-          log.info(`Canal vocal temporaire supprimé, canal écrit <${dChannelInfo.textChannel.name}> (${dChannelInfo.textChannel.id}) également supprimé.`);
-        }
-      }
-    })
-    .filter(dChannelInfo => dChannelInfo.voiceChannel.members.size > 0);
+async function registerDynamicChannels(client: DatadropClient): Promise<void> {
+  const { dynamicChannelPrefix, dynamicChannelPrefixRegex, staticTriggerChannelids } = config;
+  staticTriggerChannelids.forEach((id: Snowflake) => client.tempChannelsManager.registerChannel(id, {
+    childAutoDeleteIfEmpty: true,
+    childAutoDeleteIfParentGetsUnregistered: true,
+    childAutoDeleteIfOwnerLeaves: false,
+    childVoiceFormat: (str) => `${dynamicChannelPrefix} ${str}`,
+    childVoiceFormatRegex: dynamicChannelPrefixRegex,
+    childCanBeRenamed: true
+  }));
 }

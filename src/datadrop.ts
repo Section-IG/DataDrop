@@ -1,10 +1,10 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import * as path from 'path';
-import addDiscordLogsFramework from 'discord-logs';
 
 import { readFilesFrom } from './helpers';
+import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
 
 const minLevel: string = process.env.MIN_LEVEL || 'info';
 const log = new Logger({
@@ -15,20 +15,34 @@ const log = new Logger({
 export class DatadropClient extends Client {
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
-    dynamicChannels: Collection<Snowflake, any>;
+    readonly tempChannelsManager: TempChannelsManager;
 
     constructor(options: ClientOptions) {
         super(options);
 
         this.commands = new Collection();
-        this.dynamicChannels = new Collection();
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
             deleteAfterUnregistration: false,
             useReactions: true,
         });
         this.#listenToSelfRoleEvents();
-        addDiscordLogsFramework(this);
+
+        this.tempChannelsManager = new TempChannelsManager(this);
+        this.#listenToTempChannelsEvents();
+    }
+
+    #listenToTempChannelsEvents(): void {
+        this.tempChannelsManager.on(TempChannelsManagerEvents.channelRegister, async (parent: ParentChannelData) => {
+            const parentChannel = await this.channels.fetch(parent.channelId) as VoiceChannel;
+            log.info(`Canal ${parentChannel.name} enregistré comme générateur de canaux temporaires!`);
+        });
+        this.tempChannelsManager.on(TempChannelsManagerEvents.channelUnregister, async (parent: ParentChannelData) => {
+            const parentChannel = await this.channels.fetch(parent.channelId) as VoiceChannel;
+            log.info(`Canal ${parentChannel.name} désenregistré comme générateur de canaux temporaires!`);
+        });
+        this.tempChannelsManager.on(TempChannelsManagerEvents.childAdd, (child: ChildChannelData) => log.info(`Le membre <${child.owner.displayName}> (${child.owner.id}) a lancé la création d'un canal vocal dynamique`));
+        this.tempChannelsManager.on(TempChannelsManagerEvents.childRemove, (child: ChildChannelData) => log.info(`Plus aucun utilisateur dans <${child.voiceChannel.name}> (${child.voiceChannel.id}). Canal supprimé.`));
     }
 
     #listenToSelfRoleEvents(): void {
