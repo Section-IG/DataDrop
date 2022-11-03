@@ -1,8 +1,7 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, Snowflake, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import * as path from 'path';
-import addDiscordLogsFramework from 'discord-logs';
 
 import { readFilesFrom } from './helpers';
 
@@ -15,20 +14,17 @@ const log = new Logger({
 export class DatadropClient extends Client {
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
-    dynamicChannels: Collection<Snowflake, any>;
 
     constructor(options: ClientOptions) {
         super(options);
 
         this.commands = new Collection();
-        this.dynamicChannels = new Collection();
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
             deleteAfterUnregistration: false,
             useReactions: true,
         });
         this.#listenToSelfRoleEvents();
-        addDiscordLogsFramework(this);
     }
 
     #listenToSelfRoleEvents(): void {
