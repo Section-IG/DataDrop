@@ -19,6 +19,7 @@ const config: Configuration = {
 	igcomiteeChannelid: '506564987914027008',
 
 	dynamicChannelPrefix: '[DRoom]',
+	dynamicChannelPrefixRegex: /^\[DRoom\]/,
 	staticTriggerChannelids: [
 		'619190601383936000', // co-learning common-profs-étu
 		'762381363532922892', // salon public IG1

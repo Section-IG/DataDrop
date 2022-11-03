@@ -39,6 +39,7 @@ export interface Configuration {
     igcomiteeChannelid: Snowflake;
 
     dynamicChannelPrefix: string;
+    dynamicChannelPrefixRegex: RegExp;
     staticTriggerChannelids: Snowflake[];
 
     rolesChannelid: Snowflake;

@@ -1,13 +1,15 @@
-import { Channel, ChannelType, OverwriteType, VoiceChannel, GuildEmoji, ReactionEmoji, Role, roleMention, bold } from 'discord.js';
+import { Role, roleMention, bold, Snowflake } from 'discord.js';
 import { Logger } from '@hunteroi/advanced-logger';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
 import config from '../config';
+import { Configuration } from 'src/models/Configuration';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
   const { version, botName } = config;
   await registerRolesChannels(client);
+  await registerDynamicChannels(client, config);
 
   await client.user?.setUsername(botName);
   client.user?.setActivity({ name: version });
@@ -59,4 +61,16 @@ async function registerRolesChannels(client: DatadropClient): Promise<void> {
         maxRolesAssigned: 1
       }))),
   ]);
+}
+
+async function registerDynamicChannels(client: DatadropClient, config: Configuration): Promise<void> {
+  const { dynamicChannelPrefix, dynamicChannelPrefixRegex, staticTriggerChannelids } = config;
+  staticTriggerChannelids.forEach((id: Snowflake) => client.tempChannelsManager.registerChannel(id, {
+    childAutoDeleteIfEmpty: true,
+    childAutoDeleteIfParentGetsUnregistered: true,
+    childAutoDeleteIfOwnerLeaves: false,
+    childVoiceFormat: (str) => `${dynamicChannelPrefix} ${str}`,
+    childVoiceFormatRegex: dynamicChannelPrefixRegex,
+    childCanBeRenamed: true
+  }));
 }
