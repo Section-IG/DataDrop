@@ -6,7 +6,7 @@ import { DatadropClient } from '../datadrop';
 import { Configuration } from 'src/models/Configuration';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
-  const config = client.config;
+  const { config } = client;
   await registerRolesChannels(client, config);
   await registerDynamicChannels(client, config);
 
