@@ -10,7 +10,7 @@ module.exports = {
     args: true,
 
     async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
-        const config = client.config;
+        const { config } = client;
 
         // double check sur l'identité juste pour la sécurité
         if (message.author.id !== config.ownerId) return;
