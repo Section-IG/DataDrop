@@ -4,12 +4,11 @@ import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
 import config from '../config';
-import { Configuration } from 'src/models/Configuration';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
   const { version, botName } = config;
   await registerRolesChannels(client);
-  await registerDynamicChannels(client, config);
+  await registerDynamicChannels(client);
 
   await client.user?.setUsername(botName);
   client.user?.setActivity({ name: version });
@@ -63,7 +62,7 @@ async function registerRolesChannels(client: DatadropClient): Promise<void> {
   ]);
 }
 
-async function registerDynamicChannels(client: DatadropClient, config: Configuration): Promise<void> {
+async function registerDynamicChannels(client: DatadropClient): Promise<void> {
   const { dynamicChannelPrefix, dynamicChannelPrefixRegex, staticTriggerChannelids } = config;
   staticTriggerChannelids.forEach((id: Snowflake) => client.tempChannelsManager.registerChannel(id, {
     childAutoDeleteIfEmpty: true,
