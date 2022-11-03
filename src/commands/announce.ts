@@ -1,7 +1,6 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import { readConfig } from '../config';
 
 module.exports = {
 	name: 'announce',
@@ -15,7 +14,7 @@ module.exports = {
 
 	async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
 		if (!message.guild) return;
-		const { announce } = await readConfig();
+		const { announce } = client.config;
 
 		const embed = new EmbedBuilder()
 			.setAuthor({

@@ -5,6 +5,8 @@ import * as path from 'path';
 
 import { readFilesFrom } from './helpers';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
+import { Configuration } from './models/Configuration';
+import { readConfig } from './config';
 
 const minLevel: string = process.env.MIN_LEVEL || 'info';
 const log = new Logger({
@@ -13,13 +15,15 @@ const log = new Logger({
 });
 
 export class DatadropClient extends Client {
+    #config: Configuration;
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
     readonly tempChannelsManager: TempChannelsManager;
 
-    constructor(options: ClientOptions) {
+    constructor(options: ClientOptions, config: Configuration) {
         super(options);
 
+        this.#config = config;
         this.commands = new Collection();
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
@@ -30,6 +34,14 @@ export class DatadropClient extends Client {
 
         this.tempChannelsManager = new TempChannelsManager(this);
         this.#listenToTempChannelsEvents();
+    }
+
+    get config(): Configuration {
+        return this.#config;
+    }
+
+    async reloadConfig(): Promise<void> {
+        this.#config = await readConfig();
     }
 
     #listenToTempChannelsEvents(): void {

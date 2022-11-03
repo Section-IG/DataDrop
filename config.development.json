@@ -8,7 +8,7 @@
     "faqChannelid": "1028257513109454856",
     "igcomiteeChannelid": "1028257513109454857",
     "dynamicChannelPrefix": "[DRoom]",
-    "dynamicChannelPrefixRegex": "/^\\[DRoom\\]/",
+    "dynamicChannelPrefixRegex": "^\\[DRoom\\]",
     "staticTriggerChannelids": [
         "1028257513604390937",
         "1028257513960898589",

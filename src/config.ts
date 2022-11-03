@@ -4,10 +4,11 @@ import { version } from '../package.json';
 
 const environment = (process.env.NODE_ENV || 'development').toLowerCase();
 
+// should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
-    ownerId: process.env.OWNER,
-    prefix: process.env.PREFIX,
-    version: `${environment}-v${version}`,
+    ownerId: '',
+    prefix: '',
+    version: '',
     botName: '',
     communitymanagerRoleid: '',
     adminRoleid: '',
@@ -29,19 +30,23 @@ const defaultConfig: Configuration = {
     ok_hand: '',
     zeroWidthSpace: ''
 };
-// should be Partial<Configuration> but codebase not ready yet
 
 export async function readConfig(): Promise<Configuration> {
     try {
         const response = await readFile(`${__dirname}/../../config.${environment}.json`, 'utf-8');
 
         const json = JSON.parse(response);
-        const regexp = new RegExp(json['dynamicChannelPrefixRegex']); // workaround, reflection is shit
+        for (const prop in json) {
+            if (prop.match(/regex/i)) {
+                json[prop] = new RegExp(json[prop]);
+            }
+        }
 
         return {
-            ...defaultConfig,
             ...json,
-            dynamicChannelPrefixRegex: regexp
+            ownerId: process.env.OWNER,
+            prefix: process.env.PREFIX,
+            version: `${environment}-v${version}`
         };
     }
     catch (err) {

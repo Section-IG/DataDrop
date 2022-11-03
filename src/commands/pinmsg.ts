@@ -1,7 +1,6 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { Message, MessageResolvable } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import { readConfig } from '../config';
 
 module.exports = {
   name: 'pinmsg',
@@ -14,7 +13,7 @@ module.exports = {
     if (!message.guild || !message.member || !message.reference) return;
 
     const reference = message.reference;
-    const { communitymanagerRoleid, adminRoleid, delegatesRoleid, professorRoleid } = await readConfig();
+    const { communitymanagerRoleid, adminRoleid, delegatesRoleid, professorRoleid } = client.config;
     const verboseIsActive = args && args.length >= 1 && (args[0] === '--verbose' || args[0] === '-v');
 
     const hasAnyRequiredRole = [communitymanagerRoleid, adminRoleid, delegatesRoleid, professorRoleid].some(r => message.member!.roles.cache.has(r));

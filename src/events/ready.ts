@@ -3,11 +3,10 @@ import { Logger } from '@hunteroi/advanced-logger';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
-import { readConfig } from '../config';
 import { Configuration } from 'src/models/Configuration';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
-  const config = await readConfig();
+  const config = client.config;
   await registerRolesChannels(client, config);
   await registerDynamicChannels(client, config);
 

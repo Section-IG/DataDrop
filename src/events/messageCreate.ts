@@ -1,7 +1,6 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, Message } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import { readConfig } from '../config';
 
 const escapeRegex = (str: string | null | undefined) => str?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -11,7 +10,7 @@ module.exports = async (client: DatadropClient, log: Logger, message: Message) =
     communitymanagerRoleid,
     adminRoleid,
     ownerId,
-  } = await readConfig();
+  } = client.config;
 
   if (message.author.bot) return;
 
