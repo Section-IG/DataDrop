@@ -1,7 +1,6 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import config from '../config';
 
 function buildEmbed(title: string, color: ColorResolvable, description: string): EmbedBuilder {
   return new EmbedBuilder().setTitle(title).setColor(color).setDescription(description);
@@ -15,7 +14,7 @@ module.exports = {
   usage: '[commande]',
 
   execute: async (client: DatadropClient, log: Logger, message: Message, args: string[]) => {
-    const { prefix } = config;
+    const { prefix } = client.config;
     const { commands } = client;
     const data = [];
     let embed: EmbedBuilder;
@@ -49,10 +48,8 @@ module.exports = {
     }
 
     try {
-      if (message.channel.type === ChannelType.DM)
-        {await message.author.send({ embeds: [embed] });}
-      else
-        {await message.channel.send({ embeds: [embed] });}
+      if (message.channel.type === ChannelType.DM) { await message.author.send({ embeds: [embed] }); }
+      else { await message.channel.send({ embeds: [embed] }); }
     } catch (err) {
       log.error(`Erreur durant l'envoi du message d'aide pour ${message.author.username}:\n` + err);
     }

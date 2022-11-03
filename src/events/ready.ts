@@ -3,20 +3,20 @@ import { Logger } from '@hunteroi/advanced-logger';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
-import config from '../config';
+import { Configuration } from 'src/models/Configuration';
 
 module.exports = async (client: DatadropClient, log: Logger) => {
-  const { version, botName } = config;
-  await registerRolesChannels(client);
-  await registerDynamicChannels(client);
+  const { config } = client;
+  await registerRolesChannels(client, config);
+  await registerDynamicChannels(client, config);
 
-  await client.user?.setUsername(botName);
-  client.user?.setActivity({ name: version });
+  await client.user?.setUsername(config.botName);
+  client.user?.setActivity({ name: config.version });
 
-  log.info(`Connecté en tant que ${client.user?.tag}, version ${version}!`);
+  log.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
 };
 
-async function registerRolesChannels(client: DatadropClient): Promise<void> {
+async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {
   const { rolesChannelid, ig1, ig2, ig3, alumni, tutor, announce } = config;
   const format = (rte: RoleToEmojiData) =>
     `${rte.emoji} - ${rte.role instanceof Role ? rte.role : roleMention(rte.role)}${rte.smallNote ? ` (${rte.smallNote})` : ''}`;
@@ -62,7 +62,7 @@ async function registerRolesChannels(client: DatadropClient): Promise<void> {
   ]);
 }
 
-async function registerDynamicChannels(client: DatadropClient): Promise<void> {
+async function registerDynamicChannels(client: DatadropClient, config: Configuration): Promise<void> {
   const { dynamicChannelPrefix, dynamicChannelPrefixRegex, staticTriggerChannelids } = config;
   staticTriggerChannelids.forEach((id: Snowflake) => client.tempChannelsManager.registerChannel(id, {
     childAutoDeleteIfEmpty: true,
