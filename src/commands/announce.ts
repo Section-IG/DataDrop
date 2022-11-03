@@ -1,7 +1,7 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import config from '../config';
+import { readConfig } from '../config';
 
 module.exports = {
 	name: 'announce',
@@ -15,7 +15,7 @@ module.exports = {
 
 	async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
 		if (!message.guild) return;
-		const { announce } = config;
+		const { announce } = await readConfig();
 
 		const embed = new EmbedBuilder()
 			.setAuthor({
@@ -49,7 +49,7 @@ module.exports = {
 				content: annoncesRole?.toString(),
 				embeds: [embed]
 			});
-			if (annoncesChannel.type === ChannelType.GuildNews) {
+			if (annoncesChannel.type === ChannelType.GuildAnnouncement) {
 				await announceMessage.crosspost();
 			}
 

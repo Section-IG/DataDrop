@@ -1,12 +1,12 @@
 import { Logger } from '@hunteroi/advanced-logger';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 import { DatadropClient } from '../datadrop';
-import config from '../config';
+import { readConfig } from '../config';
 
 module.exports = async (client: DatadropClient, log: Logger, member: GuildMember) => {
 	if (member.user.bot) return;
 
-	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = config;
+	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = await readConfig();
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
 	const fields = [
