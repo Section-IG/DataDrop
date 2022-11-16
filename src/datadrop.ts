@@ -10,6 +10,12 @@ import { readConfig } from './config';
 import { JSONDatabaseService, SendGridService, VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
 import { User } from './models/User';
 
+const minLevel: string = process.env.MIN_LEVEL || 'info';
+const log = new Logger({
+    minLevel: LogEventLevel[minLevel.toLowerCase()],
+    includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP),
+});
+
 export class DatadropClient extends Client {
     #config: Configuration;
     readonly log: Logger;
