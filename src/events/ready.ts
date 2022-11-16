@@ -1,11 +1,10 @@
 import { Role, roleMention, bold, Snowflake } from 'discord.js';
-import { Logger } from '@hunteroi/advanced-logger';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
 import { Configuration } from 'src/models/Configuration';
 
-module.exports = async (client: DatadropClient, log: Logger) => {
+module.exports = async (client: DatadropClient) => {
   const { config } = client;
   await registerRolesChannels(client, config);
   await registerDynamicChannels(client, config);
@@ -13,7 +12,7 @@ module.exports = async (client: DatadropClient, log: Logger) => {
   await client.user?.setUsername(config.botName);
   client.user?.setActivity({ name: config.version });
 
-  log.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
+  client.log.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
 };
 
 async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {

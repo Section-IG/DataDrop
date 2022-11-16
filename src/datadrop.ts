@@ -3,19 +3,15 @@ import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import * as path from 'path';
 
-import { readFilesFrom } from './helpers';
+import { getErrorMessage, readFilesFrom } from './helpers';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
 import { Configuration } from './models/Configuration';
 import { readConfig } from './config';
 
-const minLevel: string = process.env.MIN_LEVEL || 'info';
-const log = new Logger({
-    minLevel: LogEventLevel[minLevel.toLowerCase()],
-    includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP),
-});
 
 export class DatadropClient extends Client {
     #config: Configuration;
+    readonly log: Logger;
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
     readonly tempChannelsManager: TempChannelsManager;
@@ -24,6 +20,11 @@ export class DatadropClient extends Client {
         super(options);
 
         this.#config = config;
+
+        this.log = new Logger({
+            minLevel: LogEventLevel[config.minLevel.toLowerCase()],
+            includeTimestamp: config.includeTimestamp,
+        });
         this.commands = new Collection();
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
@@ -47,14 +48,15 @@ export class DatadropClient extends Client {
     #listenToTempChannelsEvents(): void {
         this.tempChannelsManager.on(TempChannelsManagerEvents.channelRegister, async (parent: ParentChannelData) => {
             const parentChannel = await this.channels.fetch(parent.channelId) as VoiceChannel;
-            log.info(`Canal ${parentChannel.name} enregistré comme générateur de canaux temporaires!`);
+            this.log.info(`Canal ${parentChannel.name} enregistré comme générateur de canaux temporaires!`);
         });
         this.tempChannelsManager.on(TempChannelsManagerEvents.channelUnregister, async (parent: ParentChannelData) => {
             const parentChannel = await this.channels.fetch(parent.channelId) as VoiceChannel;
-            log.info(`Canal ${parentChannel.name} désenregistré comme générateur de canaux temporaires!`);
+            this.log.info(`Canal ${parentChannel.name} désenregistré comme générateur de canaux temporaires!`);
         });
-        this.tempChannelsManager.on(TempChannelsManagerEvents.childAdd, (child: ChildChannelData) => log.info(`Le membre <${child.owner.displayName}> (${child.owner.id}) a lancé la création d'un canal vocal dynamique`));
-        this.tempChannelsManager.on(TempChannelsManagerEvents.childRemove, (child: ChildChannelData) => log.info(`Plus aucun utilisateur dans <${child.voiceChannel.name}> (${child.voiceChannel.id}). Canal supprimé.`));
+        this.tempChannelsManager.on(TempChannelsManagerEvents.childAdd, (child: ChildChannelData) => this.log.info(`Le membre <${child.owner.displayName}> (${child.owner.id}) a lancé la création d'un canal vocal dynamique`));
+        this.tempChannelsManager.on(TempChannelsManagerEvents.childRemove, (child: ChildChannelData) => this.log.info(`Plus aucun utilisateur dans <${child.voiceChannel.name}> (${child.voiceChannel.id}). Canal supprimé.`));
+        this.tempChannelsManager.on(TempChannelsManagerEvents.error, (error: unknown, message: string) => this.log.error(`Une erreur est survenie lors de la gestion des canaux dynamiques.\nErreur: ${message}\n${getErrorMessage(error)}`));
     }
 
     #listenToSelfRoleEvents(): void {
@@ -70,26 +72,27 @@ export class DatadropClient extends Client {
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.messageRetrieve, (msg: Message) => {
             const channel = msg.channel as GuildTextBasedChannel;
-            log.info(`Message récupéré dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
+            this.log.info(`Message récupéré dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => log.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => log.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => this.log.error(`Une erreur est survenue lors de la gestion des rôles automatiques.\nErreur: ${message}\n${getErrorMessage(error)}`));
     }
 
     #bindEvents(): void {
         const eventDirectory = path.join(__dirname, 'events');
-        log.debug(`Chargement de ${eventDirectory}`);
+        this.log.debug(`Chargement de ${eventDirectory}`);
         readFilesFrom(eventDirectory, (eventName: string, props: any) => {
-            log.info(`Event '${eventName}' chargé`);
-            this.on(eventName, props.bind(null, this, log));
+            this.log.info(`Event '${eventName}' chargé`);
+            this.on(eventName, props.bind(null, this));
         });
     }
 
     #bindCommands(): void {
         const commandDirectory = path.join(__dirname, 'commands');
-        log.debug(`Chargement de ${commandDirectory}`);
+        this.log.debug(`Chargement de ${commandDirectory}`);
         readFilesFrom(commandDirectory, (commandName: string, props: any) => {
-            log.info(`Commande '${commandName}' chargée`);
+            this.log.info(`Commande '${commandName}' chargée`);
             this.commands.set(commandName, props);
         });
     }

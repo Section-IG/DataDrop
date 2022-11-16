@@ -1,4 +1,3 @@
-import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
 import { DatadropClient } from '../datadrop';
 
@@ -13,7 +12,7 @@ module.exports = {
   aliases: ['commandes'],
   usage: '[commande]',
 
-  execute: async (client: DatadropClient, log: Logger, message: Message, args: string[]) => {
+  execute: async (client: DatadropClient, message: Message, args: string[]) => {
     const { prefix } = client.config;
     const { commands } = client;
     const data = [];
@@ -51,7 +50,7 @@ module.exports = {
       if (message.channel.type === ChannelType.DM) { await message.author.send({ embeds: [embed] }); }
       else { await message.channel.send({ embeds: [embed] }); }
     } catch (err) {
-      log.error(`Erreur durant l'envoi du message d'aide pour ${message.author.username}:\n` + err);
+      client.log.error(`Erreur durant l'envoi du message d'aide pour ${message.author.username}:\n` + err);
     }
   }
 };

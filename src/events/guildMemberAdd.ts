@@ -1,8 +1,8 @@
-import { Logger } from '@hunteroi/advanced-logger';
+
 import { EmbedBuilder, GuildMember } from 'discord.js';
 import { DatadropClient } from '../datadrop';
 
-module.exports = async (client: DatadropClient, log: Logger, member: GuildMember) => {
+module.exports = async (client: DatadropClient, member: GuildMember) => {
 	if (member.user.bot) return;
 
 	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = client.config;
@@ -46,11 +46,11 @@ module.exports = async (client: DatadropClient, log: Logger, member: GuildMember
 	try {
 		if (annoncesRole) {
 			await member.roles.add(annoncesRole);
-			log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
+			client.log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
 
 		await member.send({ embeds: [embed] });
-		log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
+		client.log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
 	} catch (err) {
 		console.error(err);
 	}
