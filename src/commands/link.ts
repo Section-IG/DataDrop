@@ -1,4 +1,3 @@
-import { Logger } from '@hunteroi/advanced-logger';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
 import { DatadropClient } from '../datadrop';
 
@@ -6,7 +5,7 @@ module.exports = {
     name: 'link',
     description: 'Lie ton compte Discord avec ton adresse Hénallux!',
 
-    async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
+    async execute(client: DatadropClient, message: Message, args: string[]) {
         const user = message.author;
         const linkAccountButton = new ButtonBuilder()
             .setLabel('Lier son compte')
