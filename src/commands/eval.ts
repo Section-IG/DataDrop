@@ -1,5 +1,4 @@
-﻿import { Logger } from '@hunteroi/advanced-logger';
-import { Message, codeBlock } from 'discord.js';
+﻿import { Message, codeBlock } from 'discord.js';
 import { DatadropClient } from '../datadrop';
 import { Configuration } from 'src/models/Configuration';
 
@@ -9,7 +8,7 @@ module.exports = {
     ownerOnly: true,
     args: true,
 
-    async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
+    async execute(client: DatadropClient, message: Message, args: string[]) {
         const { config } = client;
 
         // double check sur l'identité juste pour la sécurité

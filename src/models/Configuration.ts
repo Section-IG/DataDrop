@@ -24,6 +24,9 @@ export interface AnnounceConfiguration {
 }
 
 export interface Configuration {
+    minLevel: string;
+    includeTimestamp: boolean;
+
     ownerId: Snowflake | undefined;
     prefix: string | undefined;
     version: string | undefined;

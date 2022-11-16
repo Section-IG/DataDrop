@@ -1,4 +1,3 @@
-import { Logger } from '@hunteroi/advanced-logger';
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 import { DatadropClient } from '../datadrop';
 
@@ -12,7 +11,7 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 
-	async execute(client: DatadropClient, log: Logger, message: Message, args: string[]) {
+	async execute(client: DatadropClient, message: Message, args: string[]) {
 		if (!message.guild) return;
 		const { announce } = client.config;
 

@@ -6,6 +6,8 @@ const environment = (process.env.NODE_ENV || 'development').toLowerCase();
 
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
+    minLevel: 'info',
+    includeTimestamp: false,
     ownerId: '',
     prefix: '',
     version: '',
@@ -46,7 +48,9 @@ export async function readConfig(): Promise<Configuration> {
             ...json,
             ownerId: process.env.OWNER,
             prefix: process.env.PREFIX,
-            version: `${environment}-v${version}`
+            version: `${environment}-v${version}`,
+            minLevel: process.env.MIN_LEVEL ?? 'info',
+            includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP)
         };
     }
     catch (err) {
