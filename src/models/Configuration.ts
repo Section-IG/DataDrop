@@ -1,4 +1,5 @@
 import { Snowflake } from 'discord.js';
+import { SendGridOptions } from '@hunteroi/discord-verification';
 
 export interface SpecialRoleConfiguration {
     roleid: Snowflake;
@@ -57,4 +58,10 @@ export interface Configuration {
 
     ok_hand: string;
     zeroWidthSpace: string;
+
+    communicationServiceOptions: SendGridOptions;
+
+    database: {
+        fileName: string;
+    };
 }

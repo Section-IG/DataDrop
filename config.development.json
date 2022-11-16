@@ -104,5 +104,15 @@
         "emote": "📢"
     },
     "ok_hand": "👌",
-    "zeroWidthSpace": "​"
+    "zeroWidthSpace": "​",
+
+    "communicationServiceOptions": {
+        "mailData": {
+            "from": "",
+            "templateId": ""
+        }
+    },
+    "database": {
+        "fileName": "db.development.json"
+    }
 }

@@ -63,4 +63,4 @@ templated.env
 .next
 
 build
-/src/config.ts
+db.*.json

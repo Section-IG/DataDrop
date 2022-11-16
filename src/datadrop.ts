@@ -1,4 +1,4 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel, Role } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel, Role, Snowflake } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
@@ -7,6 +7,8 @@ import * as path from 'path';
 import { getErrorMessage, readFilesFrom } from './helpers';
 import { Configuration } from './models/Configuration';
 import { readConfig } from './config';
+import { JSONDatabaseService, SendGridService, VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
+import { User } from './models/User';
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -14,6 +16,9 @@ export class DatadropClient extends Client {
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
     readonly tempChannelsManager: TempChannelsManager;
+    readonly verificationManager: VerificationManager<User>;
+
+    public readonly errorMessage = "Je n'ai pas su t'envoyer le code!";
 
     constructor(options: ClientOptions, config: Configuration) {
         super(options);
@@ -34,6 +39,20 @@ export class DatadropClient extends Client {
 
         this.tempChannelsManager = new TempChannelsManager(this);
         this.#listenToTempChannelsEvents();
+
+        const database = new JSONDatabaseService(`${__dirname}/../../${config.database.fileName}`);
+        const communicationService = new SendGridService(config.communicationServiceOptions);
+        this.verificationManager = new VerificationManager(this, database, communicationService, {
+            codeGenerationOptions: { length: 6 },
+            maxNbCodeCalledBeforeResend: 3,
+            errorMessage: () => this.errorMessage,
+            pendingMessage: (user: User) => `Ton code de vérification vient de t'être envoyé, ${user.username}`,
+            alreadyPendingMessage: (user: User) => `${user.username}, tu as déjà un code en attente!`,
+            alreadyActiveMessage: (user: User) => `${user.username}, ton compte est déjà vérifié!`,
+            validCodeMessage: (user: User, code: string) => `Le code ${code} est valide. Bienvenue ${user.username}!`,
+            invalidCodeMessage: (_, code: string) => `Le code ${code} est invalide!`
+        });
+        this.#listenToVerificationEvents();
     }
 
     get config(): Configuration {
@@ -42,6 +61,17 @@ export class DatadropClient extends Client {
 
     async reloadConfig(): Promise<void> {
         this.#config = await readConfig();
+    }
+
+    #listenToVerificationEvents(): void {
+        this.verificationManager.on(VerificationManagerEvents.codeVerify, (user: User, userid: Snowflake, code: string, isVerified: boolean) =>
+            this.log.info(`L'utilisateur ${user.username} (${userid}) ${isVerified ? 'a été vérifié avec succès' : 'a échoué sa vérification'} avec le code ${code}.`)
+        );
+        this.verificationManager.on(VerificationManagerEvents.codeCreate, (code: string) => this.log.debug(`Le code ${code} vient d'être créé.`));
+        this.verificationManager.on(VerificationManagerEvents.userCreate, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid}) vient d'être enregistré.`));
+        this.verificationManager.on(VerificationManagerEvents.userAwait, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid}) attend d'être vérifié.`));
+        this.verificationManager.on(VerificationManagerEvents.userActive, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid} est déjà actif!`));
+        this.verificationManager.on(VerificationManagerEvents.error, (user: User, error: unknown) => this.log.error(`Une erreur est survenue lors de l'envoi du code à l'utilisateur ${user.username} (${user.userid}).\nErreur: ${getErrorMessage(error)}`));
     }
 
     #listenToTempChannelsEvents(): void {
