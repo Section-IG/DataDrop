@@ -1,4 +1,5 @@
 import { EmbedBuilder, Message } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 const people = [

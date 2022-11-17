@@ -1,4 +1,5 @@
 ﻿import { Message } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 module.exports = {

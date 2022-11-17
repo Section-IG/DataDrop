@@ -1,5 +1,6 @@
 
 import { EmbedBuilder, GuildMember } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 module.exports = async (client: DatadropClient, member: GuildMember) => {

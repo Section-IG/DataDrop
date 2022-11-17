@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "rootDir": ".",
-    "outDir": "./build",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "strict": true,
+    "useUnknownInCatchVariables": true,
+    "resolveJsonModule": true,
     "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    "rootDir": ".",
+    "outDir": "./build",
     "baseUrl": "."
   }
 }

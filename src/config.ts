@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+
 import { Configuration } from './models/Configuration';
 import { version } from '../package.json';
 

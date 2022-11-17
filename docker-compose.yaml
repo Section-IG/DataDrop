@@ -1,0 +1,38 @@
+x-env_file:
+  &env-file
+  env_file:
+    - .env
+x-network:
+  &network
+  networks:
+    - postgres-network
+x-restart-policy:
+  &restart-policy
+  restart: "no"
+
+version: '3.8'
+services:
+  database:
+    <<: *env-file
+    <<: *network
+    <<: *restart-policy
+    image: postgres:15.1
+    ports:
+      - "$DATABASE_PORT:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  bot:
+    <<: *env-file
+    <<: *network
+    <<: *restart-policy
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - database
+
+volumes:
+  postgres:
+
+networks:
+  postgres-network:

@@ -2,7 +2,7 @@ import { Role, roleMention, bold, Snowflake } from 'discord.js';
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop';
-import { Configuration } from 'src/models/Configuration';
+import { Configuration } from '../models/Configuration';
 
 module.exports = async (client: DatadropClient) => {
   const { config } = client;

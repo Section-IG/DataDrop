@@ -1,6 +1,7 @@
 ﻿import { Message, codeBlock } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
-import { Configuration } from 'src/models/Configuration';
+import { Configuration } from '../models/Configuration';
 
 module.exports = {
     name: 'eval',

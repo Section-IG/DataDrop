@@ -4,6 +4,7 @@
 	"main": "./build/index.js",
 	"scripts": {
 		"start": "node ./build/index.js",
+		"debug": "DEBUG=true && yarn start",
 		"build": "rm -rf build/ && tsc",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "eslint --fix --ext .ts ."
@@ -22,17 +23,10 @@
 		"@hunteroi/advanced-logger": "^0.0.3",
 		"@hunteroi/discord-selfrole": "^2.2.3",
 		"@hunteroi/discord-temp-channels": "^3.0.0",
-		"chalk": "^5.0.1",
-		"discord-api-types": "^0.37.5",
 		"discord.js": "^14.6.0",
-		"dotenv-flow": "^3.2.0",
-		"moment": "^2.29.4",
-		"moment-timezone": "^0.5.37",
-		"node-fetch": "^3.2.10",
-		"nodemon": "^2.0.19"
+		"dotenv": "^16.0.3"
 	},
 	"devDependencies": {
-		"@types/dotenv-flow": "^3.2.0",
 		"@types/node": "^18.7.14",
 		"@typescript-eslint/eslint-plugin": "^5.36.2",
 		"@typescript-eslint/parser": "^5.36.2",

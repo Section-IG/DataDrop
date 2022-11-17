@@ -1,11 +1,11 @@
-import * as dotenv from 'dotenv-flow';
+import * as dotenv from 'dotenv';
 import { GatewayIntentBits } from 'discord.js';
 
 import { DatadropClient } from './src/datadrop';
 import { readConfig } from './src/config';
 import { Configuration } from './src/models/Configuration';
 
-dotenv.config({ silent: true });
+dotenv.config({ debug: Boolean(process.env.DEBUG) });
 
 readConfig().then(
     (config: Configuration) => {

@@ -1,4 +1,5 @@
 import { ChannelType, Message } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 const escapeRegex = (str: string | null | undefined) => str?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

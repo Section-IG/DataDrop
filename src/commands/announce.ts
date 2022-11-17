@@ -1,4 +1,5 @@
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 module.exports = {
