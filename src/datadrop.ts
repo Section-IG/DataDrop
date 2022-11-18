@@ -8,7 +8,6 @@ import { getErrorMessage, readFilesFrom } from './helpers';
 import { Configuration } from './models/Configuration';
 import { readConfig } from './config';
 
-
 export class DatadropClient extends Client {
     #config: Configuration;
     readonly log: Logger;

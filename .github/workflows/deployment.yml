@@ -17,6 +17,4 @@ jobs:
           script: |
             cd ${{secrets.APP_PATH}}
             git pull origin master
-            yarn install
-            yarn run build
-            NODE_ENV=production PM2_HOME=${{secrets.PM2_HOME}} pm2 restart ${{secrets.APP_NAME}} --update-env
+            ENVIRONMENT=production docker-compose up --build

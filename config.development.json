@@ -1,4 +1,8 @@
 {
+    "ownerIds": [ "170844396877512704" ],
+    "minLevel": "debug",
+    "includeTimestamp": false,
+    "prefix": "igb!",
     "botName": "IG Bot Beta",
     "communitymanagerRoleid": "1028257512383848478",
     "adminRoleid": "1028257512358674472",

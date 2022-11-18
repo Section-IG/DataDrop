@@ -13,7 +13,7 @@ module.exports = {
         const { config } = client;
 
         // double check sur l'identité juste pour la sécurité
-        if (message.author.id !== config.ownerId) return;
+        if (!config.ownerIds.includes(message.author.id)) return;
 
         let content = '';
         try {

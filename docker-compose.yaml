@@ -1,7 +1,7 @@
 x-env_file:
   &env-file
   env_file:
-    - .env
+    - templated.env
 x-network:
   &network
   networks:
@@ -28,6 +28,8 @@ services:
     build: 
       context: .
       dockerfile: ./Dockerfile
+      args:
+        - ENVIRONMENT
     depends_on:
       - database
 

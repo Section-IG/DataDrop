@@ -1,13 +1,14 @@
 {
 	"name": "datadrop",
-	"version": "1.6.2",
+	"version": "1.6.3",
 	"main": "./build/index.js",
 	"scripts": {
 		"start": "node ./build/index.js",
 		"debug": "DEBUG=true && yarn start",
 		"build": "rm -rf build/ && tsc",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "eslint --fix --ext .ts ."
+		"lint": "eslint --fix --ext .ts .",
+		"env-gen": "node ./scripts/envgen.js",
+		"deploy": "yarn run env-gen && docker-compose up"
 	},
 	"repository": {
 		"type": "git",
