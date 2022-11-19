@@ -9,13 +9,13 @@ function stringifyOnSingleLine(json) {
     return JSON.stringify(object);
 }
 
-function asASingleVariable() {
+async function asASingleVariable() {
     console.log(`Loading configuration for ${environment}`);
-    fs.readFile(`${path}/config.${environment}.json`, 'utf-8').then(json => {
-        fs.readFile(`${path}/templated.env`, 'utf-8').then((templatedenv) => {
-            fs.writeFile(`${path}/.env`, `CONFIG=${stringifyOnSingleLine(json)}\n${templatedenv}`);
-        });
-    });
+
+    const json = await fs.readFile(`${path}/config.${environment}.json`, 'utf-8');
+    const templatedEnv = await fs.readFile(`${path}/templated.env`, 'utf-8');
+
+    await fs.writeFile(`${path}/.env`, `CONFIG=${stringifyOnSingleLine(json)}\n${templatedEnv}`);
 }
 
 asASingleVariable();

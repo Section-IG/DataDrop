@@ -1,7 +1,7 @@
 {
     "ownerIds": [ "170844396877512704" ],
     "minLevel": "info",
-    "includeTimestamp": false,
+    "includeTimestamp": true,
     "prefix": "ig!",
     "botName": "IG Bot",
     "communitymanagerRoleid": "288659580064366592",

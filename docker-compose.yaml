@@ -8,7 +8,7 @@ x-network:
     - postgres-network
 x-restart-policy:
   &restart-policy
-  restart: "no"
+  restart: always
 
 version: '3.8'
 services:
