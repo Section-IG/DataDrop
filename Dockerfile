@@ -14,7 +14,7 @@ FROM node:lts-alpine as APP
 
 WORKDIR /app
 
-COPY --from=BUILD /app/node_modules .
+COPY --from=BUILD /app/node_modules ./node_modules
 COPY --from=BUILD /app/build ./build
 COPY --from=BUILD /app/build/package.json .
 COPY --from=BUILD /app/yarn.lock .
