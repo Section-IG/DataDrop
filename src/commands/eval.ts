@@ -1,6 +1,7 @@
 ﻿import { Message, codeBlock } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
-import { Configuration } from 'src/models/Configuration';
+import { Configuration } from '../models/Configuration';
 
 module.exports = {
     name: 'eval',
@@ -12,7 +13,7 @@ module.exports = {
         const { config } = client;
 
         // double check sur l'identité juste pour la sécurité
-        if (message.author.id !== config.ownerId) return;
+        if (!config.ownerIds.includes(message.author.id)) return;
 
         let content = '';
         try {

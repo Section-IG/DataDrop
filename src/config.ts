@@ -1,4 +1,3 @@
-import { readFile } from 'fs/promises';
 import { Configuration } from './models/Configuration';
 import { version } from '../package.json';
 
@@ -8,7 +7,7 @@ const environment = (process.env.NODE_ENV || 'development').toLowerCase();
 const defaultConfig: Configuration = {
     minLevel: 'info',
     includeTimestamp: false,
-    ownerId: '',
+    ownerIds: [],
     prefix: '',
     version: '',
     botName: '',
@@ -20,7 +19,7 @@ const defaultConfig: Configuration = {
     faqChannelid: '',
     igcomiteeChannelid: '',
     dynamicChannelPrefix: '',
-    dynamicChannelPrefixRegex: / /,
+    dynamicChannelPrefixRegex: /.*/,
     staticTriggerChannelids: [],
     rolesChannelid: '',
     ig1: { channelid: '', roleid: '', emote: '', groups: [] },
@@ -35,25 +34,16 @@ const defaultConfig: Configuration = {
 
 export async function readConfig(): Promise<Configuration> {
     try {
-        const response = await readFile(`${__dirname}/../../config.${environment}.json`, 'utf-8');
-
-        const json = JSON.parse(response);
+        const json = JSON.parse(process.env.CONFIG ?? '{}');
         for (const prop in json) {
             if (prop.match(/regex/i)) {
                 json[prop] = new RegExp(json[prop]);
             }
         }
 
-        return {
-            ...json,
-            ownerId: process.env.OWNER,
-            prefix: process.env.PREFIX,
-            version: `${environment}-v${version}`,
-            minLevel: process.env.MIN_LEVEL ?? 'info',
-            includeTimestamp: Boolean(process.env.INCLUDE_TIMESTAMP)
-        };
+        return { ...json, version: `${environment}-v${version}` };
     }
-    catch (err) {
+    catch (err: unknown) {
         console.error(err);
         return defaultConfig;
     }

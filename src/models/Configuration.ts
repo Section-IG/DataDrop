@@ -27,7 +27,7 @@ export interface Configuration {
     minLevel: string;
     includeTimestamp: boolean;
 
-    ownerId: Snowflake | undefined;
+    ownerIds: Snowflake[];
     prefix: string | undefined;
     version: string | undefined;
     botName: string;

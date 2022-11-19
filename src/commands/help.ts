@@ -1,4 +1,5 @@
 import { ChannelType, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 function buildEmbed(title: string, color: ColorResolvable, description: string): EmbedBuilder {

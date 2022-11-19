@@ -1,4 +1,5 @@
 import { ChannelType, Message } from 'discord.js';
+
 import { DatadropClient } from '../datadrop';
 
 const escapeRegex = (str: string | null | undefined) => str?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -8,7 +9,7 @@ module.exports = async (client: DatadropClient, message: Message) => {
     prefix,
     communitymanagerRoleid,
     adminRoleid,
-    ownerId,
+    ownerIds,
   } = client.config;
 
   if (message.author.bot) return;
@@ -44,7 +45,7 @@ module.exports = async (client: DatadropClient, message: Message) => {
     return message.channel.send(reply);
   }
 
-  const isAuthorized = message.author.id === ownerId || message.member!.roles.cache.get(communitymanagerRoleid) || message.member!.roles.cache.get(adminRoleid);
+  const isAuthorized = ownerIds.includes(message.author.id) || message.member!.roles.cache.get(communitymanagerRoleid) || message.member!.roles.cache.get(adminRoleid);
   if ((command.adminOnly || command.ownerOnly) && !isAuthorized) return;
 
   try {
