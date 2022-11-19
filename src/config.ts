@@ -1,8 +1,6 @@
 import { Configuration } from './models/Configuration';
 import { version } from '../package.json';
 
-const environment = (process.env.NODE_ENV || 'development').toLowerCase();
-
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
     minLevel: 'info',
@@ -34,6 +32,8 @@ const defaultConfig: Configuration = {
 
 export async function readConfig(): Promise<Configuration> {
     try {
+        const environment = (process.env.NODE_ENV || 'development').toLowerCase();
+
         const json = JSON.parse(process.env.CONFIG ?? '{}');
         for (const prop in json) {
             if (prop.match(/regex/i)) {

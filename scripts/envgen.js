@@ -15,7 +15,7 @@ async function asASingleVariable() {
     const json = await fs.readFile(`${path}/config.${environment}.json`, 'utf-8');
     const templatedEnv = await fs.readFile(`${path}/templated.env`, 'utf-8');
 
-    await fs.writeFile(`${path}/.env`, `CONFIG=${stringifyOnSingleLine(json)}\n${templatedEnv}`);
+    await fs.writeFile(`${path}/.env`, `CONFIG=${stringifyOnSingleLine(json)}\nNODE_ENV=${environment}\n${templatedEnv}`);
 }
 
 asASingleVariable();
