@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 RUN yarn install --frozen-lockfile
-RUN NODE_ENV=$ENVIRONMENT yarn env-gen
+RUN NODE_ENV=${ENVIRONMENT} yarn env-gen
 RUN yarn build
 RUN yarn install --production
 
