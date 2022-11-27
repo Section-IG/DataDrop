@@ -1,9 +1,8 @@
-import { Logger } from '@hunteroi/advanced-logger';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 import { DatadropClient } from 'src/datadrop';
 
-module.exports = async (client: DatadropClient, log: Logger, interaction: Interaction) => {
+module.exports = async (client: DatadropClient, interaction: Interaction) => {
     const user = interaction.user;
     if (interaction.isButton() && interaction.customId.startsWith('la') && interaction.customId.includes(user.id)) {
         const modal = new ModalBuilder().setTitle('Lier son compte');
