@@ -25,5 +25,4 @@ If you wish to deploy it with a development configuration*, you can run `docker-
 If you need it to be deployed on production ground, change the `NODE_ENV=development` value in the `.env` file by `NODE_ENV=production`.
 You can then run the `docker-compose up` command!
 
-
 _\* the Developer eXperience (DX) is a priority to us, which means default commands will always trigger processes for the development environment, never for the production one!_
