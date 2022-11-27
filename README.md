@@ -3,7 +3,7 @@
 
 Discord bot built with Discord.JS for Section IG guild.
 
-The following environment variables must be filled in a `templated.env` file.
+The following environment variables must be filled in a `.env` file.
 This file is used when building the container to generate a production-ready .env file.
 ```dotenv
 DISCORD_TOKEN=
@@ -11,17 +11,19 @@ SENDGRID_API_KEY=
 POSTGRES_DB=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
+DATABASE_PORT=5432
+DATABASE_HOST=localhost
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${POSTGRES_DB}?schema=public
+NODE_ENV=development
 ```
-An empty copy of this file is available as [#templated.env](./#templated.env).
+An empty copy of this file is available as [#.env](./#.env).
 
 ## Deployment
 As the app is dockerized, you can deploy it on your server or locally on your machine.
-First step no matter what you want to achieve is to define an environment variable named `DATABASE_PORT` on your machine.
-It should hold the value 5432 by default.
 
-Then:
-- If you wish to deploy it with a development configuration*, you can run `docker-compose up`.
-- If you need it to be deployed on production ground, give the docker-compose an environment argument: `ENVIRONMENT=production docker-compose up`.
+If you wish to deploy it with a development configuration*, you can run `docker-compose up`.
 
+If you need it to be deployed on production ground, change the `NODE_ENV=development` value in the `.env` file by `NODE_ENV=production`.
+You can then run the `docker-compose up` command!
 
 _\* the Developer eXperience (DX) is a priority to us, which means default commands will always trigger processes for the development environment, never for the production one!_
