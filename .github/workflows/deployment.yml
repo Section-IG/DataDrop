@@ -17,4 +17,4 @@ jobs:
           script: |
             cd ${{secrets.APP_PATH}}
             git pull origin master
-            ENVIRONMENT=production DATABASE_PORT=5432 docker-compose up --build -d
+            docker-compose up --build -d
