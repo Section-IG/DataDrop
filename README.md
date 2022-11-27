@@ -7,7 +7,6 @@ The following environment variables must be filled in a `.env` file.
 This file is used when building the container to generate a production-ready .env file.
 ```dotenv
 DISCORD_TOKEN=
-SENDGRID_API_KEY=
 POSTGRES_DB=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
