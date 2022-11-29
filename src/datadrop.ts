@@ -85,7 +85,7 @@ export class DatadropClient extends Client {
             this.log.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.join(', ')}`);
             if (!(reaction instanceof ButtonInteraction)) {
                 try {
-                    await member.send({ content: `Tu ne peux pas t'assigner le rôle ${role.name}! Tu dois d'abord avec les rôles suivants: ${requiredRolesMissing.join(', ')}` });
+                    await member.send({ content: `Tu ne peux pas t'assigner le rôle ${role.name}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}` });
                 } catch { /** ignore */ }
                 finally {
                     await reaction.users.remove(member);
