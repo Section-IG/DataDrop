@@ -1,4 +1,4 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel, Role } from 'discord.js';
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
@@ -61,6 +61,8 @@ export class DatadropClient extends Client {
     #listenToSelfRoleEvents(): void {
         this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, nbRoles: number, maxRoles: number) => {
             if (!(reaction instanceof ButtonInteraction)) {
+                const channel = await member.guild.channels.fetch(reaction.message.channel.id);
+                this.log.info(`Le membre <${member.user.tag}> a atteint la limite de rôles${(channel ? ` dans <${channel.name}>` : '')}! (${nbRoles}/${maxRoles})`);
                 try {
                     await member.send({ content: `Tu ne peux pas t'assigner plus de ${maxRoles} rôle${(maxRoles > 1 ? 's' : '')} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${(nbRoles > 1 ? 's' : '')}` });
                 } catch { /** ignore */ }
@@ -75,6 +77,21 @@ export class DatadropClient extends Client {
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
         this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, role: Role, requiredRoles: string[]) => {
+            const requiredRolesMissing = (await Promise.all(requiredRoles.map(requiredRole => member.guild.roles.fetch(requiredRole))))
+                .map((requiredRole: Role | null) => requiredRole?.name)
+                .filter(requiredRoles => !!requiredRoles);
+
+            this.log.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.join(', ')}`);
+            if (!(reaction instanceof ButtonInteraction)) {
+                try {
+                    await member.send({ content: `Tu ne peux pas t'assigner le rôle ${role.name}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}` });
+                } catch { /** ignore */ }
+                finally {
+                    await reaction.users.remove(member);
+                }
+            }
+        });
         this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => this.log.error(`Une erreur est survenue lors de la gestion des rôles automatiques.\nErreur: ${message}\n${getErrorMessage(error)}`));
     }
 

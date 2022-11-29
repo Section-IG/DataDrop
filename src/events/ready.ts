@@ -49,14 +49,15 @@ async function registerRolesChannels(client: DatadropClient, config: Configurati
         }
       },
     }),
-    ...([ig1, ig2, ig3].map(({ channelid, groups }) =>
+    ...([ig1, ig2, ig3].map(({ roleid, channelid, groups }) =>
       client.selfRoleManager.registerChannel(channelid, {
         rolesToEmojis: groups.map((group) => ({
           role: group.roleid,
           emoji: group.emote,
+          requiredRoles: [roleid]
         })),
         message,
-        maxRolesAssigned: 1
+        maxRolesAssigned: 1,
       }))),
   ]);
 }
