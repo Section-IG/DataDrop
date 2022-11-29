@@ -62,7 +62,7 @@ export class DatadropClient extends Client {
         this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, nbRoles: number, maxRoles: number) => {
             if (!(reaction instanceof ButtonInteraction)) {
                 const channel = await member.guild.channels.fetch(reaction.message.channel.id);
-                this.log.info(`Le membre <${member.user.tag}> a atteint la limite de rôle${(channel ? ` dans <${channel.name}>` : '')}! (${nbRoles}/${maxRoles})`);
+                this.log.info(`Le membre <${member.user.tag}> a atteint la limite de rôles${(channel ? ` dans <${channel.name}>` : '')}! (${nbRoles}/${maxRoles})`);
                 try {
                     await member.send({ content: `Tu ne peux pas t'assigner plus de ${maxRoles} rôle${(maxRoles > 1 ? 's' : '')} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${(nbRoles > 1 ? 's' : '')}` });
                 } catch { /** ignore */ }
