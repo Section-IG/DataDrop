@@ -75,6 +75,7 @@ export class DatadropClient extends Client {
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
         this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => this.log.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, (member, _, role, requiredRoles) => this.log.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${JSON.stringify(requiredRoles)}`));
         this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => this.log.error(`Une erreur est survenue lors de la gestion des rôles automatiques.\nErreur: ${message}\n${getErrorMessage(error)}`));
     }
 
