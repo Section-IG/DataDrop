@@ -12,7 +12,6 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 DATABASE_PORT=5432
 DATABASE_HOST=localhost
-DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${POSTGRES_DB}?schema=public
 NODE_ENV=development
 ```
 An empty copy of this file is available as [#.env](./#.env).

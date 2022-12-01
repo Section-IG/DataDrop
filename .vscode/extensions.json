@@ -1,6 +1,5 @@
 {
     "recommendations": [
-        "ms-azuretools.vscode-docker",
-        "prisma.prisma"
+        "ms-azuretools.vscode-docker"
     ]
 }
