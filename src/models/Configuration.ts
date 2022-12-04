@@ -61,8 +61,4 @@ export interface Configuration {
     zeroWidthSpace: string;
 
     communicationServiceOptions: SendGridOptions;
-
-    database: {
-        fileName: string;
-    };
 }
