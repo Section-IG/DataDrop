@@ -65,4 +65,3 @@ typings/
 .next
 
 build/
-db.*.json
