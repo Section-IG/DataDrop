@@ -32,8 +32,7 @@ const defaultConfig: Configuration = {
     communicationServiceOptions: {
         apiKey: '',
         mailData: { from: '', templateId: '' }
-    },
-    database: { fileName: '' }
+    }
 };
 
 export async function readConfig(): Promise<Configuration> {
