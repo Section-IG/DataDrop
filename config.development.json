@@ -110,8 +110,8 @@
     "zeroWidthSpace": "​",
     "communicationServiceOptions": {
         "mailData": {
-            "from": "tinael.devresse@henallux.be",
-            "templateId": "d-5e8429db595648749bcbcdf041d853ee"
+            "from": "AN_EMAIL@DOMAIN.COM",
+            "templateId": "TEMPLATE_ID"
         }
     }
 }
