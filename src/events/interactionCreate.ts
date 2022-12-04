@@ -35,19 +35,25 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
         await interaction.showModal(modal);
     }
     else if (interaction.isModalSubmit()) {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         switch (interaction.customId) {
             case `lacm${user.id}`: {
+                const regex = /(etu\d{5,}|mdp[a-z]{5,})@henallux\.be/;
                 const email = interaction.fields.getTextInputValue('email');
-                const result = await client.verificationManager.sendCode(user.id, { to: email });
+                if (!regex.test(email)) {
+                    await interaction.editReply({ content: "L'adresse email fournie n'est pas valide!\nSi tu es un.e étudiant.e, elle doit correspondre à etuXXXXX@henallux.be.\nSi tu es un.e professeur.e, elle doit correspondre à mdpXXXXX@henallux.be." });
+                    break;
+                }
+
+                const result = await client.verificationManager.sendCode(user.id, { to: email, guildId: interaction.guildId });
 
                 const linkAccountButton = new ButtonBuilder()
                     .setLabel('Vérifier son code')
                     .setEmoji('🎰')
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(`lacb${user.id}`)
-                    .setDisabled(result === client.errorMessage);
+                    .setDisabled(result === client.errorMessage || result.endsWith(client.activeAccountMessage));
                 const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
                 await interaction.editReply({ content: result, components: [buttonComponent] });
                 break;

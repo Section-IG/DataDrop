@@ -2,16 +2,20 @@ import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collect
 import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
+import { VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
+import { SendGridService } from '@hunteroi/discord-verification/lib/services/SendGridService';
 import * as path from 'path';
 
+import PostgresDatabaseService from './services/PostgresDatabaseService';
 import { getErrorMessage, readFilesFrom } from './helpers';
 import { Configuration } from './models/Configuration';
 import { readConfig } from './config';
-import { JSONDatabaseService, SendGridService, VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
 import { User } from './models/User';
+import { IDatabaseService } from './models/IDatabaseService';
 
 export class DatadropClient extends Client {
     #config: Configuration;
+    readonly database: IDatabaseService;
     readonly log: Logger;
     readonly commands: Collection<string, any>;
     readonly selfRoleManager: SelfRoleManager;
@@ -19,6 +23,7 @@ export class DatadropClient extends Client {
     readonly verificationManager: VerificationManager<User>;
 
     public readonly errorMessage = "Je n'ai pas su t'envoyer le code!";
+    public readonly activeAccountMessage = 'ton compte est déjà vérifié!';
 
     constructor(options: ClientOptions, config: Configuration) {
         super(options);
@@ -40,15 +45,15 @@ export class DatadropClient extends Client {
         this.tempChannelsManager = new TempChannelsManager(this);
         this.#listenToTempChannelsEvents();
 
-        const database = new JSONDatabaseService(`${__dirname}/../../${config.database.fileName}`);
+        this.database = new PostgresDatabaseService(this.log);
         const communicationService = new SendGridService(config.communicationServiceOptions);
-        this.verificationManager = new VerificationManager(this, database, communicationService, {
+        this.verificationManager = new VerificationManager(this, this.database, communicationService, {
             codeGenerationOptions: { length: 6 },
             maxNbCodeCalledBeforeResend: 3,
             errorMessage: () => this.errorMessage,
             pendingMessage: (user: User) => `Ton code de vérification vient de t'être envoyé, ${user.username}`,
             alreadyPendingMessage: (user: User) => `${user.username}, tu as déjà un code en attente!`,
-            alreadyActiveMessage: (user: User) => `${user.username}, ton compte est déjà vérifié!`,
+            alreadyActiveMessage: (user: User) => `${user.username}, ${this.activeAccountMessage}`,
             validCodeMessage: (user: User, code: string) => `Le code ${code} est valide. Bienvenue ${user.username}!`,
             invalidCodeMessage: (_, code: string) => `Le code ${code} est invalide!`
         });
@@ -64,13 +69,19 @@ export class DatadropClient extends Client {
     }
 
     #listenToVerificationEvents(): void {
-        this.verificationManager.on(VerificationManagerEvents.codeVerify, (user: User, userid: Snowflake, code: string, isVerified: boolean) =>
-            this.log.info(`L'utilisateur ${user.username} (${userid}) ${isVerified ? 'a été vérifié avec succès' : 'a échoué sa vérification'} avec le code ${code}.`)
-        );
+        this.verificationManager.on(VerificationManagerEvents.codeVerify, async (user: User, userid: Snowflake, code: string, isVerified: boolean) => {
+            this.log.info(`L'utilisateur ${user.username} (${userid}) ${isVerified ? 'a été vérifié avec succès' : 'a échoué sa vérification'} avec le code ${code}.`);
+
+            if (isVerified) {
+                const guild = await this.guilds.fetch(user.data['guildId']);
+                const member = await guild.members.fetch(user.userid);
+                await member.roles.add(this.#config.verifiedRoleId, `Compte Hénallux vérifié! ${user.data['email']}`);
+            }
+        });
         this.verificationManager.on(VerificationManagerEvents.codeCreate, (code: string) => this.log.debug(`Le code ${code} vient d'être créé.`));
         this.verificationManager.on(VerificationManagerEvents.userCreate, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid}) vient d'être enregistré.`));
         this.verificationManager.on(VerificationManagerEvents.userAwait, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid}) attend d'être vérifié.`));
-        this.verificationManager.on(VerificationManagerEvents.userActive, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid} est déjà actif!`));
+        this.verificationManager.on(VerificationManagerEvents.userActive, (user: User) => this.log.debug(`L'utilisateur ${user.username} (${user.userid}) est déjà actif!`));
         this.verificationManager.on(VerificationManagerEvents.error, (user: User, error: unknown) => this.log.error(`Une erreur est survenue lors de l'envoi du code à l'utilisateur ${user.username} (${user.userid}).\nErreur: ${getErrorMessage(error)}`));
     }
 
@@ -143,9 +154,15 @@ export class DatadropClient extends Client {
         });
     }
 
-    start() {
+    async start(): Promise<void> {
         this.#bindEvents();
         this.#bindCommands();
+        await this.database?.start();
         this.login();
+    }
+
+    async stop(): Promise<void> {
+        await this.database?.stop();
+        process.exit(0);
     }
 }

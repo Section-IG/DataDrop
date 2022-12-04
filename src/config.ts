@@ -13,6 +13,7 @@ const defaultConfig: Configuration = {
     adminRoleid: '',
     delegatesRoleid: '',
     professorRoleid: '',
+    verifiedRoleId: '',
     informationsChannelid: '',
     faqChannelid: '',
     igcomiteeChannelid: '',

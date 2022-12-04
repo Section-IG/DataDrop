@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { SendGridOptions } from '@hunteroi/discord-verification';
+import { SendGridOptions } from '@hunteroi/discord-verification/lib/services/SendGridService';
 
 export interface SpecialRoleConfiguration {
     roleid: Snowflake;
@@ -37,6 +37,7 @@ export interface Configuration {
     adminRoleid: Snowflake;
     delegatesRoleid: Snowflake;
     professorRoleid: Snowflake;
+    verifiedRoleId: Snowflake;
 
     informationsChannelid: Snowflake;
     faqChannelid: Snowflake;

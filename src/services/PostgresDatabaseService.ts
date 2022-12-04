@@ -1,9 +1,9 @@
 import { Snowflake } from 'discord.js';
 import { IStoringSystem } from '@hunteroi/discord-verification';
-import { Client, DatabaseError } from 'ts-postgres';
+import { Logger } from '@hunteroi/advanced-logger';
+import { Client, DatabaseError, PreparedStatement, Value } from 'ts-postgres';
 
 import { User } from '../models/User';
-import { Logger } from '@hunteroi/advanced-logger';
 
 export default class PostgresDatabaseService implements IStoringSystem<User> {
     #logger: Logger;
@@ -39,6 +39,28 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async start(): Promise<void> {
         await this.#database.connect();
+
+        await this.#database.query(`CREATE TABLE IF NOT EXISTS Users (
+            userId text NOT NULL PRIMARY KEY,
+            data text UNIQUE,
+            code text,
+            activatedCode text,
+            activationTimestamp text,
+            username text NOT NULL,
+            status integer NOT NULL,
+            nbCodeCalled integer NOT NULL DEFAULT 0,
+            nbVerifyCalled integer NOT NULL DEFAULT 0,
+            createdAt timestamp NOT NULL DEFAULT now(),
+            updatedAt timestamp
+        );`);
+        await this.#database.query(`CREATE OR REPLACE FUNCTION set_updatedAt() RETURNS TRIGGER AS $set_updatedAt$
+            BEGIN
+                NEW.updatedAt = now();
+                RETURN NEW;
+            END;
+            $set_updatedAt$ LANGUAGE plpgsql;
+        `);
+        await this.#database.query(`CREATE OR REPLACE TRIGGER users_update BEFORE UPDATE ON Users FOR EACH ROW EXECUTE PROCEDURE set_updatedAt();`);
     }
 
     /**
@@ -53,32 +75,110 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     /**
      * @inherited
      */
-    public async read(userid: Snowflake): Promise<User> {
-        const statement = await this.#database.prepare('SELECT * FROM `Users` WHERE `userid` = $1');
-        try {
-            const result = await statement.execute([userid]);
-            for (const row of result) {
-                console.log(row);
-            }
-        }
-        finally {
-            await statement.close();
-        }
-
-        throw new Error('Method not implemented.');
+    public async read(userid: Snowflake): Promise<User | undefined | null> {
+        const statement = await this.#database.prepare('SELECT * FROM Users WHERE userId = $1;');
+        return await this.#executeStatement(statement, [userid]);
     }
 
     /**
      * @inherited
      */
-    public async readBy(callback: (user: User, index: string | number) => boolean): Promise<User> {
-        throw new Error('Method not implemented.');
+    public async readBy(argument: Map<string, any> | ((user: User, index: string | number) => boolean)): Promise<User | undefined | null> {
+        if (!(argument instanceof Map)) throw new Error('Method not implemented.');
+
+        let sqlQuery = 'SELECT * FROM Users';
+        let nbArguments = 1;
+        while (nbArguments <= argument.size * 2) {
+            if (!sqlQuery.includes('WHERE')) sqlQuery += ' WHERE ';
+            else sqlQuery += ' AND ';
+            sqlQuery += `$${nbArguments} = $${++nbArguments}`;
+            nbArguments++;
+        }
+        const statement = await this.#database.prepare(sqlQuery);
+        return await this.#executeStatement(statement, [...argument.entries()].flat());
     }
 
     /**
      * @inherited
      */
     public async write(user: User): Promise<void> {
-        throw new Error('Method not implemented.');
+        const userid = user.userid;
+        const data = user.data;
+        const offset = 3;
+        const userEntries = Object.entries(user);
+        const insertColumns = ['status', 'code', 'nbCodeCalled', 'nbVerifyCalled', 'username'].sort(this.#ascendingSort);
+        const insertValues = userEntries.filter(([prop]) => insertColumns.includes(prop)).sort(([prop1], [prop2]) => this.#ascendingSort(prop1, prop2));
+        const updateColumns = ['status', 'code', 'nbCodeCalled', 'nbVerifyCalled', 'activatedCode', 'activationTimestamp'].sort(this.#ascendingSort);
+        const updateValues = userEntries.filter(([prop]) => updateColumns.includes(prop)).sort(([prop1], [prop2]) => this.#ascendingSort(prop1, prop2));
+
+        const sqlQuery = `INSERT INTO Users (userId, data, createdAt, ${this.#listParameters(insertColumns)})
+            VALUES ($1, $2, NOW(), ${this.#listValues(insertValues, offset)})
+            ON CONFLICT (userId) DO UPDATE SET ${this.#listParametersWithValues(updateValues, offset + insertValues.length)} WHERE EXCLUDED.userId = $1;`;
+        const values = [userid, JSON.stringify(data), ...this.#deconstructValues(insertValues), ...this.#deconstructValues(updateValues)];
+        this.#logger.debug(`Query: ${sqlQuery}\nParameters: ${JSON.stringify(values)}`);
+
+        const statement = await this.#database.prepare(sqlQuery);
+        await this.#executeStatement(statement, values, false);
     }
+
+    //#region private
+    #ascendingSort(string1: string, string2: string): number {
+        if (string1 > string2) return 1;
+        if (string1 < string2) return -1;
+        return 0;
+    }
+
+    #listParameters(parameters: string[]): string {
+        return parameters.join(', ');
+    }
+
+    #listValues(values: [string, any][], offset: number): string {
+        return values.map((_, index) => '$' + (index + offset)).join(', ');
+    }
+
+    #listParametersWithValues(values: [string, any][], offset: number) {
+        return values.map(([prop], index) => prop + ' = $' + (index + offset)).join(', ');
+    }
+
+    #deconstructValues(values: [string, any][]): Value[] {
+        return values.flatMap(([, v]) => v instanceof Object && typeof v !== 'bigint' ? JSON.stringify(v) : (v ?? null));
+    }
+
+    async #executeStatement(statement: PreparedStatement, values: Value[] = [], isSelect = true): Promise<User | undefined | null> {
+        try {
+            const entities = await statement.execute(values);
+            if (!isSelect) return null;
+
+            const entity = [...entities].pop();
+            if (!entity) throw new Error('User not found');
+
+            const asDate = (value: string | undefined | null): Date | null => value ? new Date(value) : null;
+            const asInteger = (value: string | undefined | null): number | null => value ? parseInt(value) : null;
+            const user = {
+                userid: entity.get('userid')?.valueOf(),
+                data: JSON.parse(entity.get('data')?.toString() ?? '{}'),
+                username: entity.get('username')?.valueOf(),
+                createdAt: asDate(entity.get('createdat')?.valueOf() as string),
+                updatedAt: asDate(entity.get('updatedat')?.valueOf() as string),
+                status: entity.get('status')?.valueOf(),
+                code: entity.get('code')?.valueOf(),
+                activatedCode: entity.get('activatedcode')?.valueOf(),
+                activationTimestamp: asInteger(entity.get('activationtimestamp')?.valueOf() as string),
+                nbCodeCalled: entity.get('nbcodecalled')?.valueOf(),
+                nbVerifyCalled: entity.get('nbverifycalled')?.valueOf()
+            } as User;
+
+            this.#logger.debug('[ENTITY] ' + JSON.stringify(entity) + '\n[USER] ' + JSON.stringify(user));
+
+            return user;
+        }
+        catch (error: unknown) {
+            this.#logger.error((error as Error).message);
+            return null;
+        }
+        finally {
+            await statement.close();
+        }
+    }
+    //#endregion
 }
