@@ -13,7 +13,7 @@ POSTGRES_PASSWORD=
 DATABASE_PORT=5432
 DATABASE_HOST=localhost
 NODE_ENV=development
-SENGRID_API_KEY=
+SENDGRID_API_KEY=
 ```
 An empty copy of this file is available as [#.env](./#.env).
 
