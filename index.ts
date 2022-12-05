@@ -7,20 +7,23 @@ import { Configuration } from './src/models/Configuration';
 
 dotenv.config({ debug: Boolean(process.env.DEBUG) });
 
-readConfig().then(
-    (config: Configuration) => {
-        const client = new DatadropClient({
-            intents: [
-                GatewayIntentBits.GuildMembers,
-                GatewayIntentBits.GuildMessageReactions,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.GuildVoiceStates,
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.MessageContent,
-                GatewayIntentBits.DirectMessages
-            ]
-        }, config);
+let client: DatadropClient;
+readConfig()
+    .then(
+        async (config: Configuration) => {
+            client = new DatadropClient({
+                intents: [
+                    GatewayIntentBits.GuildMembers,
+                    GatewayIntentBits.GuildMessageReactions,
+                    GatewayIntentBits.GuildMessages,
+                    GatewayIntentBits.GuildVoiceStates,
+                    GatewayIntentBits.Guilds,
+                    GatewayIntentBits.MessageContent,
+                    GatewayIntentBits.DirectMessages
+                ]
+            }, config);
 
-        client.start();
-    }
-);
+            await client.start();
+        }
+    )
+    .catch(() => client?.stop());

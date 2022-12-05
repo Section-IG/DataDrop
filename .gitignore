@@ -56,11 +56,12 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-templated.env
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
 
 # next.js build output
 .next
 
-build
-/src/config.ts
+build/

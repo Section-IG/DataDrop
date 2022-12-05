@@ -13,6 +13,7 @@ const defaultConfig: Configuration = {
     adminRoleid: '',
     delegatesRoleid: '',
     professorRoleid: '',
+    verifiedRoleId: '',
     informationsChannelid: '',
     faqChannelid: '',
     igcomiteeChannelid: '',
@@ -27,7 +28,11 @@ const defaultConfig: Configuration = {
     tutor: { roleid: '', emote: '' },
     announce: { roleid: '', emote: '', channelid: '' },
     ok_hand: '',
-    zeroWidthSpace: ''
+    zeroWidthSpace: '',
+    communicationServiceOptions: {
+        apiKey: '',
+        mailData: { from: '', templateId: '' }
+    }
 };
 
 export async function readConfig(): Promise<Configuration> {
@@ -41,7 +46,10 @@ export async function readConfig(): Promise<Configuration> {
             }
         }
 
-        return { ...json, version: `${environment}-v${version}` };
+        const config = { ...json, version: `${environment}-v${version}` };
+        config.communicationServiceOptions.apiKey = process.env.SENDGRID_API_KEY;
+
+        return config;
     }
     catch (err: unknown) {
         console.error(err);

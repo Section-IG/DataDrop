@@ -1,5 +1,7 @@
 {
-    "ownerIds": [ "170844396877512704" ],
+    "ownerIds": [
+        "170844396877512704"
+    ],
     "minLevel": "debug",
     "includeTimestamp": true,
     "prefix": "igb!",
@@ -8,6 +10,7 @@
     "adminRoleid": "1028257512358674472",
     "delegatesRoleid": "1028257512358674468",
     "professorRoleid": "1028257512358674470",
+    "verifiedRoleId": "1048774508007407726",
     "informationsChannelid": "1028257513109454855",
     "faqChannelid": "1028257513109454856",
     "igcomiteeChannelid": "1028257513109454857",
@@ -104,5 +107,11 @@
         "emote": "📢"
     },
     "ok_hand": "👌",
-    "zeroWidthSpace": "​"
+    "zeroWidthSpace": "​",
+    "communicationServiceOptions": {
+        "mailData": {
+            "from": "mdpdevti@henallux.be",
+            "templateId": "d-c8892944b4f2417bafece2d7a5b73d1f"
+        }
+    }
 }
