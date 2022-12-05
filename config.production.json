@@ -110,8 +110,8 @@
     "zeroWidthSpace": "​",
     "communicationServiceOptions": {
         "mailData": {
-            "from": "",
-            "templateId": ""
+            "from": "mdpdevti@henallux.be",
+            "templateId": "d-ae8dfdd7cc9c49f1af6e016ecbb4d856"
         }
     }
 }
