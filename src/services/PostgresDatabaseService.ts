@@ -153,12 +153,13 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     }
 
     async #executeStatement(statement: PreparedStatement, values: Value[] = [], isSelect = true): Promise<User | undefined | null> {
+        const notFoundMessage = 'User not found';
         try {
             const entities = await statement.execute(values);
             if (!isSelect) return null;
 
             const entity = [...entities].pop();
-            if (!entity) throw new Error('User not found');
+            if (!entity) throw new Error(notFoundMessage);
 
             const asDate = (value: string | undefined | null): Date | null => value ? new Date(value) : null;
             const asInteger = (value: string | undefined | null): number | null => value ? parseInt(value) : null;
@@ -179,7 +180,12 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
             return user;
         }
         catch (error: unknown) {
-            this.#logger.error((error as Error).message);
+            const err = <Error>error;
+            if (err.message === notFoundMessage) {
+                this.#logger.verbose(err.message);
+            } else {
+                this.#logger.error(err.message);
+            }
             return null;
         }
         finally {
