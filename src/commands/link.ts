@@ -23,7 +23,7 @@ module.exports = {
         const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
 
         await message.reply({
-            content: `Pour lier ton compte, rien de plus simple! Il te suffit de cliquer sur le bouton ci-dessous et remplir le formulaire! Tu recevras un code par email qu'il faudra envoyer ici ensuite!\n${client.config.warning} Nous conservons les informations soumises après utilisation. Si tu soumets tes informations, tu acceptes que celles-ci nous soient transmises et que tu les conservions durant toute la durée de ta présence sur le serveur!`,
+            content: `Pour lier ton compte, rien de plus simple! Il te suffit de cliquer sur le bouton ci-dessous et remplir le formulaire! Tu recevras un code par email qu'il faudra envoyer ici ensuite!\n${client.config.warning} Nous conservons les informations soumises après utilisation. Si tu soumets tes informations, tu acceptes que celles-ci nous soient transmises et que nous les conservions durant toute la durée de ta présence sur le serveur!`,
             components: [buttonComponent]
         });
     },
