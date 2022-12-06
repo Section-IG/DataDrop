@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, italic, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 import { DatadropClient } from 'src/datadrop';
 
@@ -67,7 +67,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
                     .setCustomId(`lacb${user.id}`)
                     .setDisabled(result === client.errorMessage || result.endsWith(client.activeAccountMessage));
                 const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
-                await interaction.editReply({ content: result, components: [buttonComponent] });
+                await interaction.editReply({ content: `${result}\n${italic("D'ailleurs, l'email peut potentiellement se retrouver dans tes spams!")}`, components: [buttonComponent] });
                 break;
             }
             case `lav${user.id}`: {
