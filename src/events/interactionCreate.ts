@@ -34,7 +34,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
         modal.addComponents(inputComponent);
         await interaction.showModal(modal);
     }
-    else if (interaction.isModalSubmit()) {
+    else if (interaction.isModalSubmit() && interaction.customId.includes(user.id)) {
         await interaction.deferReply({ ephemeral: true });
 
         switch (interaction.customId) {
@@ -65,5 +65,8 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
                 break;
             }
         }
+    }
+    else if (interaction.isRepliable()) {
+        interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
     }
 };
