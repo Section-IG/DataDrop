@@ -5,6 +5,7 @@ import { version } from '../package.json';
 const defaultConfig: Configuration = {
     minLevel: 'info',
     includeTimestamp: false,
+    guildId: '',
     ownerIds: [],
     prefix: '',
     version: '',

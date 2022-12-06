@@ -73,8 +73,8 @@ export class DatadropClient extends Client {
             this.log.info(`L'utilisateur ${user.username} (${userid}) ${isVerified ? 'a été vérifié avec succès' : 'a échoué sa vérification'} avec le code ${code}.`);
 
             if (isVerified) {
-                const guild = await this.guilds.fetch(user.data['guildId']);
-                const member = await guild.members.fetch(user.userid);
+                const guild = await this.guilds.fetch(this.#config.guildId);
+                const member = await guild.members.fetch(userid);
                 await member.roles.add(this.#config.verifiedRoleId, `Compte Hénallux vérifié! ${user.data['email']}`);
             }
         });
