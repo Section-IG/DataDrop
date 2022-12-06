@@ -33,9 +33,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     }
 
     /**
-     * Opens the connection with the database.
-     *
-     * @memberof DatabaseService
+     * @inherited
      */
     public async start(): Promise<void> {
         await this.#database.connect();
@@ -64,9 +62,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     }
 
     /**
-     * Closes the connection with the database.
-     *
-     * @memberof DatabaseService
+     * @inherited
      */
     public async stop(): Promise<void> {
         await this.#database.end();
@@ -119,6 +115,14 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
 
         const statement = await this.#database.prepare(sqlQuery);
         await this.#executeStatement(statement, values, false);
+    }
+
+    /**
+     * @inherited
+     */
+    public async delete(userid: Snowflake): Promise<void> {
+        const statement = await this.#database.prepare('DELETE FROM Users WHERE userId = $1;');
+        await this.#executeStatement(statement, [userid], false);
     }
 
     //#region private

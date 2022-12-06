@@ -26,8 +26,8 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 
 		await member.send({ embeds: [embed], components: [buttonComponent] });
 		client.log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
-	} catch (err) {
-		console.error(err);
+	} catch (err: unknown) {
+		client.log.error((<Error>err).message);
 	}
 };
 
