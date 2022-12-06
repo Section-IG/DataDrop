@@ -29,6 +29,7 @@ const defaultConfig: Configuration = {
     tutor: { roleid: '', emote: '' },
     announce: { roleid: '', emote: '', channelid: '' },
     ok_hand: '',
+    warning: '',
     zeroWidthSpace: '',
     communicationServiceOptions: {
         apiKey: '',

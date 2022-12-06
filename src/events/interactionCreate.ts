@@ -1,10 +1,16 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, italic, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 import { DatadropClient } from 'src/datadrop';
 
 module.exports = async (client: DatadropClient, interaction: Interaction) => {
     const user = interaction.user;
     if (interaction.isButton() && interaction.customId.startsWith('la') && interaction.customId.includes(user.id)) {
+        const userFromDatabase = await client.database.read(user.id);
+        if (userFromDatabase?.activatedCode) {
+            await interaction.reply({ ephemeral: true, content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+            return;
+        }
+
         const modal = new ModalBuilder().setTitle('Lier son compte');
         const input = new TextInputBuilder();
         switch (interaction.customId) {
@@ -34,8 +40,14 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
         modal.addComponents(inputComponent);
         await interaction.showModal(modal);
     }
-    else if (interaction.isModalSubmit()) {
+    else if (interaction.isModalSubmit() && interaction.customId.includes(user.id)) {
         await interaction.deferReply({ ephemeral: true });
+
+        const userFromDatabase = await client.database.read(user.id);
+        if (userFromDatabase?.activatedCode) {
+            await interaction.editReply({ content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+            return;
+        }
 
         switch (interaction.customId) {
             case `lacm${user.id}`: {
@@ -55,7 +67,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
                     .setCustomId(`lacb${user.id}`)
                     .setDisabled(result === client.errorMessage || result.endsWith(client.activeAccountMessage));
                 const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
-                await interaction.editReply({ content: result, components: [buttonComponent] });
+                await interaction.editReply({ content: `${result}\n${italic("D'ailleurs, l'email peut potentiellement se retrouver dans tes spams!")}`, components: [buttonComponent] });
                 break;
             }
             case `lav${user.id}`: {
@@ -65,5 +77,8 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
                 break;
             }
         }
+    }
+    else if (interaction.isRepliable()) {
+        interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
     }
 };
