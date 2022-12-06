@@ -27,9 +27,9 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     }
 
     #listenToDatabaseEvents() {
-        this.#database.on('connect', () => this.#logger.info('Database connection established!'));
-        this.#database.on('end', () => this.#logger.info('Database connection closed!'));
-        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`The following error occured while using the database: \n${error.message}`));
+        this.#database.on('connect', () => this.#logger.info('Connexion établie avec la base de données!'));
+        this.#database.on('end', () => this.#logger.info('Connexion fermée avec la base de données!'));
+        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
     }
 
     /**
@@ -72,6 +72,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      * @inherited
      */
     public async read(userid: Snowflake): Promise<User | undefined | null> {
+        this.#logger.verbose(`Lecture de l'utilisateur sur base de l'identifiant ${userid}`);
         const statement = await this.#database.prepare('SELECT * FROM Users WHERE userId = $1;');
         return await this.#executeStatement(statement, [userid]);
     }
@@ -82,6 +83,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     public async readBy(argument: Map<string, any> | ((user: User, index: string | number) => boolean)): Promise<User | undefined | null> {
         if (!(argument instanceof Map)) throw new Error('Method not implemented.');
 
+        this.#logger.verbose(`Lecture de l'utilisateur sur base des filtres ${JSON.stringify(argument)}`);
         let sqlQuery = 'SELECT * FROM Users';
         let nbArguments = 1;
         while (nbArguments <= argument.size * 2) {
@@ -98,6 +100,8 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      * @inherited
      */
     public async write(user: User): Promise<void> {
+        this.#logger.verbose(`Écriture de l'utilisateur ${JSON.stringify(user)}`);
+
         const userid = user.userid;
         const data = user.data;
         const offset = 3;
@@ -111,7 +115,6 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
             VALUES ($1, $2, NOW(), ${this.#listValues(insertValues, offset)})
             ON CONFLICT (userId) DO UPDATE SET ${this.#listParametersWithValues(updateValues, offset + insertValues.length)} WHERE EXCLUDED.userId = $1;`;
         const values = [userid, JSON.stringify(data), ...this.#deconstructValues(insertValues), ...this.#deconstructValues(updateValues)];
-        this.#logger.debug(`Query: ${sqlQuery}\nParameters: ${JSON.stringify(values)}`);
 
         const statement = await this.#database.prepare(sqlQuery);
         await this.#executeStatement(statement, values, false);
@@ -121,6 +124,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      * @inherited
      */
     public async delete(userid: Snowflake): Promise<void> {
+        this.#logger.verbose(`Suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
         const statement = await this.#database.prepare('DELETE FROM Users WHERE userId = $1;');
         await this.#executeStatement(statement, [userid], false);
     }
@@ -171,8 +175,6 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
                 nbCodeCalled: entity.get('nbcodecalled')?.valueOf(),
                 nbVerifyCalled: entity.get('nbverifycalled')?.valueOf()
             } as User;
-
-            this.#logger.debug('[ENTITY] ' + JSON.stringify(entity) + '\n[USER] ' + JSON.stringify(user));
 
             return user;
         }

@@ -6,6 +6,7 @@ import { DatadropClient } from '../datadrop';
 
 module.exports = async (client: DatadropClient, member: GuildMember) => {
 	if (member.user.bot) return;
+	client.logger.info(`L'utilisateur <${member.nickname} a rejoint le serveur.`);
 
 	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = client.config;
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
@@ -21,13 +22,13 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 	try {
 		if (annoncesRole) {
 			await member.roles.add(annoncesRole);
-			client.log.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
+			client.logger.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
 
 		await member.send({ embeds: [embed], components: [buttonComponent] });
-		client.log.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
+		client.logger.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
 	} catch (err: unknown) {
-		client.log.error((<Error>err).message);
+		client.logger.error((<Error>err).message);
 	}
 };
 

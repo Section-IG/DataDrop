@@ -9,7 +9,7 @@ module.exports = {
 
 	async execute(client: DatadropClient, message: Message, args: string[]) {
 		const { ok_hand } = client.config;
-		client.log.info('Arrêt en cours...');
+		client.logger.info('Arrêt en cours...');
 		await message.channel.send(ok_hand);
 		process.exit();
 	}

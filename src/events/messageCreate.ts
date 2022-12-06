@@ -29,7 +29,7 @@ module.exports = async (client: DatadropClient, message: Message) => {
   const command = client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
   if (!command) return;
 
-  client.log.info(`${message.author.tag} (${message.author.id}) a utilisé '${command.name}' ${message.channel.type === ChannelType.GuildText ? `dans #${message.channel.name} (${message.channel.id})` : 'en DM'}`);
+  client.logger.info(`${message.author.tag} (${message.author.id}) a utilisé '${command.name}' ${message.channel.type === ChannelType.GuildText ? `dans #${message.channel.name} (${message.channel.id})` : 'en DM'}`);
 
   if (command.guildOnly && message.channel.type !== ChannelType.GuildText) {
     return message.reply("Je ne peux pas exécuter cette commande en dehors d'une guilde!");
@@ -52,7 +52,7 @@ module.exports = async (client: DatadropClient, message: Message) => {
     command.execute(client, message, args);
   }
   catch (err) {
-    client.log.error(err as string);
+    client.logger.error(err as string);
     message.reply(":x: **Oups!** - Une erreur est apparue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!");
   }
 };

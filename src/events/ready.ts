@@ -12,7 +12,7 @@ module.exports = async (client: DatadropClient) => {
   await client.user?.setUsername(config.botName);
   client.user?.setActivity({ name: config.version });
 
-  client.log.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
+  client.logger.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
 };
 
 async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {

@@ -21,7 +21,7 @@ module.exports = {
       if (verboseIsActive) await message.channel.send(`❌ **Oups!** - Tu n'es pas membre d'un des rôles nécessaires et n'es donc pas éligible à cette commande.`);
       else await message.react('❌');
 
-      client.log.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler le message <${reference.messageId}> mais n'a pas les droits nécessaires.`);
+      client.logger.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler le message <${reference.messageId}> mais n'a pas les droits nécessaires.`);
       return;
     }
 
@@ -29,7 +29,7 @@ module.exports = {
       if (verboseIsActive) await message.channel.send('❌ **Oups!** - Pas de référence. Peut-être avez-vous oublié de sélectionner le message à (dés)épingler en y répondant? (cfr <https://support.discord.com/hc/fr/articles/360057382374-Replies-FAQ>)');
       else await message.react('❌');
 
-      client.log.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler un message sans le référencer.`);
+      client.logger.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler un message sans le référencer.`);
       return;
     }
 
@@ -39,7 +39,7 @@ module.exports = {
       if (verboseIsActive) await message.channel.send('❌ **Oups!** - Message non trouvé. Peut-être a-t-il été supprimé?');
       else await message.react('❌');
 
-      client.log.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler un message non-trouvé.`);
+      client.logger.info(`Le membre <${message.member.displayName}> (${message.member.id}) a tenté d'épingler/désépingler un message non-trouvé.`);
       return;
     }
 
@@ -52,6 +52,6 @@ module.exports = {
       if (verboseIsActive) await message.channel.send('✅ Message épinglé!');
       else await message.react('✅');
     }
-    client.log.info(`Le membre <${message.member.displayName}> (${message.member.id}) a épinglé/désépinglé le message <${parentMessage.id}>.`);
+    client.logger.info(`Le membre <${message.member.displayName}> (${message.member.id}) a épinglé/désépinglé le message <${parentMessage.id}>.`);
   }
 };
