@@ -8,6 +8,13 @@ module.exports = {
 
     async execute(client: DatadropClient, message: Message, args: string[]) {
         const user = message.author;
+
+        const userFromDatabase = await client.database.read(user.id);
+        if (userFromDatabase?.activatedCode) {
+            await message.reply({ content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+            return;
+        }
+
         const linkAccountButton = new ButtonBuilder()
             .setLabel('Lier son compte')
             .setEmoji('🔗')

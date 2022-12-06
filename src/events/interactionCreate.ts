@@ -5,6 +5,12 @@ import { DatadropClient } from 'src/datadrop';
 module.exports = async (client: DatadropClient, interaction: Interaction) => {
     const user = interaction.user;
     if (interaction.isButton() && interaction.customId.startsWith('la') && interaction.customId.includes(user.id)) {
+        const userFromDatabase = await client.database.read(user.id);
+        if (userFromDatabase?.activatedCode) {
+            await interaction.reply({ ephemeral: true, content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+            return;
+        }
+
         const modal = new ModalBuilder().setTitle('Lier son compte');
         const input = new TextInputBuilder();
         switch (interaction.customId) {
@@ -36,6 +42,12 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
     }
     else if (interaction.isModalSubmit() && interaction.customId.includes(user.id)) {
         await interaction.deferReply({ ephemeral: true });
+
+        const userFromDatabase = await client.database.read(user.id);
+        if (userFromDatabase?.activatedCode) {
+            await interaction.editReply({ content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+            return;
+        }
 
         switch (interaction.customId) {
             case `lacm${user.id}`: {
