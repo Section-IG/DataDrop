@@ -32,6 +32,12 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     public async start(): Promise<void> {
         await this.#database.connect();
 
+        await this.#database.query(`CREATE TABLE IF NOT EXISTS Migrations (
+            id serial PRIMARY KEY,
+            name text UNIQUE,
+            date timestamp NOT NULL DEFAULT now()
+        );`);
+
         await this.#database.query(`CREATE TABLE IF NOT EXISTS Users (
             userId text NOT NULL PRIMARY KEY,
             data text UNIQUE,
@@ -122,13 +128,24 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async delete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = 1 WHERE userId = $1;');
-        await this.#executeStatement(statement, [userid], false);
+        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = $1 WHERE userId = $2;');
+        await this.#executeStatement(statement, [true, userid], false);
     }
 
     //#region private
     async #runMigrations(): Promise<void> {
-        await this.#database.query('ALTER TABLE Users ADD isDeleted boolean;');
+        await this.#runMigration('User soft delete', async () => {
+            await this.#database.query('ALTER TABLE Users ADD isDeleted boolean;');
+        });
+    }
+
+    async #runMigration(name: string, callback: () => Promise<void>) {
+        const result = await this.#database.query('SELECT * FROM Migrations WHERE name = $1', [name]);
+        const migration = [...result].pop();
+        if (!migration) {
+            await this.#database.query('INSERT INTO Migrations (name) VALUES($1);', [name]);
+            await callback();
+        }
     }
 
     #listenToDatabaseEvents() {
