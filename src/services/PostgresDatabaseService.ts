@@ -26,12 +26,6 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
         this.#listenToDatabaseEvents();
     }
 
-    #listenToDatabaseEvents() {
-        this.#database.on('connect', () => this.#logger.info('Connexion établie avec la base de données!'));
-        this.#database.on('end', () => this.#logger.info('Connexion fermée avec la base de données!'));
-        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
-    }
-
     /**
      * @inherited
      */
@@ -49,7 +43,8 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
             nbCodeCalled integer NOT NULL DEFAULT 0,
             nbVerifyCalled integer NOT NULL DEFAULT 0,
             createdAt timestamp NOT NULL DEFAULT now(),
-            updatedAt timestamp
+            updatedAt timestamp,
+            isDeleted boolean
         );`);
         await this.#database.query(`CREATE OR REPLACE FUNCTION set_updatedAt() RETURNS TRIGGER AS $set_updatedAt$
             BEGIN
@@ -59,6 +54,8 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
             $set_updatedAt$ LANGUAGE plpgsql;
         `);
         await this.#database.query(`CREATE OR REPLACE TRIGGER users_update BEFORE UPDATE ON Users FOR EACH ROW EXECUTE PROCEDURE set_updatedAt();`);
+
+        await this.#runMigrations();
     }
 
     /**
@@ -125,11 +122,21 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async delete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('DELETE FROM Users WHERE userId = $1;');
+        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = 1 WHERE userId = $1;');
         await this.#executeStatement(statement, [userid], false);
     }
 
     //#region private
+    async #runMigrations(): Promise<void> {
+        await this.#database.query('ALTER TABLE Users ADD isDeleted boolean;');
+    }
+
+    #listenToDatabaseEvents() {
+        this.#database.on('connect', () => this.#logger.info('Connexion établie avec la base de données!'));
+        this.#database.on('end', () => this.#logger.info('Connexion fermée avec la base de données!'));
+        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
+    }
+
     #ascendingSort(string1: string, string2: string): number {
         if (string1 > string2) return 1;
         if (string1 < string2) return -1;
@@ -174,7 +181,8 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
                 activatedCode: entity.get('activatedcode')?.valueOf(),
                 activationTimestamp: asInteger(entity.get('activationtimestamp')?.valueOf() as string),
                 nbCodeCalled: entity.get('nbcodecalled')?.valueOf(),
-                nbVerifyCalled: entity.get('nbverifycalled')?.valueOf()
+                nbVerifyCalled: entity.get('nbverifycalled')?.valueOf(),
+                isDeleted: entity.get('isdeleted')?.valueOf()
             } as User;
 
             return user;
