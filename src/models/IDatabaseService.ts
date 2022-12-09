@@ -1,7 +1,7 @@
 import { IStoringSystem } from '@hunteroi/discord-verification';
 
 import { User } from './User';
-import {Snowflake} from "discord.js";
+import { Snowflake } from "discord.js";
 
 export type IDatabaseService = {
     /**
@@ -15,8 +15,14 @@ export type IDatabaseService = {
     stop: () => Promise<void>,
 
     /**
-     * Removes the user whose id is userid from the database.
+     * Soft-deletes the user whose id is userid from the database (sets a flag to true).
      * @param userid
      */
     delete: (userid: Snowflake) => Promise<void>,
+
+    /**
+     * Undo the soft-delete of the user whose id is userid (sets a flag to false).
+     *
+     */
+    undelete: (userid: Snowflake) => Promise<void>,
 } & IStoringSystem<User>;

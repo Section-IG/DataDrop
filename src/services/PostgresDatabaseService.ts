@@ -132,6 +132,15 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
         await this.#executeStatement(statement, [true, userid], false);
     }
 
+    /**
+     * @inherited
+     */
+    public async undelete(userid: Snowflake): Promise<void> {
+        this.#logger.verbose(`Réversion de la suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
+        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = $1 WHERE userId = $2;');
+        await this.#executeStatement(statement, [false, userid], false);
+    }
+
     //#region private
     async #runMigrations(): Promise<void> {
         await this.#runMigration('User soft delete', async () => {

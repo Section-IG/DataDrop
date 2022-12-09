@@ -11,6 +11,11 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = client.config;
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
+	const userFromDatabase = await client.database.read(member.id);
+	if (userFromDatabase?.isDeleted) {
+		await client.database.undelete(member.id);
+	}
+
 	const embed = generateEmbed(zeroWidthSpace, informationsChannelid, faqChannelid, igcomiteeChannelid, rolesChannelid, announce);
 	const linkAccountButton = new ButtonBuilder()
 		.setLabel('Lier son compte')
