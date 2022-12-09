@@ -128,7 +128,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async delete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = $1 WHERE userId = $2;');
+        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = $1 WHERE userId = $2;');
         await this.#executeStatement(statement, [true, userid], false);
     }
 
@@ -137,7 +137,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async undelete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Réversion de la suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('UPDATE FROM Users SET isDeleted = $1 WHERE userId = $2;');
+        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = $1 WHERE userId = $2;');
         await this.#executeStatement(statement, [false, userid], false);
     }
 
