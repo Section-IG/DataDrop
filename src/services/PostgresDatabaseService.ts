@@ -50,7 +50,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
             nbVerifyCalled integer NOT NULL DEFAULT 0,
             createdAt timestamp NOT NULL DEFAULT now(),
             updatedAt timestamp,
-            isDeleted boolean
+            isDeleted timestamp
         );`);
         await this.#database.query(`CREATE OR REPLACE FUNCTION set_updatedAt() RETURNS TRIGGER AS $set_updatedAt$
             BEGIN
@@ -128,8 +128,8 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async delete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = $1 WHERE userId = $2;');
-        await this.#executeStatement(statement, [true, userid], false);
+        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = NOW() WHERE userId = $1;');
+        await this.#executeStatement(statement, [userid], false);
     }
 
     /**
@@ -137,14 +137,14 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
      */
     public async undelete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Réversion de la suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
-        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = $1 WHERE userId = $2;');
-        await this.#executeStatement(statement, [false, userid], false);
+        const statement = await this.#database.prepare('UPDATE Users SET isDeleted = NULL WHERE userId = $1;');
+        await this.#executeStatement(statement, [userid], false);
     }
 
     //#region private
     async #runMigrations(): Promise<void> {
         await this.#runMigration('User soft delete', async () => {
-            await this.#database.query('ALTER TABLE Users ADD isDeleted boolean;');
+            await this.#database.query('ALTER TABLE Users ADD isDeleted timestamp;');
         });
     }
 
@@ -208,7 +208,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
                 activationTimestamp: asInteger(entity.get('activationtimestamp')?.valueOf() as string),
                 nbCodeCalled: entity.get('nbcodecalled')?.valueOf(),
                 nbVerifyCalled: entity.get('nbverifycalled')?.valueOf(),
-                isDeleted: entity.get('isdeleted')?.valueOf()
+                isDeleted: asDate(entity.get('isdeleted')?.valueOf() as string),
             } as User;
 
             return user;
