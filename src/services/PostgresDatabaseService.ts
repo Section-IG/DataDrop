@@ -1,11 +1,11 @@
 import { Snowflake } from 'discord.js';
-import { IStoringSystem } from '@hunteroi/discord-verification';
 import { Logger } from '@hunteroi/advanced-logger';
 import { Client, DatabaseError, PreparedStatement, Value } from 'ts-postgres';
 
 import { User } from '../models/User';
+import { IDatabaseService } from '../models/IDatabaseService';
 
-export default class PostgresDatabaseService implements IStoringSystem<User> {
+export default class PostgresDatabaseService implements IDatabaseService {
     #logger: Logger;
     #database: Client;
 
@@ -140,7 +140,7 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
     /**
      * @inherited
      */
-    public async undelete(userid: Snowflake): Promise<void> {
+    public async undoDelete(userid: Snowflake): Promise<void> {
         this.#logger.verbose(`Réversion de la suppresion de l'utilisateur sur base de l'identifiant ${userid}`);
         const statement = await this.#database.prepare('UPDATE Users SET isDeleted = NULL WHERE userId = $1;');
         await this.#executeStatement(statement, [userid], false);

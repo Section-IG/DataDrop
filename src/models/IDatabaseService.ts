@@ -24,5 +24,5 @@ export type IDatabaseService = {
      * Undo the soft-delete of the user whose id is userid (sets a flag to false).
      *
      */
-    undelete: (userid: Snowflake) => Promise<void>,
+    undoDelete: (userid: Snowflake) => Promise<void>,
 } & IStoringSystem<User>;

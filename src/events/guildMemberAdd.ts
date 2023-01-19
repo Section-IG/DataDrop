@@ -13,7 +13,7 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 
 	const userFromDatabase = await client.database.read(member.id);
 	if (userFromDatabase?.isDeleted) {
-		await client.database.undelete(member.id);
+		await client.database.undoDelete(member.id);
 	}
 
 	const embed = generateEmbed(zeroWidthSpace, informationsChannelid, faqChannelid, igcomiteeChannelid, rolesChannelid, announce);
