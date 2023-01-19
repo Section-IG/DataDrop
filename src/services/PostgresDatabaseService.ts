@@ -61,6 +61,11 @@ export default class PostgresDatabaseService implements IStoringSystem<User> {
         `);
         await this.#database.query(`CREATE OR REPLACE TRIGGER users_update BEFORE UPDATE ON Users FOR EACH ROW EXECUTE PROCEDURE set_updatedAt();`);
 
+        const jobs = await this.#database.query('SELECT * FROM cron.job');
+        if (jobs.rows.length === 0) {
+            await this.#database.query(`SELECT cron.schedule($1, $2);`, ['0 0 * * *', "DELETE FROM Users WHERE isDeleted IS NOT NULL AND isDeleted < NOW() - INTERVAL '6 months'"]);
+        }
+
         await this.#runMigrations();
     }
 
