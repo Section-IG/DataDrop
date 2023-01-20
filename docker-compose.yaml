@@ -15,11 +15,20 @@ services:
     <<: *env-file
     <<: *network
     <<: *restart-policy
-    image: postgres:15.1
+    build:
+      context: .
+      dockerfile: ./Database.Dockerfile
+      args:
+        - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "${DATABASE_PORT:-5432}:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U ${POSTGRES_USER}"
+      interval: 1s
+      timeout: 1s
+      retries: 60
   bot:
     <<: *env-file
     <<: *network
@@ -27,11 +36,14 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    volumes:
+      - bot_logs:/app/logs
     depends_on:
       - database
 
 volumes:
   postgres:
+  bot_logs:
 
 
 networks:

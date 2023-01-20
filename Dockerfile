@@ -24,4 +24,4 @@ RUN rm app.zip
 RUN mv ./build/* .
 RUN rm -rf ./build
 
-CMD node ./index.js
+CMD ["sh", "-c", "sleep 2 && node ./index.js"]
