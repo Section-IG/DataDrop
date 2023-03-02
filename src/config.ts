@@ -31,8 +31,10 @@ const defaultConfig: Configuration = {
     ok_hand: '',
     warning: '',
     communicationServiceOptions: {
-        apiKey: '',
-        mailData: { from: '', templateId: '' }
+        auth: { user: '', pass: '' },
+        from: '',
+        port: 587,
+        host: ''
     }
 };
 
@@ -48,7 +50,8 @@ export async function readConfig(): Promise<Configuration> {
         }
 
         const config = { ...json, version: `${environment}-v${packageInfo.version}` };
-        config.communicationServiceOptions.apiKey = process.env.SENDGRID_API_KEY;
+        config.communicationServiceOptions.auth.user = process.env.SMTP_USER;
+        config.communicationServiceOptions.auth.pass = process.env.SMTP_PASS;
 
         return config;
     }
