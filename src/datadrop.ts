@@ -3,15 +3,12 @@ import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
 import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
 import { VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
-import { SendGridService } from '@hunteroi/discord-verification/lib/services/SendGridService';
 import * as path from 'path';
 
-import PostgresDatabaseService from './services/PostgresDatabaseService';
+import { PostgresDatabaseService, SMTPService } from './services';
 import { getErrorMessage, readFilesFrom } from './helpers';
-import { Configuration } from './models/Configuration';
+import { Configuration, User, IDatabaseService } from './models';
 import { readConfig } from './config';
-import { User } from './models/User';
-import { IDatabaseService } from './models/IDatabaseService';
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -43,7 +40,7 @@ export class DatadropClient extends Client {
         this.tempChannelsManager = new TempChannelsManager(this);
 
         this.database = new PostgresDatabaseService(this.logger);
-        const communicationService = new SendGridService(config.communicationServiceOptions);
+        const communicationService = new SMTPService(config.communicationServiceOptions);
         this.verificationManager = new VerificationManager(this, this.database, communicationService, {
             codeGenerationOptions: { length: 6 },
             maxNbCodeCalledBeforeResend: 3,
