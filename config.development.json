@@ -144,9 +144,8 @@
         "emote": "📢"
     },
     "communicationServiceOptions": {
-        "mailData": {
-            "from": "mdpdevti@henallux.be",
-            "templateId": "d-c8892944b4f2417bafece2d7a5b73d1f"
-        }
+        "from": "noreply-discord@henallux.be",
+        "port": 587,
+        "host": "smtp.office365.com"
     }
 }

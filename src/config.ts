@@ -29,9 +29,11 @@ const defaultConfig: Configuration = {
     tutor: { roleid: "", emote: "" },
     announce: { roleid: "", emote: "", channelid: "" },
     communicationServiceOptions: {
-        apiKey: "",
-        mailData: { from: "", templateId: "" },
-    },
+        auth: { user: '', pass: '' },
+        from: '',
+        port: 587,
+        host: ''
+    }
 };
 
 export async function readConfig(): Promise<Configuration> {
@@ -51,8 +53,8 @@ export async function readConfig(): Promise<Configuration> {
             ...json,
             version: `${environment}-v${packageInfo.version}`,
         };
-        config.communicationServiceOptions.apiKey =
-            process.env.SENDGRID_API_KEY;
+        config.communicationServiceOptions.auth.user = process.env.SMTP_USER;
+        config.communicationServiceOptions.auth.pass = process.env.SMTP_PASS;
 
         return config;
     } catch (err: unknown) {
