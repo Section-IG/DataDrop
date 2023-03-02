@@ -19,6 +19,7 @@ import {
     VerificationManager,
     VerificationManagerEvents,
 } from "@hunteroi/discord-verification";
+import * as path from 'path';
 import { SMTP2GoService } from "@hunteroi/discord-verification/lib/services/SMTP2GoService.js";
 import {
     type ButtonInteraction,
@@ -35,14 +36,10 @@ import {
     type VoiceChannel,
 } from "discord.js";
 
-import { readConfig } from "./config.js";
-import { getErrorMessage, readFilesFrom } from "./helpers.js";
-import type { Command } from "./models/Command.js";
-import type { Configuration } from "./models/Configuration.js";
-import type { Event } from "./models/Event.js";
-import type { IDatabaseService } from "./models/IDatabaseService.js";
-import type { User } from "./models/User.js";
-import PostgresDatabaseService from "./services/PostgresDatabaseService.js";
+import { PostgresDatabaseService, SMTPService } from './services/index.js';
+import { getErrorMessage, readFilesFrom } from './helpers.js';
+import { Configuration, User, IDatabaseService } from './models/index.js';
+import { readConfig } from './config.js';
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -74,9 +71,7 @@ export class DatadropClient extends Client {
         this.tempChannelsManager = new TempChannelsManager(this);
 
         this.database = new PostgresDatabaseService(this.logger);
-        const communicationService = new SMTP2GoService(
-            config.communicationServiceOptions,
-        );
+        const communicationService = new SMTPService(config.communicationServiceOptions);
         this.verificationManager = new VerificationManager(
             this,
             this.database,
