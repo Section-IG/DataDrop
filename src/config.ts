@@ -50,8 +50,10 @@ export async function readConfig(): Promise<Configuration> {
         }
 
         const config = { ...json, version: `${environment}-v${version}` };
-        config.communicationServiceOptions.auth.user = process.env.SMTP_USER;
-        config.communicationServiceOptions.auth.pass = process.env.SMTP_PASS;
+        config.communicationServiceOptions.auth = {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+        };
 
         return config;
     }
