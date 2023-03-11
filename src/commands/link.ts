@@ -7,7 +7,7 @@ export default {
     aliases: ['lier', 'compte'],
     description: 'Lie ton compte Discord avec ton adresse Hénallux!',
 
-    async execute(client: DatadropClient, message: Message, args: string[]) {
+    async execute(client: DatadropClient, message: Message) {
         const user = message.author;
 
         const userFromDatabase = await client.database.read(user.id);

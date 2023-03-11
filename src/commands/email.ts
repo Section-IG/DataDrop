@@ -19,7 +19,7 @@ export default {
 	description:
 		"Affiche un message concernant l'envoi d'email à un.e professeur.e ou aux organisations étudiantes.",
 
-	async execute(client: DatadropClient, message: Message, args: string[]) {
+	async execute(client: DatadropClient, message: Message) {
 		const embed = new EmbedBuilder()
 			.setTitle(`Emails`)
 			.setColor('Random')
