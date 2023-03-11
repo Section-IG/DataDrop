@@ -1,4 +1,4 @@
-﻿import { Message, codeBlock } from 'discord.js';
+import { Message, codeBlock } from 'discord.js';
 
 import { DatadropClient } from '../datadrop';
 import { clean } from '../helpers';

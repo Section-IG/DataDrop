@@ -7,7 +7,7 @@ module.exports = {
     description: 'Recharge la configuration du bot',
     ownerOnly: true,
 
-    async execute(client: DatadropClient, message: Message, args: string[]) {
+    async execute(client: DatadropClient, message: Message) {
         const { ok_hand } = client.config;
         client.logger.info('Recharge de la configuration...');
         await client.reloadConfig();

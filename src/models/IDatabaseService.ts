@@ -1,7 +1,7 @@
 import { IStoringSystem } from '@hunteroi/discord-verification';
 
 import { User } from './User';
-import { Snowflake } from "discord.js";
+import { Snowflake } from 'discord.js';
 
 export type IDatabaseService = {
     /**
