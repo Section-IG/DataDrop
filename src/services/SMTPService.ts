@@ -1,6 +1,6 @@
+import { ISenderAPI, SenderAPIData } from '@hunteroi/discord-verification';
 import { createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { ISenderAPI, SenderAPIData } from '@hunteroi/discord-verification';
 
 export type SMTPServiceOptions = SMTPTransport.Options;
 
@@ -17,9 +17,9 @@ export default class SMTPService implements ISenderAPI {
         await transporter.sendMail({
             from: this.#options.from,
             to: data.to,
-            subject: 'Discord Authentication Code',
-            text: `Hello ${name}! Your code is ${code}. See you soon o/`,
-            html: `<p>Hello ${name}!</p><p>Your code is ${code}.</p><p>See you soon o/</p>`
+            subject: "Code d'Authentification Discord",
+            text: `Hello ${name}! Ton code est ${code}. A plus tard o/`,
+            html: `<p>Hello ${name}!</p><p>Ton code est ${code}.</p><p>A plus tard o/</p>`
         });
     }
 }
