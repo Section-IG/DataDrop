@@ -150,14 +150,15 @@ export default class PostgresDatabaseService implements IDatabaseService {
     //#region private
     async #runMigrations(): Promise<void> {
         await this.#runMigration('User soft delete', async () => {
-            await this.#database.query('ALTER TABLE Users ADD isDeleted timestamp;');
+            await this.#database.query('ALTER TABLE Users ADD COLUMN IF NOT EXISTS isDeleted timestamp;');
         });
     }
 
     async #runMigration(name: string, callback: () => Promise<void>) {
         const result = await this.#database.query('SELECT * FROM Migrations WHERE name = $1', [name]);
-        const migration = [...result].pop();
-        if (!migration) {
+
+        this.#logger.verbose(`Running migration "${name}" with pre-query returning ${JSON.stringify(result)}`);
+        if (result && result.rows.length === 0) {
             await this.#database.query('INSERT INTO Migrations (name) VALUES($1);', [name]);
             await callback();
         }
