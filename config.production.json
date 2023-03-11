@@ -154,6 +154,9 @@
     "communicationServiceOptions": {
         "from": "noreply-discord@henallux.be",
         "port": 587,
-        "host": "smtp.office365.com"
+        "host": "smtp.office365.com",
+        "tls": {
+            "rejectUnauthorized": false
+        }
     }
 }
