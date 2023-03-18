@@ -1,11 +1,14 @@
-name: Continuous Delivery
-'on':
+name: Deployment
+
+on:
   push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy bot to production
         uses: appleboy/ssh-action@master
