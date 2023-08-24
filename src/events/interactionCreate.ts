@@ -78,7 +78,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
             }
         }
     }
-    else if (interaction.isRepliable()) {
+    else if (interaction.isRepliable() && !interaction.replied && !interaction.deferred) {
         interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
     }
 };
