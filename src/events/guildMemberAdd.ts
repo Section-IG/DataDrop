@@ -8,7 +8,7 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 	if (member.user.bot) return;
 	client.logger.info(`L'utilisateur <${member.nickname} a rejoint le serveur.`);
 
-	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = client.config;
+	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, comiteeChannelid } = client.config;
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
 	const userFromDatabase = await client.database.read(member.id);
@@ -16,7 +16,7 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 		await client.database.undoDelete(member.id);
 	}
 
-	const embed = generateEmbed(zeroWidthSpace, informationsChannelid, faqChannelid, igcomiteeChannelid, rolesChannelid, announce);
+	const embed = generateEmbed(zeroWidthSpace, informationsChannelid, faqChannelid, comiteeChannelid, rolesChannelid, announce);
 	const linkAccountButton = new ButtonBuilder()
 		.setLabel('Lier son compte')
 		.setEmoji('🔗')
@@ -37,7 +37,7 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 	}
 };
 
-function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, faqChannelid: string, igcomiteeChannelid: string, rolesChannelid: string, announce: AnnounceConfiguration) {
+function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, faqChannelid: string, comiteeChannelid: string, rolesChannelid: string, announce: AnnounceConfiguration) {
 	const fields = [
 		{
 			name: zeroWidthSpace,
@@ -61,7 +61,7 @@ function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, fa
 		},
 		{
 			name: '3. Lis les canaux importants',
-			value: `En arrivant, tu vas être un peu perdu. C'est normal, il y a beaucoup de choses et c'est pas forcément simple à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux listés ci-dessous :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${igcomiteeChannelid}>\n  - <#${rolesChannelid}>\n  - <#${announce.channelid}>`,
+			value: `En arrivant, tu vas être un peu perdu. C'est normal, il y a beaucoup de choses et c'est pas forcément simple à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux listés ci-dessous :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${comiteeChannelid}>\n  - <#${rolesChannelid}>\n  - <#${announce.channelid}>`,
 		},
 	];
 
@@ -72,11 +72,11 @@ function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, fa
 		)
 		.setTitle('Salut toi!')
 		.setDescription(
-			`Bienvenue sur le serveur Discord non-officiel de la section **Informatique de Gestion** de l'IESN. Ce serveur est une initiative étudiante et n'est donc pas une plateforme de communication officielle de la Haute-École Namur-Liège-Luxembourg.\n\nPour bien commencer l'année, on te recommande de suivre les quelques étapes suivantes :`
+			`Bienvenue sur le serveur Discord non-officiel de la section **Informatique Orientation _Développement d'Application_** de l'IESN. Ce serveur est une initiative étudiante et n'est donc pas une plateforme de communication officielle de la Haute-École Namur-Liège-Luxembourg.\n\nPour bien commencer l'année, on te recommande de suivre les quelques étapes suivantes :`
 		)
 		.addFields(fields)
 		.setFooter({
-			text: `Le Comité IG`,
+			text: `Le Comité IODA`,
 			iconURL: 'https://cdn.discordapp.com/icons/491312065785364482/c9d724c34519c57d3cc1c28f79813f73.png'
 		})
 		.setTimestamp();

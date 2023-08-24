@@ -1,7 +1,7 @@
 # DataDrop
 [![Continuous Delivery](https://github.com/Section-IG/DataDrop/actions/workflows/deployment.yml/badge.svg)](https://github.com/Section-IG/DataDrop/actions/workflows/deployment.yml)
 
-Discord bot built with Discord.JS for Section IG guild.
+Discord bot built with Discord.JS for Section IODA guild.
 
 The following environment variables must be filled in a `.env` file.
 This file is used when building the container to generate a production-ready .env file.

@@ -16,7 +16,7 @@ module.exports = async (client: DatadropClient) => {
 };
 
 async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {
-  const { rolesChannelid, ig1, ig2, ig3, alumni, tutor, announce } = config;
+  const { rolesChannelid, first, second, third, alumni, tutor, announce } = config;
   const format = (rte: RoleToEmojiData) =>
     `${rte.emoji} - ${rte.role instanceof Role ? rte.role : roleMention(rte.role)}${rte.smallNote ? ` (${rte.smallNote})` : ''}`;
   const message = {
@@ -32,7 +32,7 @@ async function registerRolesChannels(client: DatadropClient, config: Configurati
   await Promise.all([
     client.selfRoleManager.registerChannel(rolesChannelid, {
       rolesToEmojis: [
-        ...([ig1, ig2, ig3, alumni, tutor].map(cfg => ({ role: cfg.roleid, emoji: cfg.emote }))),
+        ...([first, second, third, alumni, tutor].map(cfg => ({ role: cfg.roleid, emoji: cfg.emote }))),
         {
           role: announce.roleid,
           emoji: announce.emote,
@@ -45,11 +45,11 @@ async function registerRolesChannels(client: DatadropClient, config: Configurati
         options: {
           ...message.options,
           descriptionSuffix:
-            '\nLes Professeurs, les Délégués et les membres du Comité IG doivent notifier un Admin/Community Manager pour avoir leur rôle.'
+            '\nLes Professeurs, les Délégués et les membres du Comité IODA doivent notifier un Admin/Community Manager pour avoir leur rôle.'
         }
       },
     }),
-    ...([ig1, ig2, ig3].map(({ roleid, channelid, groups }) =>
+    ...([first, second, third].map(({ roleid, channelid, groups }) =>
       client.selfRoleManager.registerChannel(channelid, {
         rolesToEmojis: groups.map((group) => ({
           role: group.roleid,

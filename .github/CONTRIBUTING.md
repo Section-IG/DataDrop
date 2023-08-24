@@ -11,7 +11,7 @@ A big welcome and thank you for considering contributing to this project. We wan
 * [References](#references)
 
 ## Code of Conduct
-We take our open source community seriously and hold ourselves and other contributors to high standards of communication. By participating and contributing to this project, you agree to uphold yo our [Code Of Conduct](https://github.com/IESN-IG/DataDrop/blob/master/.github/CODE_OF_CONDUCT.md).
+We take our open source community seriously and hold ourselves and other contributors to high standards of communication. By participating and contributing to this project, you agree to uphold yo our [Code Of Conduct](https://github.com/section-IG/DataDrop/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ## Getting started
 We use [GitHub](https://github.com) to host code, to track Issues and feature requests, as well as accept Pull Requests (PRs). A few guidelines that cover all these topics:
@@ -19,7 +19,7 @@ We use [GitHub](https://github.com) to host code, to track Issues and feature re
 - We work hard to makes sure issues are handled in a timely manner but, depending on the impact, it could take a while to investigate the root cause. A friendly ping in the comment thread to the submitter or a contributor can help draw attention if your issue is blocking.
 
 ### Issues
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/IESN-IG/DataDrop/issues/new/choose); it's that easy!
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/section-IG/DataDrop/issues/new/choose); it's that easy!
 
 **Great Bug Reports** tend to have:
 - A quick summary and/or background

@@ -42,16 +42,16 @@ export interface Configuration {
 
     informationsChannelid: Snowflake;
     faqChannelid: Snowflake;
-    igcomiteeChannelid: Snowflake;
+    comiteeChannelid: Snowflake;
 
     dynamicChannelPrefix: string;
     dynamicChannelPrefixRegex: RegExp;
     staticTriggerChannelids: Snowflake[];
 
     rolesChannelid: Snowflake;
-    ig1: YearConfiguration;
-    ig2: YearConfiguration;
-    ig3: YearConfiguration;
+    first: YearConfiguration;
+    second: YearConfiguration;
+    third: YearConfiguration;
 
     alumni: SpecialRoleConfiguration;
     tutor: SpecialRoleConfiguration;
