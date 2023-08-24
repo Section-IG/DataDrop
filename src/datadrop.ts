@@ -37,8 +37,7 @@ export class DatadropClient extends Client {
         this.commands = new Collection();
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
-            deleteAfterUnregistration: false,
-            useReactions: true,
+            deleteAfterUnregistration: false
         });
         this.#listenToSelfRoleEvents();
 
