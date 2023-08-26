@@ -60,7 +60,6 @@ export interface Configuration {
 
     ok_hand: string;
     warning: string;
-    zeroWidthSpace: string;
 
     communicationServiceOptions: SendGridOptions;
 }

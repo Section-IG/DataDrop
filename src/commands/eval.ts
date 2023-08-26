@@ -1,7 +1,7 @@
 ﻿import { Message, codeBlock } from 'discord.js';
 
 import { DatadropClient } from '../datadrop';
-import { Configuration } from '../models/Configuration';
+import { clean } from '../helpers';
 
 module.exports = {
     name: 'eval',
@@ -25,18 +25,11 @@ module.exports = {
                 evaled = util.inspect(evaled);
             }
 
-            content = clean(evaled, config);
+            content = clean(evaled);
         } catch (err) {
-            content = `// An error occured\n\n${clean(err, config)}`;
+            content = `// An error occured\n\n${clean(err)}`;
         } finally {
             message.channel.send(codeBlock('xl', content));
         }
     }
 };
-
-function clean(text: any, config: Configuration): string {
-    if (typeof (text) === 'string') {
-        return text.replace(/@/g, `@${config.zeroWidthSpace}`);
-    }
-    return text;
-}
