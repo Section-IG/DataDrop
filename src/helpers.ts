@@ -12,6 +12,13 @@ export function readFilesFrom(path: string, callback: (name: string, props: any)
     });
 }
 
+export function clean(text: any): string {
+    if (typeof (text) === 'string') {
+        return text.replace(/@/g, '@​');
+    }
+    return text;
+}
+
 // #region Error handling helper
 // source: https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript
 

@@ -6,9 +6,9 @@ import { DatadropClient } from '../datadrop';
 
 module.exports = async (client: DatadropClient, member: GuildMember) => {
 	if (member.user.bot) return;
-	client.logger.info(`L'utilisateur <${member.nickname} a rejoint le serveur.`);
+	client.logger.info(`L'utilisateur <${member.displayName} a rejoint le serveur.`);
 
-	const { zeroWidthSpace, announce, informationsChannelid, faqChannelid, rolesChannelid, igcomiteeChannelid } = client.config;
+	const { announce, informationsChannelid, faqChannelid, rolesChannelid, comiteeChannelid } = client.config;
 	const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
 	const userFromDatabase = await client.database.read(member.id);
@@ -16,7 +16,7 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 		await client.database.undoDelete(member.id);
 	}
 
-	const embed = generateEmbed(zeroWidthSpace, informationsChannelid, faqChannelid, igcomiteeChannelid, rolesChannelid, announce);
+	const embed = generateEmbed(informationsChannelid, faqChannelid, comiteeChannelid, rolesChannelid, announce);
 	const linkAccountButton = new ButtonBuilder()
 		.setLabel('Lier son compte')
 		.setEmoji('🔗')
@@ -37,31 +37,19 @@ module.exports = async (client: DatadropClient, member: GuildMember) => {
 	}
 };
 
-function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, faqChannelid: string, igcomiteeChannelid: string, rolesChannelid: string, announce: AnnounceConfiguration) {
+function generateEmbed(informationsChannelid: string, faqChannelid: string, comiteeChannelid: string, rolesChannelid: string, announce: AnnounceConfiguration) {
 	const fields = [
-		{
-			name: zeroWidthSpace,
-			value: zeroWidthSpace,
-		},
 		{
 			name: '1. Lie ton compte',
 			value: `Pour accéder au serveur, tu dois lier ton compte Discord avec ton adresse Hénallux. Pour se faire, rien de plus simple que de cliquer sur le bouton ci-dessous et remplir le formulaire! Tu recevras un code par email qu'il faudra envoyer ici!`,
-		},
-		{
-			name: zeroWidthSpace,
-			value: zeroWidthSpace,
 		},
 		{
 			name: '2. Change ton pseudo',
 			value: `Sur Discord, tu peux changer ton pseudo sur chaque serveur (tu as donc un pseudo différent par serveur!). Pour cela, fais un clic-droit sur l'icône du serveur en question et sélectionne **Changer le pseudo**.`,
 		},
 		{
-			name: zeroWidthSpace,
-			value: zeroWidthSpace,
-		},
-		{
 			name: '3. Lis les canaux importants',
-			value: `En arrivant, tu vas être un peu perdu. C'est normal, il y a beaucoup de choses et c'est pas forcément simple à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux listés ci-dessous :\n  - <#${informationsChannelid}>\n  - <#${faqChannelid}>\n  - <#${igcomiteeChannelid}>\n  - <#${rolesChannelid}>\n  - <#${announce.channelid}>`,
+			value: `En arrivant, tu vas être un peu perdu. C'est normal, il y a beaucoup de choses et c'est pas forcément simple à suivre.\nOn te conseille d'abord de jeter un oeil aux différents canaux listés ci-dessous :\n- <#${informationsChannelid}>\n- <#${faqChannelid}>\n- <#${comiteeChannelid}>\n- <#${rolesChannelid}>\n- <#${announce.channelid}>`,
 		},
 	];
 
@@ -72,11 +60,11 @@ function generateEmbed(zeroWidthSpace: string, informationsChannelid: string, fa
 		)
 		.setTitle('Salut toi!')
 		.setDescription(
-			`Bienvenue sur le serveur Discord non-officiel de la section **Informatique de Gestion** de l'IESN. Ce serveur est une initiative étudiante et n'est donc pas une plateforme de communication officielle de la Haute-École Namur-Liège-Luxembourg.\n\nPour bien commencer l'année, on te recommande de suivre les quelques étapes suivantes :`
+			`Bienvenue sur le serveur Discord non-officiel de la section **Informatique Orientation _Développement d'Application_** de l'IESN. Ce serveur est une initiative étudiante et n'est donc pas une plateforme de communication officielle de la Haute-École Namur-Liège-Luxembourg.\n\nPour bien commencer l'année, on te recommande de suivre les quelques étapes suivantes :`
 		)
 		.addFields(fields)
 		.setFooter({
-			text: `Le Comité IG`,
+			text: `Le Comité IODA`,
 			iconURL: 'https://cdn.discordapp.com/icons/491312065785364482/c9d724c34519c57d3cc1c28f79813f73.png'
 		})
 		.setTimestamp();

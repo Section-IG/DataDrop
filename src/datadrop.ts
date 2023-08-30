@@ -35,15 +35,12 @@ export class DatadropClient extends Client {
             includeTimestamp: config.includeTimestamp,
         });
         this.commands = new Collection();
+
         this.selfRoleManager = new SelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
-            deleteAfterUnregistration: false,
-            useReactions: true,
+            deleteAfterUnregistration: false
         });
-        this.#listenToSelfRoleEvents();
-
         this.tempChannelsManager = new TempChannelsManager(this);
-        this.#listenToTempChannelsEvents();
 
         this.database = new PostgresDatabaseService(this.logger);
         const communicationService = new SendGridService(config.communicationServiceOptions);
@@ -57,7 +54,6 @@ export class DatadropClient extends Client {
             validCodeMessage: (user: User, code: string) => `Le code ${code} est valide. Bienvenue ${user.username}!`,
             invalidCodeMessage: (_, code: string) => `Le code ${code} est invalide!`
         });
-        this.#listenToVerificationEvents();
     }
 
     get config(): Configuration {
@@ -116,24 +112,33 @@ export class DatadropClient extends Client {
             const channel = msg.channel as GuildTextBasedChannel;
             this.logger.info(`Message récupéré dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, (role, member) => this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`));
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, (role, member) => this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`));
-        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, role: Role, requiredRoles: string[]) => {
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, async (role: Role, member: GuildMember, interaction: ButtonInteraction) => {
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`);
+
+            await interaction.editReply(`Le rôle ${role} t'a été ajouté.`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, async (role: Role, member: GuildMember, interaction: ButtonInteraction) => {
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`);
+
+            await interaction.editReply(`Le rôle ${role} t'a été retiré.`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, interaction: ButtonInteraction, role: Role, requiredRoles: string[]) => {
             const requiredRolesMissing = (await Promise.all(requiredRoles.map(requiredRole => member.guild.roles.fetch(requiredRole))))
                 .map((requiredRole: Role | null) => requiredRole?.name)
                 .filter(requiredRoles => !!requiredRoles);
 
-            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.join(', ')}`);
-            if (!(reaction instanceof ButtonInteraction)) {
-                try {
-                    await member.send({ content: `Tu ne peux pas t'assigner le rôle ${role.name}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}` });
-                } catch { /** ignore */ }
-                finally {
-                    await reaction.users.remove(member);
-                }
-            }
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.join(', ')}.`);
+
+            await interaction.editReply(`Tu ne peux pas t'assigner le rôle ${role}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}.`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => this.logger.error(`Une erreur est survenue lors de la gestion des rôles automatiques.\nErreur: ${message}\n${getErrorMessage(error)}`));
+        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, interaction: ButtonInteraction, currentRolesNumber: number, maxRolesNumber: number, role: Role) => {
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que ce membre a été la limite de rôles: ${currentRolesNumber}/${maxRolesNumber}.`);
+
+            await interaction.editReply(`Tu ne peux pas t'assigner le rôle ${role}! Tu as atteint la limite: ${currentRolesNumber}/${maxRolesNumber}.`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => {
+            this.logger.error(`Une erreur est survenue lors de la gestion des rôles automatiques.\nErreur: ${message}\n${getErrorMessage(error)}`);
+        });
     }
 
     #bindEvents(): void {
@@ -155,7 +160,13 @@ export class DatadropClient extends Client {
     }
 
     async start(): Promise<void> {
+
+        this.#listenToSelfRoleEvents();
+        this.#listenToTempChannelsEvents();
+        this.#listenToVerificationEvents();
+
         this.#bindEvents();
+
         this.#bindCommands();
         await this.database?.start();
         this.login();

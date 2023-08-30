@@ -5,8 +5,8 @@
     ],
     "minLevel": "debug",
     "includeTimestamp": true,
-    "prefix": "igb!",
-    "botName": "IG Bot Beta",
+    "prefix": "dab!",
+    "botName": "Yoda Beta",
     "communitymanagerRoleid": "1028257512383848478",
     "adminRoleid": "1028257512358674472",
     "delegatesRoleid": "1028257512358674468",
@@ -14,7 +14,7 @@
     "verifiedRoleId": "1048774508007407726",
     "informationsChannelid": "1028257513109454855",
     "faqChannelid": "1028257513109454856",
-    "igcomiteeChannelid": "1028257513109454857",
+    "comiteeChannelid": "1028257513109454857",
     "dynamicChannelPrefix": "[DRoom]",
     "dynamicChannelPrefixRegex": "^\\[DRoom\\]",
     "staticTriggerChannelids": [
@@ -25,7 +25,7 @@
         "1028257515680583727"
     ],
     "rolesChannelid": "1028257513319170089",
-    "ig1": {
+    "first": {
         "channelid": "1028257513604390939",
         "roleid": "1028257512337711148",
         "emote": "1⃣",
@@ -56,7 +56,7 @@
             }
         ]
     },
-    "ig2": {
+    "second": {
         "channelid": "1028257514296463431",
         "roleid": "1028257512337711152",
         "emote": "2⃣",
@@ -75,7 +75,7 @@
             }
         ]
     },
-    "ig3": {
+    "third": {
         "channelid": "1028257514799779857",
         "roleid": "1028257512358674464",
         "emote": "3⃣",
@@ -109,7 +109,6 @@
     },
     "ok_hand": "👌",
     "warning": "⚠️",
-    "zeroWidthSpace": "​",
     "communicationServiceOptions": {
         "mailData": {
             "from": "mdpdevti@henallux.be",

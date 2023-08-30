@@ -8,7 +8,7 @@ const people = [
 		emails: ['cehenallux@gmail.com'],
 	},
 	{
-		name: 'Comité IG',
+		name: 'Comité IODA',
 		emails: ['ighenallux@gmail.com'],
 	},
 ];

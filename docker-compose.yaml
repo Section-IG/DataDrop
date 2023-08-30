@@ -12,9 +12,7 @@ x-restart-policy:
 version: '3.8'
 services:
   database:
-    <<: *env-file
-    <<: *network
-    <<: *restart-policy
+    <<: [*env-file, *network, *restart-policy]
     build:
       context: .
       dockerfile: ./Database.Dockerfile
@@ -30,9 +28,7 @@ services:
       timeout: 1s
       retries: 60
   bot:
-    <<: *env-file
-    <<: *network
-    <<: *restart-policy
+    <<: [*env-file, *network, *restart-policy]
     build:
       context: .
       dockerfile: ./Dockerfile

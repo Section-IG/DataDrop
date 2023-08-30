@@ -78,7 +78,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
             }
         }
     }
-    else if (interaction.isRepliable()) {
-        interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
+    else if ((interaction.isButton() || interaction.isModalSubmit()) && !interaction.customId.startsWith('sr-') && !interaction.customId.includes(user.id)) {
+        await interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
     }
 };
