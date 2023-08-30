@@ -1,6 +1,6 @@
 {
 	"name": "datadrop",
-	"version": "1.9.0",
+	"version": "1.10.0",
 	"main": "./build/index.js",
 	"scripts": {
 		"start": "docker-compose up --build",
