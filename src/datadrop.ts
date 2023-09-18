@@ -117,10 +117,10 @@ export class DatadropClient extends Client {
 
             await interaction.editReply(`Le rôle ${role} t'a été ajouté.`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, async (role: Role, member: GuildMember, interaction: ButtonInteraction) => {
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, async (role: Role, member: GuildMember, interaction?: ButtonInteraction) => {
             this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`);
 
-            await interaction.editReply(`Le rôle ${role} t'a été retiré.`);
+            if (interaction) await interaction.editReply(`Le rôle ${role} t'a été retiré.`);
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, interaction: ButtonInteraction, role: Role, requiredRoles: string[]) => {
             const requiredRolesMissing = (await Promise.all(requiredRoles.map(requiredRole => member.guild.roles.fetch(requiredRole))))
