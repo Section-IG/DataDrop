@@ -1,12 +1,12 @@
 import { ChannelType, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
 function buildEmbed(title: string, color: ColorResolvable, description: string): EmbedBuilder {
   return new EmbedBuilder().setTitle(title).setColor(color).setDescription(description);
 }
 
-module.exports = {
+export default {
   name: 'help',
   description:
     "Liste toutes les commandes disponibles ou les informations d'une commande fournie en paramètres",
@@ -16,7 +16,7 @@ module.exports = {
   execute: async (client: DatadropClient, message: Message, args: string[]) => {
     const { prefix } = client.config;
     const { commands } = client;
-    const data = [];
+    const data: string[] = [];
     let embed: EmbedBuilder;
 
     if (!args.length) {
@@ -34,7 +34,8 @@ module.exports = {
         commands.find((c) => c.aliases && c.aliases.includes(name));
 
       if (!command) {
-        await message.channel.send("Ce n'est pas une commande valide.");
+        if (message.channel.isSendable())
+          await message.channel.send("Ce n'est pas une commande valide.");
         return;
       }
 
@@ -48,8 +49,9 @@ module.exports = {
     }
 
     try {
-      if (message.channel.type === ChannelType.DM) { await message.author.send({ embeds: [embed] }); }
-      else { await message.channel.send({ embeds: [embed] }); }
+      if (message.channel.isSendable()) {
+        await message.channel.send({ embeds: [embed] });
+      }
     } catch (err) {
       client.logger.error(`Erreur durant l'envoi du message d'aide pour ${message.author.username}:\n` + err);
     }

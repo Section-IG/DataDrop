@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
-module.exports = {
+export default {
     name: 'reload',
     description: 'Recharge la configuration du bot',
     ownerOnly: true,
@@ -11,6 +11,6 @@ module.exports = {
         const { ok_hand } = client.config;
         client.logger.info('Recharge de la configuration...');
         await client.reloadConfig();
-        await message.channel.send(ok_hand);
+        await message.reply(ok_hand);
     }
 };

@@ -1,24 +1,25 @@
-import { MessageReaction, PartialMessageReaction, Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel, Role, Snowflake } from 'discord.js';
-import { LogEventLevel, Logger } from '@hunteroi/advanced-logger';
-import { SelfRoleManager, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
-import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
-import { VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
-import { SendGridService } from '@hunteroi/discord-verification/lib/services/SendGridService';
+import { Client, ClientOptions, Collection, ButtonInteraction, GuildMember, Message, GuildTextBasedChannel, VoiceChannel, Role, Snowflake, StringSelectMenuInteraction } from 'discord.js';
 import * as path from 'path';
 
-import PostgresDatabaseService from './services/PostgresDatabaseService';
-import { getErrorMessage, readFilesFrom } from './helpers';
-import { Configuration } from './models/Configuration';
-import { readConfig } from './config';
-import { User } from './models/User';
-import { IDatabaseService } from './models/IDatabaseService';
+import { LogEventLevel, DefaultLogger, ConsoleLogger } from '@hunteroi/advanced-logger';
+import { InteractionsSelfRoleManager, RoleToEmojiData, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
+import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
+import { VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
+import { SendGridService } from '@hunteroi/discord-verification/lib/services/SendGridService.js';
+
+import PostgresDatabaseService from './services/PostgresDatabaseService.js';
+import { getErrorMessage, readFilesFrom } from './helpers.js';
+import { Configuration } from './models/Configuration.js';
+import { readConfig } from './config.js';
+import { User } from './models/User.js';
+import { IDatabaseService } from './models/IDatabaseService.js';
 
 export class DatadropClient extends Client {
     #config: Configuration;
     readonly database: IDatabaseService;
-    readonly logger: Logger;
+    readonly logger: DefaultLogger;
     readonly commands: Collection<string, any>;
-    readonly selfRoleManager: SelfRoleManager;
+    readonly selfRoleManager: InteractionsSelfRoleManager;
     readonly tempChannelsManager: TempChannelsManager;
     readonly verificationManager: VerificationManager<User>;
 
@@ -30,13 +31,13 @@ export class DatadropClient extends Client {
 
         this.#config = config;
 
-        this.logger = new Logger({
+        this.logger = new ConsoleLogger({
             minLevel: LogEventLevel[config.minLevel.toLowerCase()],
             includeTimestamp: config.includeTimestamp,
         });
         this.commands = new Collection();
 
-        this.selfRoleManager = new SelfRoleManager(this, {
+        this.selfRoleManager = new InteractionsSelfRoleManager(this, {
             channelsMessagesFetchLimit: 10,
             deleteAfterUnregistration: false
         });
@@ -96,44 +97,45 @@ export class DatadropClient extends Client {
     }
 
     #listenToSelfRoleEvents(): void {
-        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, reaction: ButtonInteraction | MessageReaction | PartialMessageReaction, nbRoles: number, maxRoles: number) => {
-            if (!(reaction instanceof ButtonInteraction)) {
-                const channel = await member.guild.channels.fetch(reaction.message.channel.id);
-                this.logger.info(`Le membre <${member.user.tag}> a atteint la limite de rôles${(channel ? ` dans <${channel.name}>` : '')}! (${nbRoles}/${maxRoles})`);
-                try {
-                    await member.send({ content: `Tu ne peux pas t'assigner plus de ${maxRoles} rôle${(maxRoles > 1 ? 's' : '')} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${(nbRoles > 1 ? 's' : '')}` });
-                } catch { /** ignore */ }
-                finally {
-                    await reaction.users.remove(member);
-                }
-            }
+        this.selfRoleManager.on(SelfRoleManagerEvents.interaction, async (rte: RoleToEmojiData, interaction: StringSelectMenuInteraction | ButtonInteraction) => {
+            await interaction.editReply("Ton interaction a été enregistrée.");
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, interaction: StringSelectMenuInteraction | ButtonInteraction, nbRoles: number, maxRoles: number) => {
+            const channel = await member.guild.channels.fetch(interaction.message.channel.id);
+
+            this.logger.info(`Le membre <${member.user.tag}> a atteint la limite de rôles${(channel ? ` dans <${channel.name}>` : '')}! (${nbRoles}/${maxRoles})`);
+            await interaction.editReply(`Tu ne peux pas t'assigner plus de ${maxRoles} rôle${(maxRoles > 1 ? 's' : '')} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${(nbRoles > 1 ? 's' : '')}`);
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.messageRetrieve, (msg: Message) => {
             const channel = msg.channel as GuildTextBasedChannel;
             this.logger.info(`Message récupéré dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, async (role: Role, member: GuildMember, interaction: ButtonInteraction) => {
+        this.selfRoleManager.on(SelfRoleManagerEvents.messageCreate, (msg: Message) => {
+            const channel = msg.channel as GuildTextBasedChannel;
+            this.logger.info(`Message créé dans ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.messageDelete, (msg: Message) => {
+            const channel = msg.channel as GuildTextBasedChannel;
+            this.logger.info(`Message supprimé de ${channel.parent!.name}-${channel.name} (${msg.channelId})`);
+        });
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleAdd, async (role: Role, member: GuildMember, interaction: StringSelectMenuInteraction | ButtonInteraction) => {
             this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été ajouté à <${member.user.tag}>`);
-
             await interaction.editReply(`Le rôle ${role} t'a été ajouté.`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, async (role: Role, member: GuildMember, interaction?: ButtonInteraction) => {
+        this.selfRoleManager.on(SelfRoleManagerEvents.roleRemove, async (role: Role, member: GuildMember, interaction?: StringSelectMenuInteraction | ButtonInteraction) => {
             this.logger.info(`Le rôle ${role.name} (<${role.id}>) a été retiré de <${member.user.tag}>`);
-
             if (interaction) await interaction.editReply(`Le rôle ${role} t'a été retiré.`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, interaction: ButtonInteraction, role: Role, requiredRoles: string[]) => {
-            const requiredRolesMissing = (await Promise.all(requiredRoles.map(requiredRole => member.guild.roles.fetch(requiredRole))))
-                .map((requiredRole: Role | null) => requiredRole?.name)
-                .filter(requiredRoles => !!requiredRoles);
+        this.selfRoleManager.on(SelfRoleManagerEvents.requiredRolesMissing, async (member: GuildMember, interaction: StringSelectMenuInteraction | ButtonInteraction, role: Role, requiredRoles: string[]) => {
+            const requiredRolesMissing: Role[] = (await Promise.all(requiredRoles.map(requiredRole => member.guild.roles.fetch(requiredRole))))
+                .map(role => role as Role)
+                .filter(requiredRole => !!requiredRole);
 
-            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.join(', ')}.`);
-
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.map(role => `${role.name} (<${role.id}>)`).join(', ')}.`);
             await interaction.editReply(`Tu ne peux pas t'assigner le rôle ${role}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}.`);
         });
-        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, interaction: ButtonInteraction, currentRolesNumber: number, maxRolesNumber: number, role: Role) => {
+        this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, interaction: StringSelectMenuInteraction | ButtonInteraction, currentRolesNumber: number, maxRolesNumber: number, role: Role) => {
             this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que ce membre a été la limite de rôles: ${currentRolesNumber}/${maxRolesNumber}.`);
-
             await interaction.editReply(`Tu ne peux pas t'assigner le rôle ${role}! Tu as atteint la limite: ${currentRolesNumber}/${maxRolesNumber}.`);
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.error, (error: unknown, message: string) => {
@@ -142,7 +144,7 @@ export class DatadropClient extends Client {
     }
 
     #bindEvents(): void {
-        const eventDirectory = path.join(__dirname, 'events');
+        const eventDirectory = path.join(import.meta.dirname, 'events');
         this.logger.debug(`Chargement de ${eventDirectory}`);
         readFilesFrom(eventDirectory, (eventName: string, props: any) => {
             this.logger.info(`Event '${eventName}' chargé`);
@@ -151,7 +153,7 @@ export class DatadropClient extends Client {
     }
 
     #bindCommands(): void {
-        const commandDirectory = path.join(__dirname, 'commands');
+        const commandDirectory = path.join(import.meta.dirname, 'commands');
         this.logger.debug(`Chargement de ${commandDirectory}`);
         readFilesFrom(commandDirectory, (commandName: string, props: any) => {
             this.logger.info(`Commande '${commandName}' chargée`);
@@ -160,16 +162,21 @@ export class DatadropClient extends Client {
     }
 
     async start(): Promise<void> {
+        try {
 
-        this.#listenToSelfRoleEvents();
-        this.#listenToTempChannelsEvents();
-        this.#listenToVerificationEvents();
+            this.#listenToSelfRoleEvents();
+            this.#listenToTempChannelsEvents();
+            this.#listenToVerificationEvents();
 
-        this.#bindEvents();
+            this.#bindEvents();
 
-        this.#bindCommands();
-        await this.database?.start();
-        this.login();
+            this.#bindCommands();
+            await this.database?.start();
+            this.login();
+        } catch (error) {
+            this.logger.error(`Une erreur est survenue lors du démarrage du bot.\nErreur: ${getErrorMessage(error)}`);
+            throw error;
+        }
     }
 
     async stop(): Promise<void> {

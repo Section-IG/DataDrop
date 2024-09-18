@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import { GatewayIntentBits } from 'discord.js';
 
-import { DatadropClient } from './src/datadrop';
-import { readConfig } from './src/config';
-import { Configuration } from './src/models/Configuration';
+import { DatadropClient } from './src/datadrop.js';
+import { readConfig } from './src/config.js';
+import { Configuration } from './src/models/Configuration.js';
 
 dotenv.config({ debug: Boolean(process.env.DEBUG) });
 

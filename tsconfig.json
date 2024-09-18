@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "strict": true,
     "useUnknownInCatchVariables": true,
     "resolveJsonModule": true,
-    "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
     "rootDir": ".",
     "outDir": "build",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "resolvePackageJsonImports": true
   }
 }

@@ -1,10 +1,10 @@
 import { ChannelType, Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
 const escapeRegex = (str: string | null | undefined) => str?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-module.exports = async (client: DatadropClient, message: Message) => {
+export default async function messageCreate(client: DatadropClient, message: Message) {
   const {
     prefix,
     communitymanagerRoleid,
@@ -42,7 +42,7 @@ module.exports = async (client: DatadropClient, message: Message) => {
       reply += `\nL'utilisation correcte de cette commande est : \`${matchedPrefix}${command.name} ${command.usage}\``;
     }
 
-    return message.channel.send(reply);
+    return message.reply(reply);
   }
 
   const isAuthorized = ownerIds.includes(message.author.id) || message.member!.roles.cache.get(communitymanagerRoleid) || message.member!.roles.cache.get(adminRoleid);

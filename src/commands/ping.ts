@@ -1,13 +1,13 @@
 import { Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
-module.exports = {
+export default {
   name: 'ping',
   description: 'Pong!',
 
   async execute(client: DatadropClient, message: Message, args: string[]) {
-    const msg = await message.channel.send('Calcul en cours...');
+    const msg = await message.reply('Calcul en cours...');
     await msg.edit(`Pong: ${client.ws.ping} ms`);
   },
 };

@@ -1,6 +1,6 @@
 import { EmbedBuilder, Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
 const people = [
 	{
@@ -13,7 +13,7 @@ const people = [
 	},
 ];
 
-module.exports = {
+export default {
 	name: 'email',
 	aliases: ['emails'],
 	description:
@@ -30,6 +30,7 @@ module.exports = {
 			people.map(p => ({ name: p.name, value: p.emails.join(', '), inline: true }))
 		);
 
-		await message.channel.send({ embeds: [embed] });
+		if (message.channel.isSendable())
+			await message.channel.send({ embeds: [embed] });
 	}
 };

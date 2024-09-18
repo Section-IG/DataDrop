@@ -1,12 +1,13 @@
 import { Snowflake } from 'discord.js';
-import { Logger } from '@hunteroi/advanced-logger';
-import { Client, DatabaseError, PreparedStatement, Value } from 'ts-postgres';
+import { Client, DatabaseError, PreparedStatement } from 'ts-postgres';
 
-import { User } from '../models/User';
-import { IDatabaseService } from '../models/IDatabaseService';
+import { ConsoleLogger } from '@hunteroi/advanced-logger';
+
+import { User } from '../models/User.js';
+import { IDatabaseService } from '../models/IDatabaseService.js';
 
 export default class PostgresDatabaseService implements IDatabaseService {
-    #logger: Logger;
+    #logger: ConsoleLogger;
     #database: Client;
 
     /**
@@ -14,7 +15,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
      * @param {Logger} logger
      * @memberof DatabaseService
      */
-    constructor(logger: Logger) {
+    constructor(logger: ConsoleLogger) {
         this.#logger = logger;
         this.#database = new Client({
             user: process.env.POSTGRES_USER,
@@ -23,14 +24,17 @@ export default class PostgresDatabaseService implements IDatabaseService {
             port: Number(process.env.DATABASE_PORT),
             database: process.env.POSTGRES_DB
         });
-        this.#listenToDatabaseEvents();
+        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
     }
 
     /**
      * @inherited
      */
     public async start(): Promise<void> {
-        await this.#database.connect();
+        const connectionInfo = await this.#database.connect();
+        if (!connectionInfo) throw new Error('Impossible de se connecter à la base de données.');
+
+        this.#logger.info(`Connecté à la base de données avec les données suivantes: ${JSON.stringify(connectionInfo)}`);
 
         await this.#database.query(`CREATE TABLE IF NOT EXISTS Migrations (
             id serial PRIMARY KEY,
@@ -162,12 +166,6 @@ export default class PostgresDatabaseService implements IDatabaseService {
         }
     }
 
-    #listenToDatabaseEvents() {
-        this.#database.on('connect', () => this.#logger.info('Connexion établie avec la base de données!'));
-        this.#database.on('end', () => this.#logger.info('Connexion fermée avec la base de données!'));
-        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
-    }
-
     #ascendingSort(string1: string, string2: string): number {
         if (string1 > string2) return 1;
         if (string1 < string2) return -1;
@@ -186,11 +184,11 @@ export default class PostgresDatabaseService implements IDatabaseService {
         return values.map(([prop], index) => prop + ' = $' + (index + offset)).join(', ');
     }
 
-    #deconstructValues(values: [string, any][]): Value[] {
+    #deconstructValues(values: [string, any][]): any[] {
         return values.flatMap(([, v]) => v instanceof Object && typeof v !== 'bigint' ? JSON.stringify(v) : (v ?? null));
     }
 
-    async #executeStatement(statement: PreparedStatement, values: Value[] = [], isSelect = true): Promise<User | undefined | null> {
+    async #executeStatement(statement: PreparedStatement, values: any[] = [], isSelect = true): Promise<User | undefined | null> {
         const notFoundMessage = 'User not found';
         try {
             const entities = await statement.execute(values);

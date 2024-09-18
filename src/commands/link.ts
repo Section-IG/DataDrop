@@ -1,7 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
-import { DatadropClient } from '../datadrop';
 
-module.exports = {
+import { DatadropClient } from '../datadrop.js';
+
+export default {
     name: 'link',
     aliases: ['lier', 'compte'],
     description: 'Lie ton compte Discord avec ton adresse Hénallux!',
