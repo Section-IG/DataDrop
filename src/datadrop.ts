@@ -131,7 +131,8 @@ export class DatadropClient extends Client {
                 .map(role => role as Role)
                 .filter(requiredRole => !!requiredRole);
 
-            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${requiredRolesMissing.map(role => `${role.name} (<${role.id}>)`).join(', ')}.`);
+            const roleNames = requiredRolesMissing.map(role => `${role.name} (<${role.id}>)`).join(', ');
+            this.logger.info(`Le rôle ${role.name} (<${role.id}>) n'a pas pu être donné à <${member.user.tag}> parce que tous les rôles requis ne sont pas assignés à ce membre: ${roleNames}.`);
             await interaction.editReply(`Tu ne peux pas t'assigner le rôle ${role}! Tu dois d'abord avoir les rôles suivants: ${requiredRolesMissing.join(', ')}.`);
         });
         this.selfRoleManager.on(SelfRoleManagerEvents.maxRolesReach, async (member: GuildMember, interaction: StringSelectMenuInteraction | ButtonInteraction, currentRolesNumber: number, maxRolesNumber: number, role: Role) => {

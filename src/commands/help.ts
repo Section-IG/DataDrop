@@ -1,10 +1,6 @@
-import { ChannelType, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
+import { Collection, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
-
-function buildEmbed(title: string, color: ColorResolvable, description: string): EmbedBuilder {
-  return new EmbedBuilder().setTitle(title).setColor(color).setDescription(description);
-}
 
 export default {
   name: 'help',
@@ -16,36 +12,22 @@ export default {
   execute: async (client: DatadropClient, message: Message, args: string[]) => {
     const { prefix } = client.config;
     const { commands } = client;
-    const data: string[] = [];
     let embed: EmbedBuilder;
 
     if (!args.length) {
-      // lister les commandes
-      data.push(`Utilisez \`${prefix}${module.exports.name} [commande]\` pour lire le message d'aide sur une commande spécifique.\n`);
-      data.push('Commandes disponibles :');
-      data.push(`- ${commands.map((command) => command.name).join('\n- ')}`);
-      embed = buildEmbed('Liste des commandes', 'Random', data.join('\n'));
-    }
-    else {
-      // afficher le message d'aide de la commande args[0]
+      embed = listAvailableCommands(prefix, commands);
+    } else {
       const name = args[0].toLowerCase();
-      const command =
-        commands.get(name) ||
-        commands.find((c) => c.aliases && c.aliases.includes(name));
+      const command = commands.get(name) || commands.find((c) => c.aliases?.includes(name));
 
       if (!command) {
-        if (message.channel.isSendable())
+        if (message.channel.isSendable()) {
           await message.channel.send("Ce n'est pas une commande valide.");
+        }
         return;
       }
 
-      data.push(`**Nom:** ${command.name}`);
-      if (command.aliases) data.push(`**Alias:** ${command.aliases.join(', ')}`);
-      if (command.description) data.push(`**Description:** ${command.description}`);
-      if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
-      data.push(`**Cooldown:** ${command.cooldown || 3} seconde(s)`);
-
-      embed = buildEmbed(`Aide pour '${command.name}'`, 'Random', data.join('\n'));
+      embed = buildCommandUsage(prefix, command);
     }
 
     try {
@@ -57,3 +39,35 @@ export default {
     }
   }
 };
+
+function buildEmbed(title: string, color: ColorResolvable, description: string): EmbedBuilder {
+  return new EmbedBuilder().setTitle(title).setColor(color).setDescription(description);
+}
+
+function listAvailableCommands(prefix: string | undefined, commands: Collection<string, any>): EmbedBuilder {
+  const data: string[] = [];
+
+  data.push(`Utilisez \`${prefix}${module.exports.name} [commande]\` pour lire le message d'aide sur une commande spécifique.\n`);
+  data.push('Commandes disponibles :');
+  data.push(`- ${commands.map((command) => command.name).join('\n- ')}`);
+
+  return buildEmbed('Liste des commandes', 'Random', data.join('\n'));
+}
+
+function buildCommandUsage(prefix: string | undefined, command: any): EmbedBuilder {
+  const data: string[] = [];
+
+  data.push(`**Nom:** ${command.name}`);
+  if (command.aliases) {
+    data.push(`**Alias:** ${command.aliases.join(', ')}`);
+  }
+  if (command.description) {
+    data.push(`**Description:** ${command.description}`);
+  }
+  if (command.usage) {
+    data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
+  }
+  data.push(`**Cooldown:** ${command.cooldown || 3} seconde(s)`);
+
+  return buildEmbed(`Aide pour '${command.name}'`, 'Random', data.join('\n'));
+}
