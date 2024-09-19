@@ -39,7 +39,7 @@ export default {
 			max: 1,
 			time: 30000
 		});
-		const confirmation = collectedMessages && collectedMessages.first();
+		const confirmation = collectedMessages?.first();
 		if (confirmation && confirmation.content.toLowerCase() === 'yes') {
 			const annoncesChannel = await message.guild.channels.fetch(announce.channelid);
 			if (!annoncesChannel) return;

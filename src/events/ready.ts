@@ -18,12 +18,13 @@ export default async function ready(client: DatadropClient) {
 
 async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {
   const { rolesChannelid, first, second, third, alumni, tutor, announce } = config;
-  const format = (rte: RoleToEmojiData) =>
-    `${rte.emoji} - ${rte.role instanceof Role ? rte.role : roleMention(rte.role)}${rte.smallNote ? ` (${rte.smallNote})` : ''}`;
   const message = {
     options: {
       sendAsEmbed: true,
-      format,
+      format: (rte: RoleToEmojiData) => {
+        const initialFormatedRte = `${rte.emoji} - ${rte.role instanceof Role ? rte.role : roleMention(rte.role)}`;
+        return rte.smallNote ? `${initialFormatedRte} (${rte.smallNote})` : initialFormatedRte;
+      },
       descriptionPrefix: bold(
         'Utilisez les boutons suivants pour vous attribuer/retirer le rôle souhaité!'
       )

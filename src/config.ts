@@ -42,7 +42,7 @@ export async function readConfig(): Promise<Configuration> {
 
         const json = JSON.parse(process.env.CONFIG ?? '{}');
         for (const prop in json) {
-            if (prop.match(/regex/i)) {
+            if (/regex/i.exec(prop)) {
                 json[prop] = new RegExp(json[prop]);
             }
         }
