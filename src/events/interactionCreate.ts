@@ -35,7 +35,19 @@ export default async function interactionCreate(client: DatadropClient, interact
 async function isAlreadyVerified(client: DatadropClient, interaction: Interaction) {
     const userFromDatabase = await client.database.read(interaction.user.id);
     if (userFromDatabase?.activatedCode) {
-        interaction.isRepliable() && await interaction.editReply({ content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+        if (interaction.isRepliable()) {
+            const replyOptions = {
+                content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!',
+                ephemeral: true
+            };
+            if (interaction.replied) {
+                await interaction.editReply(replyOptions);
+            }
+            else {
+                await interaction.reply(replyOptions);
+            }
+        }
+
         return true;
     }
     return false;
