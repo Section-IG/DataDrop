@@ -30,7 +30,7 @@ function isCommand(content: string, prefixRegex: RegExp): boolean {
 }
 
 function getCommandNameFromMessage(content: string, prefixRegex: RegExp): string {
-  const matches = content.match(prefixRegex);
+  const matches = prefixRegex.exec(content);
   if (!matches) return '';
   const [, matchedPrefix] = matches;
   const args = content.slice(matchedPrefix.length).trim().split(/ +/g) ?? [];
@@ -39,7 +39,7 @@ function getCommandNameFromMessage(content: string, prefixRegex: RegExp): string
 }
 
 function getCommand(client: DatadropClient, commandName: string) {
-  return client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+  return client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases?.includes(commandName));
 }
 
 function logCommandUsage(client: DatadropClient, message: Message, command: any) {
