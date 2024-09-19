@@ -1,9 +1,9 @@
 ﻿import { Message, codeBlock } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
-import { clean } from '../helpers';
+import { DatadropClient } from '../datadrop.js';
+import { clean } from '../helpers.js';
 
-module.exports = {
+export default {
     name: 'eval',
     description: 'Évalue du code Javascript.',
     ownerOnly: true,
@@ -29,7 +29,8 @@ module.exports = {
         } catch (err) {
             content = `// An error occured\n\n${clean(err)}`;
         } finally {
-            message.channel.send(codeBlock('xl', content));
+            if (message.channel.isSendable())
+                message.channel.send(codeBlock('xl', content));
         }
     }
 };

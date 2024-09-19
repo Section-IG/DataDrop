@@ -1,5 +1,5 @@
-import { Configuration } from './models/Configuration';
-import { version } from '../package.json';
+import { Configuration } from './models/Configuration.js';
+import packageInfo from '../package.json' with { type: "json" };
 
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
@@ -47,7 +47,7 @@ export async function readConfig(): Promise<Configuration> {
             }
         }
 
-        const config = { ...json, version: `${environment}-v${version}` };
+        const config = { ...json, version: `${environment}-v${packageInfo.version}` };
         config.communicationServiceOptions.apiKey = process.env.SENDGRID_API_KEY;
 
         return config;

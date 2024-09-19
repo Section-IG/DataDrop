@@ -1,8 +1,8 @@
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
-module.exports = {
+export default {
 	name: 'announce',
 	aliases: ['annonce'],
 	description:
@@ -13,7 +13,8 @@ module.exports = {
 	adminOnly: true,
 
 	async execute(client: DatadropClient, message: Message, args: string[]) {
-		if (!message.guild) return;
+		if (!message.inGuild()) return;
+
 		const { announce } = client.config;
 
 		const embed = new EmbedBuilder()

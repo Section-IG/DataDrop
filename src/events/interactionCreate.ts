@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, italic, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
-import { DatadropClient } from 'src/datadrop';
+import { DatadropClient } from 'src/datadrop.js';
 
-module.exports = async (client: DatadropClient, interaction: Interaction) => {
+export default async function interactionCreate(client: DatadropClient, interaction: Interaction) {
     const user = interaction.user;
     if (interaction.isButton() && interaction.customId.startsWith('la') && interaction.customId.includes(user.id)) {
         const userFromDatabase = await client.database.read(user.id);
@@ -78,7 +78,7 @@ module.exports = async (client: DatadropClient, interaction: Interaction) => {
             }
         }
     }
-    else if ((interaction.isButton() || interaction.isModalSubmit()) && !interaction.customId.startsWith('sr-') && !interaction.customId.includes(user.id)) {
+    else if ((interaction.isButton() || interaction.isModalSubmit() || interaction.isStringSelectMenu()) && !interaction.customId.startsWith('sr-') && !interaction.customId.includes(user.id)) {
         await interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
     }
 };

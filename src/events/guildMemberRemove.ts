@@ -1,8 +1,8 @@
 import { GuildMember } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
-module.exports = async (client: DatadropClient, member: GuildMember) => {
+export default async function guildMemberRemove(client: DatadropClient, member: GuildMember) {
   if (member.user.bot) return;
   if (member.guild.id !== client.config.guildId) return;
   client.logger.info(`L'utilisateur <${member.displayName} a quitté le serveur.`);

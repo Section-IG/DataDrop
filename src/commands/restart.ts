@@ -1,8 +1,8 @@
 ﻿import { Message } from 'discord.js';
 
-import { DatadropClient } from '../datadrop';
+import { DatadropClient } from '../datadrop.js';
 
-module.exports = {
+export default {
 	name: 'restart',
 	description: 'Relance le bot',
 	ownerOnly: true,
@@ -10,7 +10,7 @@ module.exports = {
 	async execute(client: DatadropClient, message: Message, args: string[]) {
 		const { ok_hand } = client.config;
 		client.logger.info('Arrêt en cours...');
-		await message.channel.send(ok_hand);
+		await message.reply(ok_hand);
 		process.exit();
 	}
 };
