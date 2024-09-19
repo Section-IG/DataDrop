@@ -13,7 +13,7 @@ export default async function interactionCreate(client: DatadropClient, interact
 
         if (await isAlreadyVerified(client, interaction)) return;
 
-        let content = 'Une erreur est survenue!';
+        let content: string;
         switch (interaction.customId) {
             case `lacm${interaction.user.id}`: {
                 content = await getEmailAndSendCode(interaction, client);
@@ -22,10 +22,10 @@ export default async function interactionCreate(client: DatadropClient, interact
             }
             case `lav${interaction.user.id}`: {
                 content = await verifyCode(interaction, client);
+                await interaction.editReply({ content });
                 break;
             }
         }
-        await interaction.editReply({ content });
     }
     else if (isUnhandledInteraction(interaction) && interaction.isRepliable()) {
         await interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
@@ -35,7 +35,7 @@ export default async function interactionCreate(client: DatadropClient, interact
 async function isAlreadyVerified(client: DatadropClient, interaction: Interaction) {
     const userFromDatabase = await client.database.read(interaction.user.id);
     if (userFromDatabase?.activatedCode) {
-        interaction.isRepliable() && await interaction.reply({ ephemeral: true, content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
+        interaction.isRepliable() && await interaction.editReply({ content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!' });
         return true;
     }
     return false;
@@ -49,7 +49,7 @@ async function showVerificationModal(interaction: ButtonInteraction) {
     const modal = new ModalBuilder().setTitle('Lier son compte');
     const input = new TextInputBuilder();
     switch (interaction.customId) {
-        case `lae${interaction.user.id}`: {
+        case `lae${interaction.user.id}`:
             modal.setCustomId(`lacm${interaction.user.id}`);
             input.setLabel('Email Hénallux')
                 .setPlaceholder('********@henallux.be')
@@ -58,8 +58,7 @@ async function showVerificationModal(interaction: ButtonInteraction) {
                 .setStyle(TextInputStyle.Short)
                 .setCustomId('email');
             break;
-        }
-        case `lacb${interaction.user.id}`: {
+        case `lacb${interaction.user.id}`:
             modal.setCustomId(`lav${interaction.user.id}`);
             input.setLabel('Code de vérification')
                 .setPlaceholder('******')
@@ -69,7 +68,6 @@ async function showVerificationModal(interaction: ButtonInteraction) {
                 .setStyle(TextInputStyle.Short)
                 .setCustomId('code');
             break;
-        }
     }
     const inputComponent = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
     modal.addComponents(inputComponent);
@@ -103,7 +101,7 @@ async function showVerificationButton(interaction: RepliableInteraction, content
         .setCustomId(`lacb${interaction.user.id}`)
         .setDisabled(content.includes(client.errorMessage) || content.includes(client.activeAccountMessage));
     const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
-    await interaction.reply({ content, components: [buttonComponent] });
+    await interaction.editReply({ content, components: [buttonComponent] });
 }
 
 function isUnhandledInteraction(interaction: Interaction) {
