@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { Client, DatabaseError, PreparedStatement } from 'ts-postgres';
+import { Client, DatabaseError, PreparedStatement, Value } from 'ts-postgres';
 
 import { ConsoleLogger } from '@hunteroi/advanced-logger';
 
@@ -24,17 +24,14 @@ export default class PostgresDatabaseService implements IDatabaseService {
             port: Number(process.env.DATABASE_PORT),
             database: process.env.POSTGRES_DB
         });
-        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
+        this.#listenToDatabaseEvents();
     }
 
     /**
      * @inherited
      */
     public async start(): Promise<void> {
-        const connectionInfo = await this.#database.connect();
-        if (!connectionInfo) throw new Error('Impossible de se connecter à la base de données.');
-
-        this.#logger.info(`Connecté à la base de données avec les données suivantes: ${JSON.stringify(connectionInfo)}`);
+        await this.#database.connect();
 
         await this.#database.query(`CREATE TABLE IF NOT EXISTS Migrations (
             id serial PRIMARY KEY,
@@ -166,6 +163,12 @@ export default class PostgresDatabaseService implements IDatabaseService {
         }
     }
 
+    #listenToDatabaseEvents() {
+        this.#database.on('connect', () => this.#logger.info('Connexion établie avec la base de données!'));
+        this.#database.on('end', () => this.#logger.info('Connexion fermée avec la base de données!'));
+        this.#database.on('error', (error: DatabaseError) => this.#logger.error(`Une erreur est survenue lors de l'utilisation de la base de données: \n${error.message}`));
+    }
+
     #ascendingSort(string1: string, string2: string): number {
         if (string1 > string2) return 1;
         if (string1 < string2) return -1;
@@ -184,11 +187,11 @@ export default class PostgresDatabaseService implements IDatabaseService {
         return values.map(([prop], index) => prop + ' = $' + (index + offset)).join(', ');
     }
 
-    #deconstructValues(values: [string, any][]): any[] {
+    #deconstructValues(values: [string, any][]): Value[] {
         return values.flatMap(([, v]) => v instanceof Object && typeof v !== 'bigint' ? JSON.stringify(v) : (v ?? null));
     }
 
-    async #executeStatement(statement: PreparedStatement, values: any[] = [], isSelect = true): Promise<User | undefined | null> {
+    async #executeStatement(statement: PreparedStatement, values: Value[] = [], isSelect = true): Promise<User | undefined | null> {
         const notFoundMessage = 'User not found';
         try {
             const entities = await statement.execute(values);
