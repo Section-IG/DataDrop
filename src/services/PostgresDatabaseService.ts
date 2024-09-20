@@ -8,8 +8,7 @@ import {
 
 import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 
-import type { IDatabaseService } from "../models/IDatabaseService.js";
-import type { User } from "../models/User.js";
+import { User, IDatabaseService } from '../models/index.js';
 
 export default class PostgresDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
