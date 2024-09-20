@@ -5,12 +5,10 @@ import { LogEventLevel, DefaultLogger, ConsoleLogger } from '@hunteroi/advanced-
 import { InteractionsSelfRoleManager, RoleToEmojiData, SelfRoleManagerEvents } from '@hunteroi/discord-selfrole';
 import { ChildChannelData, ParentChannelData, TempChannelsManager, TempChannelsManagerEvents } from '@hunteroi/discord-temp-channels';
 import { VerificationManager, VerificationManagerEvents } from '@hunteroi/discord-verification';
-import { SendGridService } from '@hunteroi/discord-verification/lib/services/SendGridService';
-import * as path from 'path';
 
 import { PostgresDatabaseService, SMTPService } from './services/index.js';
 import { getErrorMessage, readFilesFrom } from './helpers.js';
-import { Configuration, User, IDatabaseService } from './models/index.js';
+import { Configuration, IDatabaseService, User } from './models/index.js';
 import { readConfig } from './config.js';
 
 export class DatadropClient extends Client {

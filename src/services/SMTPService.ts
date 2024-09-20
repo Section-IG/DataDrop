@@ -1,6 +1,7 @@
-import { ISenderAPI, SenderAPIData } from '@hunteroi/discord-verification';
 import { createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+
+import { ISenderAPI, SenderAPIData } from '@hunteroi/discord-verification';
 
 export type SMTPServiceOptions = SMTPTransport.Options;
 

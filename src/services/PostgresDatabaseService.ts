@@ -3,8 +3,7 @@ import { Client, DatabaseError, PreparedStatement, Value } from 'ts-postgres';
 
 import { ConsoleLogger } from '@hunteroi/advanced-logger';
 
-import { User } from '../models/User.js';
-import { IDatabaseService } from '../models/IDatabaseService.js';
+import { User, IDatabaseService } from '../models/index.js';
 
 export default class PostgresDatabaseService implements IDatabaseService {
     #logger: ConsoleLogger;
