@@ -19,8 +19,6 @@ import {
     VerificationManager,
     VerificationManagerEvents,
 } from "@hunteroi/discord-verification";
-import * as path from 'path';
-import { SMTP2GoService } from "@hunteroi/discord-verification/lib/services/SMTP2GoService.js";
 import {
     type ButtonInteraction,
     Client,
@@ -38,7 +36,7 @@ import {
 
 import { PostgresDatabaseService, SMTPService } from './services/index.js';
 import { getErrorMessage, readFilesFrom } from './helpers.js';
-import { Configuration, User, IDatabaseService } from './models/index.js';
+import { Configuration, IDatabaseService, User } from './models/index.js';
 import { readConfig } from './config.js';
 
 export class DatadropClient extends Client {
