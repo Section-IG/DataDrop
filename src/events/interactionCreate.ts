@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Interaction, italic, ModalBuilder, ModalSubmitInteraction, RepliableInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
-import { DatadropClient } from 'src/datadrop.js';
+import { DatadropClient } from '../datadrop.js';
 
 export default async function interactionCreate(client: DatadropClient, interaction: Interaction) {
     if (isVerificationButton(interaction)) {
