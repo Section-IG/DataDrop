@@ -2,6 +2,7 @@
 
 import { DatadropClient } from '../datadrop.js';
 import { clean } from '../helpers.js';
+import { Command } from '../models/Command.js';
 
 export default {
     name: 'eval',
@@ -33,4 +34,4 @@ export default {
                 message.channel.send(codeBlock('xl', content));
         }
     }
-};
+} as Command;

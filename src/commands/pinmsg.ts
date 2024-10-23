@@ -1,13 +1,14 @@
 import { Message, MessageReference, MessageResolvable } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
+import { Command } from '../models/Command.js';
 
 export default {
   name: 'pinmsg',
   description: "Ajoute ou retire le message lié des épinglés du canal si l'utilisateur fait partie du rôle 'Professeur(e)'.\n\nLes arguments possibles sont:\n  • `--verbose` ou `-v` pour avoir un retour texte pour la commande\n",
   aliases: ['pin', 'épingler', 'unpin', 'unpinmsg', 'désépingler'],
   guildOnly: true,
-  usage: '[args]',
+  usage: '[-v | --verbose]',
 
   async execute(client: DatadropClient, message: Message, args: string[]) {
     if (!message.guild || !message.member || !message.reference) return;
@@ -30,7 +31,7 @@ export default {
     }
     client.logger.info(`Le membre <${message.member.displayName}> (${message.member.id}) a épinglé/désépinglé le message <${referencedMessage.id}>.`);
   }
-};
+} as Command;
 
 async function replyOnAction(message: Message, emoji: string, content: string, verboseIsActive?: boolean): Promise<void> {
   if (verboseIsActive && message.channel.isSendable()) {

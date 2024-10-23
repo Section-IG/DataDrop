@@ -1,6 +1,7 @@
 import { Message } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
+import { Command } from '../models/Command.js';
 
 export default {
     name: 'reload',
@@ -13,4 +14,4 @@ export default {
         await client.reloadConfig();
         await message.reply(ok_hand);
     }
-};
+} as Command;

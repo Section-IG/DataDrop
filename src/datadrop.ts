@@ -13,12 +13,13 @@ import { Configuration } from './models/Configuration.js';
 import { readConfig } from './config.js';
 import { User } from './models/User.js';
 import { IDatabaseService } from './models/IDatabaseService.js';
+import { Command } from './models/Command.js';
 
 export class DatadropClient extends Client {
     #config: Configuration;
     readonly database: IDatabaseService;
     readonly logger: DefaultLogger;
-    readonly commands: Collection<string, any>;
+    readonly commands: Collection<string, Command>;
     readonly selfRoleManager: InteractionsSelfRoleManager;
     readonly tempChannelsManager: TempChannelsManager;
     readonly verificationManager: VerificationManager<User>;

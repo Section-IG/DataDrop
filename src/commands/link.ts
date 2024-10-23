@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
+import { Command } from '../models/Command.js';
 
 export default {
     name: 'link',
@@ -28,4 +29,4 @@ export default {
             components: [buttonComponent]
         });
     },
-};
+} as Command;

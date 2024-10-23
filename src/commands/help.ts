@@ -9,7 +9,7 @@ export default {
   aliases: ['commandes'],
   usage: '[commande]',
 
-  execute: async (client: DatadropClient, message: Message, args: string[]) => {
+  async execute(client: DatadropClient, message: Message, args: string[]) {
     const { prefix } = client.config;
     const { commands } = client;
     let embed: EmbedBuilder;

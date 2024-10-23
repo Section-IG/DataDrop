@@ -1,6 +1,7 @@
 import { ChannelType, Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
+import { Command } from '../models/Command.js';
 
 export default {
 	name: 'announce',
@@ -58,4 +59,4 @@ export default {
 			await message.channel.send('Annonce annulée!');
 		}
 	},
-};
+} as Command;

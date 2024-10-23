@@ -1,6 +1,7 @@
 import { EmbedBuilder, Message } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
+import { Command } from '../models/Command.js';
 
 const people = [
 	{
@@ -33,4 +34,4 @@ export default {
 		if (message.channel.isSendable())
 			await message.channel.send({ embeds: [embed] });
 	}
-};
+} as Command;
