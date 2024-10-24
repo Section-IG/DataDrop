@@ -1,11 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 dotenv.config({ debug: true });
 
 const { Client, Collection, REST, Routes } = require('discord.js');
 const path = require('node:path');
 const os = require('node:os');
-const fsp = require('fs/promises');
+const fsp = require('node:fs/promises');
 const synchronizeSlashCommands = require('discord-sync-commands');
 const { guildId } = require('../config.development.json');
 
