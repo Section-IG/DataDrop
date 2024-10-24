@@ -1,10 +1,15 @@
 
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildMember } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Events, GuildMember } from 'discord.js';
 
 import { AnnounceConfiguration } from '../models/Configuration.js';
 import { DatadropClient } from '../datadrop.js';
 
-export default async function guildMemberAdd(client: DatadropClient, member: GuildMember) {
+export default {
+	name: Events.GuildMemberAdd,
+	execute: guildMemberAdd
+};
+
+async function guildMemberAdd(client: DatadropClient, member: GuildMember) {
 	if (member.user.bot) return;
 	client.logger.info(`L'utilisateur <${member.displayName} a rejoint le serveur.`);
 
@@ -35,7 +40,7 @@ export default async function guildMemberAdd(client: DatadropClient, member: Gui
 	} catch (err: unknown) {
 		client.logger.error((<Error>err).message);
 	}
-};
+}
 
 function generateEmbed(informationsChannelid: string, faqChannelid: string, comiteeChannelid: string, rolesChannelid: string, announce: AnnounceConfiguration) {
 	const fields = [

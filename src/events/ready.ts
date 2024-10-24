@@ -1,11 +1,17 @@
-import { Role, roleMention, bold, Snowflake, ButtonStyle } from 'discord.js';
+import { Role, roleMention, bold, Snowflake, ButtonStyle, Events } from 'discord.js';
 
 import { RoleToEmojiData } from '@hunteroi/discord-selfrole';
 
 import { DatadropClient } from '../datadrop.js';
 import { Configuration } from '../models/Configuration.js';
 
-export default async function ready(client: DatadropClient) {
+export default {
+  name: Events.ClientReady,
+  once: true,
+  execute: ready
+};
+
+async function ready(client: DatadropClient) {
   const { config } = client;
   await registerRolesChannels(client, config);
   await registerDynamicChannels(client, config);
@@ -14,7 +20,7 @@ export default async function ready(client: DatadropClient) {
   if (config.version) client.user?.setActivity({ name: config.version });
 
   client.logger.info(`Connecté en tant que ${client.user?.tag}, version ${config.version}!`);
-};
+}
 
 async function registerRolesChannels(client: DatadropClient, config: Configuration): Promise<void> {
   const { rolesChannelid, first, second, third, alumni, tutor, announce } = config;

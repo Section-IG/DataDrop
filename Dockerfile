@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS BUILD
+FROM node:lts-alpine AS build
 
 WORKDIR /app
 
@@ -12,13 +12,13 @@ RUN yarn install --production
 RUN zip -r app.zip ./node_modules ./build ./yarn.lock ./.env
 
 # ------------------------------------------------------------
-FROM node:lts-alpine AS APP
+FROM node:lts-alpine AS app
 
 WORKDIR /app
 
 RUN apk --no-cache add unzip
 
-COPY --from=BUILD /app/app.zip .
+COPY --from=build /app/app.zip .
 RUN unzip app.zip && rm app.zip && mv ./build/* . && rm -rf ./build
 
 CMD ["sh", "-c", "sleep 2 && node ./index.js"]

@@ -14,6 +14,7 @@ import { readConfig } from './config.js';
 import { User } from './models/User.js';
 import { IDatabaseService } from './models/IDatabaseService.js';
 import { Command } from './models/Command.js';
+import { Event } from './models/Event.js';
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -145,22 +146,25 @@ export class DatadropClient extends Client {
         });
     }
 
-    #bindEvents(): void {
+    async #bindEvents(): Promise<void> {
         const eventDirectory = path.join(import.meta.dirname, 'events');
-        this.logger.debug(`Chargement de ${eventDirectory}`);
-        readFilesFrom(eventDirectory, (eventName: string, props: any) => {
-            this.logger.info(`Event '${eventName}' chargé`);
-            this.on(eventName, props.bind(null, this));
-        });
+        await readFilesFrom(eventDirectory, (eventFileName: string, event: Event) => {
+            this.logger.info(`Event '${event.name}' ('${eventFileName}') chargé`);
+
+            if (event.once) {
+                this.once(event.name, event.execute.bind(null, this));
+            } else {
+                this.on(event.name, event.execute.bind(null, this));
+            }
+        }, this.logger);
     }
 
-    #bindCommands(): void {
+    async #bindCommands(): Promise<void> {
         const commandDirectory = path.join(import.meta.dirname, 'commands');
-        this.logger.debug(`Chargement de ${commandDirectory}`);
-        readFilesFrom(commandDirectory, (commandFileName: string, props: any) => {
+        await readFilesFrom(commandDirectory, (commandFileName: string, props: Command) => {
             this.logger.info(`Commande '${props.data.name}' ('${commandFileName}') chargée`);
             this.commands.set(props.data.name, props);
-        });
+        }, this.logger);
     }
 
     async start(): Promise<void> {
@@ -170,8 +174,8 @@ export class DatadropClient extends Client {
             this.#listenToTempChannelsEvents();
             this.#listenToVerificationEvents();
 
-            this.#bindEvents();
-            this.#bindCommands();
+            await this.#bindEvents();
+            await this.#bindCommands();
 
             await this.database?.start();
             this.login();

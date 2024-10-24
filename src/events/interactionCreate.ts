@@ -1,9 +1,14 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Interaction, italic, ModalBuilder, ModalSubmitInteraction, RepliableInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Events, Interaction, italic, ModalBuilder, ModalSubmitInteraction, RepliableInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 import { DatadropClient } from 'src/datadrop.js';
 import { CommandHandler } from '../services/CommandHandler.js';
 
-export default async function interactionCreate(client: DatadropClient, interaction: Interaction) {
+export default {
+    name: Events.InteractionCreate,
+    execute: interactionCreate
+};
+
+async function interactionCreate(client: DatadropClient, interaction: Interaction) {
     if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
         const commandHandler = new CommandHandler(client);
         if (commandHandler.shouldExecute(interaction)) {

@@ -1,23 +1,33 @@
-import * as fs from 'fs';
+import * as fsp from 'fs/promises';
 import * as path from 'path';
+import { ConsoleLogger, DefaultLogger } from '@hunteroi/advanced-logger';
 
-export function readFilesFrom(directory: string, callback: (name: string, props: any) => void): void {
-    fs.readdir(directory, async (err, files) => {
-        if (err) return console.error;
+const console = new ConsoleLogger();
+
+export async function readFilesFrom(directory: string, callback: (name: string, props: any) => void, logger: DefaultLogger = console): Promise<void> {
+    try {
+        logger.debug(`Lecture du répertoire ${directory}`);
+
+        const files = await fsp.readdir(directory);
         for (const file of files) {
             const filePath = path.join(directory, file);
-            const stats = fs.statSync(filePath);
+            const stats = await fsp.stat(filePath);
+
             if (stats.isDirectory()) {
-                readFilesFrom(filePath, callback);
+                await readFilesFrom(filePath, callback, logger);
                 continue;
             }
 
-            if (stats.isFile() && !file.endsWith('.js')) return;
+            if (stats.isFile() && !file.endsWith('.js')) continue;
+
+            logger.debug(`Lecture du fichier ${filePath}`);
 
             const props = await import(filePath);
             callback(file.replace('.js', ''), props.default);
         }
-    });
+    } catch (err) {
+        logger.error(getErrorMessage(err));
+    }
 }
 
 export function clean(text: any): string {
