@@ -8,9 +8,6 @@
     "files.exclude": {
         "node_modules": true
     },
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
-    },
     "npm.packageManager": "yarn",
     "files.eol": "\n",
     "editor.insertSpaces": true,

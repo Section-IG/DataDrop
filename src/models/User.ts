@@ -1,4 +1,4 @@
-import { IUser } from '@hunteroi/discord-verification';
+import type { IUser } from "@hunteroi/discord-verification";
 
 export interface User extends IUser {
     createdAt: Date;

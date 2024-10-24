@@ -42,10 +42,6 @@ typings/
 # Optional npm cache directory
 .npm
 
-# eslint
-.eslintcache
-.eslintrc.json
-
 # Optional REPL history
 .node_repl_history
 

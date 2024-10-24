@@ -1,6 +1,6 @@
-import { Snowflake } from 'discord.js';
+import type { Snowflake } from "discord.js";
 
-import { SendGridOptions } from '@hunteroi/discord-verification/lib/services/SendGridService.js';
+import type { SendGridOptions } from "@hunteroi/discord-verification/lib/services/SendGridService.js";
 
 export interface SpecialRoleConfiguration {
     roleid: Snowflake;
@@ -58,9 +58,6 @@ export interface Configuration {
     tutor: SpecialRoleConfiguration;
 
     announce: AnnounceConfiguration;
-
-    ok_hand: string;
-    warning: string;
 
     communicationServiceOptions: SendGridOptions;
 }

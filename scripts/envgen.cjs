@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require('fs/promises');
+const fs = require('node:fs/promises');
 
 const path = `${__dirname}/..`;
 
