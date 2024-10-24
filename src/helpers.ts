@@ -1,13 +1,21 @@
 import * as fs from 'fs';
+import * as path from 'path';
 
-export function readFilesFrom(path: string, callback: (name: string, props: any) => void): void {
-    fs.readdir(path, async (err, files) => {
+export function readFilesFrom(directory: string, callback: (name: string, props: any) => void): void {
+    fs.readdir(directory, async (err, files) => {
         if (err) return console.error;
         for (const file of files) {
-            if (!file.endsWith('.js')) return;
-            const props = await import(`${path}/${file}`);
-            const fileName = file.split('.')[0];
-            callback(fileName, props.default);
+            const filePath = path.join(directory, file);
+            const stats = fs.statSync(filePath);
+            if (stats.isDirectory()) {
+                readFilesFrom(filePath, callback);
+                continue;
+            }
+
+            if (stats.isFile() && !file.endsWith('.js')) return;
+
+            const props = await import(filePath);
+            callback(file.replace('.js', ''), props.default);
         }
     });
 }

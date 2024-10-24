@@ -9,7 +9,6 @@ x-restart-policy:
   &restart-policy
   restart: always
 
-version: '3.8'
 services:
   database:
     <<: [*env-file, *network, *restart-policy]

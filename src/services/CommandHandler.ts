@@ -1,63 +1,57 @@
-import { ChannelType, Message } from 'discord.js';
+import { ChannelType, ChatInputCommandInteraction, MessageContextMenuCommandInteraction } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
 import { Command } from '../models/Command.js';
-
-const escapeRegex = (str: string | null | undefined) => str?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 type AuthorizationResponse = {
     error?: string;
 };
 
 export class CommandHandler {
-    #prefixRegex: RegExp;
     #client: DatadropClient;
 
     constructor(client: DatadropClient) {
         this.#client = client;
-        this.#prefixRegex = new RegExp(`^(<@!?${client.user!.id}>|${escapeRegex(client.config.prefix)})\\s*`);
     }
 
-    shouldExecute(content: string): boolean {
-        return this.#prefixRegex.test(content.split(' ').join(''));
+    shouldExecute(interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction): boolean {
+        return true;
     }
 
-    async execute(message: Message): Promise<void> {
-        const args = this.#getArgs(message.content);
-        const command = this.#inferCommandFromArgs(args);
+    async execute(interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction): Promise<void> {
+        const command = this.#client.commands.get(interaction.commandName);
         if (!command) {
-            await message.reply(":x: **Oups!** - Cette commande n'existe pas. Utilisez la commande `help` pour voir la liste des commandes disponibles.");
+            await interaction.reply({
+                content: "❌ **Oups!** - Cette commande n'existe pas.",
+                ephemeral: true
+            });
             return;
         }
 
-        const authorizationResponse = this.#checkAuthorization(message, command);
-        this.#logUsage(message, command, !!authorizationResponse.error);
+        const authorizationResponse = await this.#checkAuthorization(interaction, command);
+        this.#logUsage(interaction, command, !authorizationResponse.error);
 
         if (authorizationResponse.error) {
-            await message.reply(authorizationResponse.error);
+            await interaction.reply({ content: authorizationResponse.error, ephemeral: true });
             return;
         }
 
         try {
-            await command.execute(this.#client, message, args);
+            await command.execute(this.#client, interaction);
         } catch (err) {
-            this.#client.logger.error(`Une erreur est survenue lors de l'exécution de la commande "${command.name}": ${err}`);
-            await message.reply(":x: **Oups!** - Une erreur est apparue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!");
+            this.#client.logger.error(`Une erreur est survenue lors de l'exécution de la commande <${command.data.name}>: ${JSON.stringify(err)}`);
+            const replyOptions = {
+                content: "❌ **Oups!** - Une erreur est survenue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!",
+                ephemeral: true
+            };
+            if (interaction.replied) {
+                await interaction.followUp(replyOptions);
+            } else if (interaction.deferred) {
+                await interaction.editReply(replyOptions.content);
+            } else {
+                await interaction.reply(replyOptions);
+            }
         }
-    }
-
-    #getArgs(content: string): string[] {
-        const matches = this.#prefixRegex.exec(content);
-        if (!matches) return [];
-        const [, matchedPrefix] = matches;
-        return content.slice(matchedPrefix.length).trim().split(/ +/g) ?? [];
-    }
-
-    #inferCommandFromArgs(args: string[]): Command | undefined {
-        if (!args || args.length === 0) return;
-        const commandName = args.shift()!.toLowerCase();
-
-        return this.#client.commands.get(commandName) || this.#client.commands.find((cmd) => cmd.aliases?.includes(commandName));
     }
 
     /**
@@ -66,32 +60,26 @@ export class CommandHandler {
      * @param command The command
      * @param isAuthorized Whether the user responsible of the message is authorized to use the command or not.
      */
-    #logUsage(message: Message, command: any, isAuthorized: boolean): void {
-        const channelInfo = message.channel.type === ChannelType.GuildText ? `dans #${message.channel.name} (${message.channel.id})` : 'en DM';
-        this.#client.logger.info(`${message.author.tag} (${message.author.id}) a utilisé '${command.name}' ${channelInfo} ${isAuthorized ? 'avec' : 'sans'} autorisation`);
+    #logUsage(interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction, command: Command, isAuthorized: boolean): void {
+        const channel = interaction.channel!;
+        const author = interaction.user;
+        const channelInfo = channel.type === ChannelType.GuildText ? `dans #${channel.name} (${channel.id})` : 'en DM';
+        this.#client.logger.info(`${author.tag} (${author.id}) a utilisé '${command.data.name}' ${channelInfo} ${isAuthorized ? 'avec' : 'sans'} autorisation`);
     }
 
-    #checkAuthorization(message: Message, command: any): AuthorizationResponse {
+    async #checkAuthorization(interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction, command: Command): Promise<AuthorizationResponse> {
         const { ownerIds, communitymanagerRoleid, adminRoleid } = this.#client.config;
 
-        const canBypassAuthorization = ownerIds.includes(message.author.id)
-            || message.member!.roles.cache.get(communitymanagerRoleid)
-            || message.member!.roles.cache.get(adminRoleid);
-        if ((command.adminOnly || command.ownerOnly) && !canBypassAuthorization) {
-            return { error: ":x: **Oups!** - Cette commande est réservée à un nombre limité de personnes dont vous ne faites pas partie." };
+        const member = await interaction.guild?.members.fetch(interaction.user.id);
+        if (!member) {
+            return { error: "❌ **Oups!** - Je n'ai pas pu récupérer vos informations de membre. Réessayez plus tard." };
         }
 
-        if (command.guildOnly && message.channel.type !== ChannelType.GuildText) {
-            return { error: ":x: **Oups!** - Je ne peux pas exécuter cette commande en dehors d'une guilde!" };
-        }
-
-        if (command.args && !message.content.slice(command.name.length).startsWith(' ')) {
-            const reply = `:x: **Oups!** - Vous n'avez pas donné d'arguments, ${message.author}!`;
-            return {
-                error: command.usage
-                    ? `${reply}\nL'utilisation correcte de cette commande est : \`${message.content} ${command.usage}\``
-                    : reply
-            };
+        const canBypassAuthorization = ownerIds.includes(interaction.user.id)
+            || member!.roles.cache.has(communitymanagerRoleid)
+            || member!.roles.cache.has(adminRoleid);
+        if (command.ownerOnly && !canBypassAuthorization) {
+            return { error: "❌ **Oups!** - Cette commande est réservée à un nombre limité de personnes dont vous ne faites pas partie." };
         }
 
         return {};

@@ -157,9 +157,9 @@ export class DatadropClient extends Client {
     #bindCommands(): void {
         const commandDirectory = path.join(import.meta.dirname, 'commands');
         this.logger.debug(`Chargement de ${commandDirectory}`);
-        readFilesFrom(commandDirectory, (commandName: string, props: any) => {
-            this.logger.info(`Commande '${commandName}' chargée`);
-            this.commands.set(commandName, props);
+        readFilesFrom(commandDirectory, (commandFileName: string, props: any) => {
+            this.logger.info(`Commande '${props.data.name}' ('${commandFileName}') chargée`);
+            this.commands.set(props.data.name, props);
         });
     }
 
@@ -171,8 +171,8 @@ export class DatadropClient extends Client {
             this.#listenToVerificationEvents();
 
             this.#bindEvents();
-
             this.#bindCommands();
+
             await this.database?.start();
             this.login();
         } catch (error) {

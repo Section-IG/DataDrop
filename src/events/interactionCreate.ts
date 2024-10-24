@@ -1,9 +1,16 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Interaction, italic, ModalBuilder, ModalSubmitInteraction, RepliableInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 import { DatadropClient } from 'src/datadrop.js';
+import { CommandHandler } from '../services/CommandHandler.js';
 
 export default async function interactionCreate(client: DatadropClient, interaction: Interaction) {
-    if (isVerificationButton(interaction)) {
+    if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
+        const commandHandler = new CommandHandler(client);
+        if (commandHandler.shouldExecute(interaction)) {
+            await commandHandler.execute(interaction);
+        }
+    }
+    else if (isVerificationButton(interaction)) {
         if (await isAlreadyVerified(client, interaction)) return;
 
         await showVerificationModal(interaction);
@@ -16,8 +23,11 @@ export default async function interactionCreate(client: DatadropClient, interact
         let content: string;
         switch (interaction.customId) {
             case `lacm${interaction.user.id}`: {
-                content = await getEmailAndSendCode(interaction, client);
-                await showVerificationButton(interaction, `${content}\n${italic("D'ailleurs, l'email peut potentiellement se retrouver dans tes spams!")}`, client);
+                const validatedEmail = await validateEmail(interaction);
+                if (validatedEmail) {
+                    content = await getEmailAndSendCode(interaction, client);
+                    await showVerificationButton(interaction, `${content}\n${italic("D'ailleurs, l'email peut potentiellement se retrouver dans tes spams!")}`, client);
+                }
                 break;
             }
             case `lav${interaction.user.id}`: {
@@ -28,7 +38,7 @@ export default async function interactionCreate(client: DatadropClient, interact
         }
     }
     else if (isUnhandledInteraction(interaction) && interaction.isRepliable()) {
-        await interaction.reply({ ephemeral: true, content: "Ce message ne t'était assurément pas destiné!" });
+        await interaction.reply({ content: "Ce message ne t'était assurément pas destiné!", ephemeral: true });
     }
 }
 
@@ -40,10 +50,9 @@ async function isAlreadyVerified(client: DatadropClient, interaction: Interactio
                 content: 'Tu as déjà lié ton compte Hénallux avec ton compte Discord!',
                 ephemeral: true
             };
-            if (interaction.replied) {
+            if (interaction.deferred) {
                 await interaction.editReply(replyOptions);
-            }
-            else {
+            } else {
                 await interaction.reply(replyOptions);
             }
         }
@@ -95,14 +104,24 @@ async function verifyCode(interaction: ModalSubmitInteraction, client: DatadropC
     return await client.verificationManager.verifyCode(interaction.user.id, code);
 }
 
-async function getEmailAndSendCode(interaction: ModalSubmitInteraction, client: DatadropClient) {
+async function validateEmail(interaction: ModalSubmitInteraction) {
     const regex = /(etu\d{5,}|mdp[a-z]{5,})@henallux\.be/;
     const email = interaction.fields.getTextInputValue('email');
     if (!regex.test(email)) {
-        return "L'adresse email fournie n'est pas valide!\nSi tu es un.e étudiant.e, elle doit correspondre à etuXXXXX@henallux.be.\nSi tu es un.e professeur.e, elle doit correspondre à mdpXXXXX@henallux.be.";
+        await interaction.editReply({
+            content: "L'adresse email fournie n'est pas valide!\nSi tu es un.e étudiant.e, elle doit correspondre à etuXXXXX@henallux.be.\nSi tu es un.e professeur.e, elle doit correspondre à mdpXXXXX@henallux.be."
+        });
+        return false;
     }
+    return true;
+}
 
-    return await client.verificationManager.sendCode(interaction.user.id, { to: email, guildId: interaction.guildId });
+async function getEmailAndSendCode(interaction: ModalSubmitInteraction, client: DatadropClient) {
+    const email = interaction.fields.getTextInputValue('email');
+    return await client.verificationManager.sendCode(interaction.user.id, {
+        to: email,
+        guildId: interaction.guildId
+    });
 }
 
 async function showVerificationButton(interaction: RepliableInteraction, content: string, client: DatadropClient) {
@@ -118,5 +137,7 @@ async function showVerificationButton(interaction: RepliableInteraction, content
 
 function isUnhandledInteraction(interaction: Interaction) {
     return (interaction.isButton() || interaction.isModalSubmit() || interaction.isStringSelectMenu())
-        && !interaction.customId.startsWith('sr-') && !interaction.customId.includes(interaction.user.id)
+        && !interaction.customId.startsWith('sr-')
+        && !interaction.customId.startsWith('ac-')
+        && !interaction.customId.includes(interaction.user.id);
 }

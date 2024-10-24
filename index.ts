@@ -13,12 +13,10 @@ readConfig()
         async (config: Configuration) => {
             client = new DatadropClient({
                 intents: [
-                    GatewayIntentBits.GuildMembers,
-                    GatewayIntentBits.GuildMessageReactions,
-                    GatewayIntentBits.GuildMessages,
-                    GatewayIntentBits.GuildVoiceStates,
                     GatewayIntentBits.Guilds,
-                    GatewayIntentBits.MessageContent,
+                    GatewayIntentBits.GuildMembers,
+                    GatewayIntentBits.GuildVoiceStates,
+                    GatewayIntentBits.GuildMessages,
                     GatewayIntentBits.DirectMessages
                 ]
             }, config);

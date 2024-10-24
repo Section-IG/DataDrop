@@ -59,8 +59,5 @@ export interface Configuration {
 
     announce: AnnounceConfiguration;
 
-    ok_hand: string;
-    warning: string;
-
     communicationServiceOptions: SendGridOptions;
 }

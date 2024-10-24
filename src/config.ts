@@ -28,8 +28,6 @@ const defaultConfig: Configuration = {
     alumni: { roleid: '', emote: '' },
     tutor: { roleid: '', emote: '' },
     announce: { roleid: '', emote: '', channelid: '' },
-    ok_hand: '',
-    warning: '',
     communicationServiceOptions: {
         apiKey: '',
         mailData: { from: '', templateId: '' }

@@ -22,7 +22,7 @@ export default async function guildMemberAdd(client: DatadropClient, member: Gui
 		.setEmoji('🔗')
 		.setStyle(ButtonStyle.Primary)
 		.setCustomId(`lae${member.id}`);
-	const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(linkAccountButton);
 
 	try {
 		if (annoncesRole) {
@@ -30,7 +30,7 @@ export default async function guildMemberAdd(client: DatadropClient, member: Gui
 			client.logger.info(`Le rôle <${annoncesRole.name}> a été ajouté à <${member.user.tag}> à l'entrée de la guilde`);
 		}
 
-		await member.send({ embeds: [embed], components: [buttonComponent] });
+		await member.send({ embeds: [embed], components: [row] });
 		client.logger.info(`Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`);
 	} catch (err: unknown) {
 		client.logger.error((<Error>err).message);

@@ -1,15 +1,9 @@
-import { Message } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, MessageContextMenuCommandInteraction, ContextMenuCommandBuilder } from 'discord.js';
 
 import { DatadropClient } from '../datadrop.js';
 
 export interface Command {
-    name: string;
-    aliases?: string[];
-    args?: boolean;
-    description: string;
-    usage?: string;
-    guildOnly?: boolean;
+    data: SlashCommandBuilder | ContextMenuCommandBuilder;
     ownerOnly?: boolean;
-
-    execute(client: DatadropClient, message: Message, args: string[]): Promise<void>;
+    execute(client: DatadropClient, interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction): Promise<void>;
 }
