@@ -1,10 +1,14 @@
-import * as fsp from 'fs/promises';
-import * as path from 'path';
-import { ConsoleLogger, DefaultLogger } from '@hunteroi/advanced-logger';
+import * as fsp from "node:fs/promises";
+import * as path from "node:path";
+import { ConsoleLogger, type DefaultLogger } from "@hunteroi/advanced-logger";
 
 const console = new ConsoleLogger();
 
-export async function readFilesFrom(directory: string, callback: (name: string, props: any) => void, logger: DefaultLogger = console): Promise<void> {
+export async function readFilesFrom<T>(
+    directory: string,
+    callback: (name: string, props: T) => void,
+    logger: DefaultLogger = console,
+): Promise<void> {
     try {
         logger.debug(`Lecture du répertoire ${directory}`);
 
@@ -18,21 +22,22 @@ export async function readFilesFrom(directory: string, callback: (name: string, 
                 continue;
             }
 
-            if (stats.isFile() && !file.endsWith('.js')) continue;
+            if (stats.isFile() && !file.endsWith(".js")) continue;
 
             logger.debug(`Lecture du fichier ${filePath}`);
 
             const props = await import(filePath);
-            callback(file.replace('.js', ''), props.default);
+            callback(file.replace(".js", ""), props.default as T);
         }
     } catch (err) {
         logger.error(getErrorMessage(err));
     }
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: evaluated code is of type "any"
 export function clean(text: any): string {
-    if (typeof (text) === 'string') {
-        return text.replace(/@/g, '@​');
+    if (typeof text === "string") {
+        return text.replace(/@/g, "@​");
     }
     return text;
 }
@@ -41,15 +46,15 @@ export function clean(text: any): string {
 // source: https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript
 
 type ErrorWithMessage = {
-    message: string
-}
+    message: string;
+};
 
 function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
     return (
-        typeof error === 'object' &&
+        typeof error === "object" &&
         error !== null &&
-        'message' in error &&
-        typeof (error as Record<string, unknown>).message === 'string'
+        "message" in error &&
+        typeof (error as Record<string, unknown>).message === "string"
     );
 }
 

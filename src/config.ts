@@ -1,56 +1,61 @@
-import { Configuration } from './models/Configuration.js';
-import packageInfo from '../package.json' with { type: "json" };
+import packageInfo from "../package.json" with { type: "json" };
+import type { Configuration } from "./models/Configuration.js";
 
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
-    minLevel: 'info',
+    minLevel: "info",
     includeTimestamp: false,
-    guildId: '',
+    guildId: "",
     ownerIds: [],
-    prefix: '',
-    version: '',
-    botName: '',
-    communitymanagerRoleid: '',
-    adminRoleid: '',
-    delegatesRoleid: '',
-    professorRoleid: '',
-    verifiedRoleId: '',
-    informationsChannelid: '',
-    faqChannelid: '',
-    comiteeChannelid: '',
-    dynamicChannelPrefix: '',
+    prefix: "",
+    version: "",
+    botName: "",
+    communitymanagerRoleid: "",
+    adminRoleid: "",
+    delegatesRoleid: "",
+    professorRoleid: "",
+    verifiedRoleId: "",
+    informationsChannelid: "",
+    faqChannelid: "",
+    comiteeChannelid: "",
+    dynamicChannelPrefix: "",
     dynamicChannelPrefixRegex: /.*/,
     staticTriggerChannelids: [],
-    rolesChannelid: '',
-    first: { channelid: '', roleid: '', emote: '', groups: [] },
-    second: { channelid: '', roleid: '', emote: '', groups: [] },
-    third: { channelid: '', roleid: '', emote: '', groups: [] },
-    alumni: { roleid: '', emote: '' },
-    tutor: { roleid: '', emote: '' },
-    announce: { roleid: '', emote: '', channelid: '' },
+    rolesChannelid: "",
+    first: { channelid: "", roleid: "", emote: "", groups: [] },
+    second: { channelid: "", roleid: "", emote: "", groups: [] },
+    third: { channelid: "", roleid: "", emote: "", groups: [] },
+    alumni: { roleid: "", emote: "" },
+    tutor: { roleid: "", emote: "" },
+    announce: { roleid: "", emote: "", channelid: "" },
     communicationServiceOptions: {
-        apiKey: '',
-        mailData: { from: '', templateId: '' }
-    }
+        apiKey: "",
+        mailData: { from: "", templateId: "" },
+    },
 };
 
 export async function readConfig(): Promise<Configuration> {
     try {
-        const environment = (process.env.NODE_ENV || 'development').toLowerCase();
+        const environment = (
+            process.env.NODE_ENV || "development"
+        ).toLowerCase();
 
-        const json = JSON.parse(process.env.CONFIG ?? '{}');
+        const json = JSON.parse(process.env.CONFIG ?? "{}");
         for (const prop in json) {
             if (/regex/i.exec(prop)) {
                 json[prop] = new RegExp(json[prop]);
             }
         }
 
-        const config = { ...json, version: `${environment}-v${packageInfo.version}` };
-        config.communicationServiceOptions.apiKey = process.env.SENDGRID_API_KEY;
+        const config = {
+            ...json,
+            version: `${environment}-v${packageInfo.version}`,
+        };
+        config.communicationServiceOptions.apiKey =
+            process.env.SENDGRID_API_KEY;
 
         return config;
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
         console.error(err);
         return defaultConfig;
     }
