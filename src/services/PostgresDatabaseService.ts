@@ -150,7 +150,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
     //#region private
     async #runMigrations(): Promise<void> {
         await this.#runMigration('User soft delete', async () => {
-            await this.#database.query('ALTER TABLE Users ADD isDeleted timestamp;');
+            await this.#database.query('ALTER TABLE Users ADD IF NOT EXISTS isDeleted timestamp;');
         });
     }
 
