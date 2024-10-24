@@ -236,7 +236,7 @@ export class DatadropClient extends Client {
                 );
 
                 this.logger.info(
-                    `Le membre <${member.user.tag}> a atteint la limite de rôles${channel ? ` dans <${channel.name}>` : ""}! (${nbRoles}/${maxRoles})`,
+                    `Le membre <${member.user.tag}> a atteint la limite de rôles${channel ? ' dans <' + channel.name + '>' : ""}! (${nbRoles}/${maxRoles})`,
                 );
                 await interaction.editReply(
                     `Tu ne peux pas t'assigner plus de ${maxRoles} rôle${maxRoles > 1 ? "s" : ""} dans ce canal! Tu en as déjà ${nbRoles} d'assigné${nbRoles > 1 ? "s" : ""}`,
