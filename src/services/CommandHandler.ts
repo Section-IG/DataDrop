@@ -65,10 +65,10 @@ export class CommandHandler {
                     "❌ **Oups!** - Une erreur est survenue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!",
                 ephemeral: true,
             };
-            if (interaction.replied) {
-                await interaction.followUp(replyOptions);
-            } else if (interaction.deferred) {
+            if (interaction.deferred) {
                 await interaction.editReply(replyOptions.content);
+            } else if (interaction.replied) {
+                await interaction.followUp(replyOptions);
             } else {
                 await interaction.reply(replyOptions);
             }
