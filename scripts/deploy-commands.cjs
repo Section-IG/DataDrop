@@ -21,8 +21,7 @@ async function readFilesFrom(directory, callback) {
 
             if (stats.isFile() && !file.endsWith('.js')) continue;
 
-            const isWin = os.platform() === 'win32';
-            const props = await import(`${isWin ? 'file:///' : ''}${filePath}`);
+            const props = await import(`file:///${filePath}`);
             callback(file.replace('.js', ''), props.default);
         }
     } catch (err) {
