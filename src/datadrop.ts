@@ -2,6 +2,7 @@ import * as path from "node:path";
 import {
     type ButtonInteraction,
     Client,
+    type ClientEvents,
     type ClientOptions,
     Collection,
     type GuildMember,
@@ -366,9 +367,9 @@ export class DatadropClient extends Client {
                 );
 
                 if (event.once) {
-                    this.once(event.name, event.execute.bind(null, this));
+                    this.once(event.name, event.execute.bind(null, this) as (...args: ClientEvents[keyof ClientEvents]) => void);
                 } else {
-                    this.on(event.name, event.execute.bind(null, this));
+                    this.on(event.name, event.execute.bind(null, this) as (...args: ClientEvents[keyof ClientEvents]) => void);
                 }
             },
             this.logger,
