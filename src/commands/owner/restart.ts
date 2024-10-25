@@ -19,8 +19,8 @@ export default {
         interaction: ChatInputCommandInteraction,
     ) {
         // double check sur l'identité juste pour la sécurité
-        const { config } = client;
-        if (!config.ownerIds.includes(interaction.user.id)) {
+        const { ownerIds } = client.config;
+        if (!ownerIds.includes(interaction.user.id)) {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
