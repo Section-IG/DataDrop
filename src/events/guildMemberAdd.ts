@@ -9,11 +9,12 @@ import {
 
 import type { DatadropClient } from "../datadrop.js";
 import type { AnnounceConfiguration } from "../models/Configuration.js";
+import type { Event } from "../models/Event.js";
 
 export default {
     name: Events.GuildMemberAdd,
     execute: guildMemberAdd,
-};
+} as Event;
 
 async function guildMemberAdd(client: DatadropClient, member: GuildMember) {
     if (member.user.bot) return;

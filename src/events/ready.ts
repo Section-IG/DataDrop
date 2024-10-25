@@ -1,21 +1,16 @@
-import {
-    ButtonStyle,
-    Events,
-    Role,
-    bold,
-    roleMention,
-} from "discord.js";
+import { ButtonStyle, Events, Role, bold, roleMention } from "discord.js";
 
 import type { RoleToEmojiData } from "@hunteroi/discord-selfrole";
 
 import type { DatadropClient } from "../datadrop.js";
 import type { Configuration } from "../models/Configuration.js";
+import type { Event } from "../models/Event.js";
 
 export default {
     name: Events.ClientReady,
     once: true,
     execute: ready,
-};
+} as Event;
 
 async function ready(client: DatadropClient) {
     const { config } = client;
