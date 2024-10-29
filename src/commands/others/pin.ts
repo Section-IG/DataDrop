@@ -12,7 +12,6 @@ export default {
     data: new ContextMenuCommandBuilder()
         .setName("(Dés)Épingler le message")
         .setType(ApplicationCommandType.Message)
-        // .setDescription("(Dés)épingle le message sélectionné dans le canal.")
         .setContexts(InteractionContextType.Guild),
 
     async execute(
