@@ -1,12 +1,10 @@
 const dotenv = require('dotenv');
-dotenv.config({ debug: true });
-
 const { Client, Collection, REST, Routes } = require('discord.js');
 const path = require('node:path');
-const os = require('node:os');
 const fsp = require('node:fs/promises');
 const synchronizeSlashCommands = require('discord-sync-commands');
-const { guildId } = require('../config.development.json');
+const { botId: botProdId } = require('../config.production.json');
+const { guildId, botId: botDevId } = require('../config.development.json');
 
 async function readFilesFrom(directory, callback) {
     try {
@@ -29,7 +27,55 @@ async function readFilesFrom(directory, callback) {
     }
 }
 
-/* DEPLOY COMMANDS */
+dotenv.config({ debug: true });
+const args = process.argv.slice(2);
+
+if (!process.env.DISCORD_TOKEN) {
+    console.error('Please provide a Discord token in the environment variable DISCORD_TOKEN.');
+    process.exit(1);
+}
+
+if (args.includes('--help')) {
+    console.log('Usage: yarn deploy:commands [options]');
+    console.log('Options:');
+    console.log('  --help\t\tShow this help message');
+    console.log('  --guild\t\tDeploy commands to the test guild');
+    console.log('  --deleteAll\t\tDelete all deployed commands (pair with --guild to delete commands in the test guild)');
+    console.log('  --prod\t\tDeploy commands to the production bot (don\'t forget to use the prod token as well from .env)');
+    process.exit(0);
+}
+
+let applicationId = botDevId;
+if (args.includes('--prod')) {
+    console.log('Deploying commands to the production bot...');
+    applicationId = botProdId;
+}
+
+if (args.includes('--deleteAll')) {
+    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+    if (args.includes('--guild')) {
+        console.log('Deleting all commands in the test guild...');
+        console.log('Guild ID:', guildId);
+
+        rest.put(Routes.applicationGuildCommands(applicationId, guildId), { body: [] })
+            .then(() => console.log('Successfully deleted all application commands from the test guild.'))
+            .catch(console.error);
+    }
+    else {
+        console.log('Deleting all global commands...');
+
+        rest.put(Routes.applicationCommands(applicationId), { body: [] })
+            .then(() => console.log('Successfully deleted all application commands.'))
+            .catch(console.error);
+    }
+    process.exit(0);
+}
+
+if (args.includes('--guild')) {
+    console.log('Deploying commands to the test guild...');
+    console.log('Guild ID:', guildId);
+}
+
 const client = new Client({ intents: [] });
 client.on('ready', () => console.log('Ready!'));
 const commands = new Collection();
@@ -43,13 +89,7 @@ readFilesFrom(path.join(__dirname, '..', 'build', 'src', 'commands'), (commandNa
 
     synchronizeSlashCommands(client, slashCommands, {
         debug: true,
-        //guildId // to deploy commands to a specific guild
+        guildId: args.includes('--guild') ? guildId : undefined,
     });
     client.login();
 });
-
-/* DELETE ALL DEPLOYED GLOBAL COMMANDS */
-// const rest = new REST().setToken(process.env.DISCORD_TOKEN);
-// rest.put(Routes.applicationCommands('703031563062870107'), { body: [] })
-//     .then(() => console.log('Successfully deleted all application commands.'))
-//     .catch(console.error);

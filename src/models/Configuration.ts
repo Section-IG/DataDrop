@@ -31,9 +31,9 @@ export interface Configuration {
     guildId: Snowflake;
 
     ownerIds: Snowflake[];
-    prefix: string | undefined;
     version: string | undefined;
     botName: string;
+    botId: Snowflake;
 
     communitymanagerRoleid: Snowflake;
     adminRoleid: Snowflake;
