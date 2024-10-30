@@ -32,7 +32,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - bot_logs:/app/logs
+      - bot_logs:/var/log/datadrop/
     depends_on:
       - database
 
