@@ -34,10 +34,16 @@ import {
     type VoiceChannel,
 } from "discord.js";
 
-import { PostgresDatabaseService, SMTPService } from './services/index.js';
-import { getErrorMessage, readFilesFrom } from './helpers.js';
-import type { Command, Event, Configuration, IDatabaseService, User } from './models/index.js';
-import { readConfig } from './config.js';
+import { readConfig } from "./config.js";
+import { getErrorMessage, readFilesFrom } from "./helpers.js";
+import type {
+    Command,
+    Configuration,
+    Event,
+    IDatabaseService,
+    User,
+} from "./models/index.js";
+import { PostgresDatabaseService, SMTPService } from "./services/index.js";
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -69,7 +75,9 @@ export class DatadropClient extends Client {
         this.tempChannelsManager = new TempChannelsManager(this);
 
         this.database = new PostgresDatabaseService(this.logger);
-        const communicationService = new SMTPService(config.communicationServiceOptions);
+        const communicationService = new SMTPService(
+            config.communicationServiceOptions,
+        );
         this.verificationManager = new VerificationManager(
             this,
             this.database,
