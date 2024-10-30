@@ -1,6 +1,6 @@
 import type { Snowflake } from "discord.js";
 
-import { SMTPServiceOptions } from '../services/SMTPService.js';
+import type { SMTPServiceOptions } from '../services/SMTPService.js';
 
 export interface SpecialRoleConfiguration {
     roleid: Snowflake;

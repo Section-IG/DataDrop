@@ -37,7 +37,7 @@ import {
 
 import { PostgresDatabaseService, SMTPService } from './services/index.js';
 import { getErrorMessage, readFilesFrom } from './helpers.js';
-import { Configuration, IDatabaseService, User } from './models/index.js';
+import type { Command, Event, Configuration, IDatabaseService, User } from './models/index.js';
 import { readConfig } from './config.js';
 
 export class DatadropClient extends Client {
