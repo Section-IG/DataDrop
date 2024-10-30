@@ -20,7 +20,7 @@ import {
 } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
-import type { Event } from "../models/Event.js";
+import type { Event } from "../models/index.js";
 import { CommandHandler } from "../services/CommandHandler.js";
 
 export default {
@@ -228,7 +228,7 @@ async function showVerificationButton(
         .setCustomId(`lacb${interaction.user.id}`)
         .setDisabled(
             content.includes(client.errorMessage) ||
-                content.includes(client.activeAccountMessage),
+            content.includes(client.activeAccountMessage),
         );
     const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(
         linkAccountButton,
