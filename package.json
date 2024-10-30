@@ -36,7 +36,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.4",
 		"@types/node": "^24.5.2",
-		"tsx": "^4.20.5",
+		"@types/nodemailer": "^6.4.7",
+        "tsx": "^4.20.5",
 		"typescript": "^5.9.2"
 	}
 }
