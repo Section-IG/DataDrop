@@ -34,16 +34,17 @@ import {
     VerificationManager,
     VerificationManagerEvents,
 } from "@hunteroi/discord-verification";
-import { SendGridService } from "@hunteroi/discord-verification/lib/services/SendGridService.js";
 
 import { readConfig } from "./config.js";
 import { getErrorMessage, readFilesFrom } from "./helpers.js";
-import type { Command } from "./models/Command.js";
-import type { Configuration } from "./models/Configuration.js";
-import type { Event } from "./models/Event.js";
-import type { IDatabaseService } from "./models/IDatabaseService.js";
-import type { User } from "./models/User.js";
-import PostgresDatabaseService from "./services/PostgresDatabaseService.js";
+import type {
+    Command,
+    Configuration,
+    Event,
+    IDatabaseService,
+    User,
+} from "./models/index.js";
+import { PostgresDatabaseService, SMTPService } from "./services/index.js";
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -75,7 +76,7 @@ export class DatadropClient extends Client {
         this.tempChannelsManager = new TempChannelsManager(this);
 
         this.database = new PostgresDatabaseService(this.logger);
-        const communicationService = new SendGridService(
+        const communicationService = new SMTPService(
             config.communicationServiceOptions,
         );
         this.verificationManager = new VerificationManager(

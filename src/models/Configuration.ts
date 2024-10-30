@@ -1,6 +1,6 @@
 import type { Snowflake } from "discord.js";
 
-import type { SendGridOptions } from "@hunteroi/discord-verification/lib/services/SendGridService.js";
+import type { SMTPServiceOptions } from "../services/SMTPService.js";
 
 export interface SpecialRoleConfiguration {
     roleid: Snowflake;
@@ -59,5 +59,5 @@ export interface Configuration {
 
     announce: AnnounceConfiguration;
 
-    communicationServiceOptions: SendGridOptions;
+    communicationServiceOptions: SMTPServiceOptions;
 }

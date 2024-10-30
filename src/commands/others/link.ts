@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";
-import type { Command } from "../../models/Command.js";
+import type { Command } from "../../models/index.js";
 
 export default {
     data: new SlashCommandBuilder()

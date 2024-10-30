@@ -3,6 +3,7 @@ const { Client, Collection, REST, Routes } = require("discord.js");
 const path = require("node:path");
 const fsp = require("node:fs/promises");
 const synchronizeSlashCommands = require("discord-sync-commands");
+
 const { botId: botProdId } = require("../config.production.json");
 const { guildId, botId: botDevId } = require("../config.development.json");
 
