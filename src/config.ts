@@ -29,11 +29,11 @@ const defaultConfig: Configuration = {
     tutor: { roleid: "", emote: "" },
     announce: { roleid: "", emote: "", channelid: "" },
     communicationServiceOptions: {
-        auth: { user: '', pass: '' },
-        from: '',
+        auth: { user: "", pass: "" },
+        from: "",
         port: 587,
-        host: ''
-    }
+        host: "",
+    },
 };
 
 export async function readConfig(): Promise<Configuration> {
@@ -55,7 +55,7 @@ export async function readConfig(): Promise<Configuration> {
         };
         config.communicationServiceOptions.auth = {
             user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS
+            pass: process.env.SMTP_PASS,
         };
 
         return config;

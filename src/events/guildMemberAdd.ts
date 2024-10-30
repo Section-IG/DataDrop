@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
-import type { Event, AnnounceConfiguration } from "../models/index.js";
+import type { AnnounceConfiguration, Event } from "../models/index.js";
 
 export default {
     name: Events.GuildMemberAdd,

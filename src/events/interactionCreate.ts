@@ -220,7 +220,7 @@ async function showVerificationButton(
         .setCustomId(`lacb${interaction.user.id}`)
         .setDisabled(
             content.includes(client.errorMessage) ||
-            content.includes(client.activeAccountMessage),
+                content.includes(client.activeAccountMessage),
         );
     const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(
         linkAccountButton,
