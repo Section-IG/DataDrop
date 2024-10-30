@@ -5,8 +5,8 @@
     ],
     "minLevel": "info",
     "includeTimestamp": true,
-    "prefix": "da!",
     "botName": "Yoda",
+    "botId": "454768256364969985",
     "communitymanagerRoleid": "288659580064366592",
     "adminRoleid": "360850813914185738",
     "delegatesRoleid": "288659613732306944",
@@ -151,8 +151,6 @@
         "roleid": "364008970966269952",
         "emote": "📢"
     },
-    "ok_hand": "👌",
-    "warning": "⚠️",
     "communicationServiceOptions": {
         "mailData": {
             "from": "mdpdevti@henallux.be",

@@ -1,7 +1,7 @@
 {
     "recommendations": [
         "ms-azuretools.vscode-docker",
-        "dbaeumer.vscode-eslint",
         "gamunu.vscode-yarn",
+        "biomejs.biome",
     ]
 }

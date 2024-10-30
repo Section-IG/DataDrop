@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require('fs/promises');
+const fs = require("node:fs/promises");
 
 const path = `${__dirname}/..`;
 
@@ -15,12 +14,20 @@ function extractEnvironmentName(envContent) {
 }
 
 async function asASingleVariable() {
-    const templatedEnv = await fs.readFile(`${path}/.env`, 'utf-8');
-    const environment = (extractEnvironmentName(templatedEnv) || 'development').toLowerCase();
-    const json = await fs.readFile(`${path}/config.${environment}.json`, 'utf-8');
+    const templatedEnv = await fs.readFile(`${path}/.env`, "utf-8");
+    const environment = (
+        extractEnvironmentName(templatedEnv) || "development"
+    ).toLowerCase();
+    const json = await fs.readFile(
+        `${path}/config.${environment}.json`,
+        "utf-8",
+    );
 
     console.log(`Loading configuration for ${environment}`);
-    await fs.writeFile(`${path}/.env`, `CONFIG=${stringifyOnSingleLine(json)}\n${templatedEnv}`);
+    await fs.writeFile(
+        `${path}/.env`,
+        `CONFIG=${stringifyOnSingleLine(json)}\n${templatedEnv}`,
+    );
 }
 
 asASingleVariable();
