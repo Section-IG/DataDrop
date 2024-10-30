@@ -367,9 +367,19 @@ export class DatadropClient extends Client {
                 );
 
                 if (event.once) {
-                    this.once(event.name, event.execute.bind(null, this) as (...args: ClientEvents[keyof ClientEvents]) => void);
+                    this.once(
+                        event.name,
+                        event.execute.bind(null, this) as (
+                            ...args: ClientEvents[keyof ClientEvents]
+                        ) => void,
+                    );
                 } else {
-                    this.on(event.name, event.execute.bind(null, this) as (...args: ClientEvents[keyof ClientEvents]) => void);
+                    this.on(
+                        event.name,
+                        event.execute.bind(null, this) as (
+                            ...args: ClientEvents[keyof ClientEvents]
+                        ) => void,
+                    );
                 }
             },
             this.logger,

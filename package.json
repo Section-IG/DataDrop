@@ -8,7 +8,7 @@
 		"stop": "docker-compose down",
 		"deploy:commands": "tsc && node ./scripts/deploy-commands.cjs",
 		"build": "rm -rf build/ && tsc",
-		"lint": "biome check --write ./src index.ts",
+		"lint": "biome check --write ./src index.ts ./scripts",
 		"env-gen": "node ./scripts/envgen.cjs"
 	},
 	"repository": {

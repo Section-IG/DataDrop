@@ -5,7 +5,7 @@ import { readConfig } from "./src/config.js";
 import { DatadropClient } from "./src/datadrop.js";
 import type { Configuration } from "./src/models/Configuration.js";
 
-dotenv.config({ debug: Boolean(process.env.DEBUG) });
+dotenv.config({ debug: Boolean(process.env.DEBUG), encoding: "utf-8" });
 
 let client: DatadropClient;
 readConfig()
