@@ -10,6 +10,7 @@ import {
 import type { DatadropClient } from "../datadrop.js";
 import type { AnnounceConfiguration } from "../models/Configuration.js";
 import type { Event } from "../models/Event.js";
+import { getErrorMessage } from '../helpers.js';
 
 export default {
     name: Events.GuildMemberAdd,
@@ -64,8 +65,8 @@ async function guildMemberAdd(client: DatadropClient, member: GuildMember) {
         client.logger.info(
             `Un DM a été envoyé à <${member.user.tag}> à son entrée dans la guilde`,
         );
-    } catch (err: unknown) {
-        client.logger.error((<Error>err).message);
+    } catch (err) {
+        client.logger.error(getErrorMessage(err));
     }
 }
 

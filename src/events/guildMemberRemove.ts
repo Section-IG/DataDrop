@@ -2,6 +2,7 @@ import { Events, type GuildMember } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
 import type { Event } from "../models/Event.js";
+import { getErrorMessage } from '../helpers.js';
 
 export default {
     name: Events.GuildMemberRemove,
@@ -17,7 +18,7 @@ async function guildMemberRemove(client: DatadropClient, member: GuildMember) {
 
     try {
         await client.database.delete(member.id);
-    } catch (err: unknown) {
-        client.logger.error((<Error>err).message);
+    } catch (err) {
+        client.logger.error(getErrorMessage(err));
     }
 }
