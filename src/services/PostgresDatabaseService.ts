@@ -8,9 +8,9 @@ import {
 
 import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 
+import { getErrorMessage } from "../helpers.js";
 import type { IDatabaseService } from "../models/IDatabaseService.js";
 import type { User } from "../models/User.js";
-import { getErrorMessage } from '../helpers.js';
 
 export default class PostgresDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
@@ -106,7 +106,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
      */
     public async readBy(
         argument: // biome-ignore lint/suspicious/noExplicitAny: DB values can be of any type
-            Map<string, any> | ((user: User, index: string | number) => boolean),
+        Map<string, any> | ((user: User, index: string | number) => boolean),
     ): Promise<User | undefined | null> {
         if (!(argument instanceof Map))
             throw new Error("Method not implemented.");

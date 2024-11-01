@@ -1,8 +1,8 @@
 import { Events, type GuildMember } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
+import { getErrorMessage } from "../helpers.js";
 import type { Event } from "../models/Event.js";
-import { getErrorMessage } from '../helpers.js';
 
 export default {
     name: Events.GuildMemberRemove,
