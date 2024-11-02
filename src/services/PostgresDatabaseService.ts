@@ -8,6 +8,7 @@ import {
 
 import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 
+import { getErrorMessage } from "../helpers.js";
 import type { IDatabaseService } from "../models/IDatabaseService.js";
 import type { User } from "../models/User.js";
 
@@ -307,12 +308,12 @@ export default class PostgresDatabaseService implements IDatabaseService {
             } as User;
 
             return user;
-        } catch (error: unknown) {
-            const err = <Error>error;
-            if (err.message === notFoundMessage) {
-                this.#logger.verbose(err.message);
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            if (errorMessage === notFoundMessage) {
+                this.#logger.verbose(errorMessage);
             } else {
-                this.#logger.error(err.message);
+                this.#logger.error(errorMessage);
             }
             return null;
         } finally {
