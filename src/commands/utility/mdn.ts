@@ -99,7 +99,7 @@ export default {
 
         const focusedOption = interaction.options.getFocused(true);
         const parts = focusedOption.value
-            .split(/[\.#]/)
+            .split(/[.#]/)
             .map((part) => part.toLowerCase());
 
         const candidates: MDNCandidate[] = [];
