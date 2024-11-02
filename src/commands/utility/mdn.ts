@@ -139,12 +139,12 @@ export default {
         await interaction.deferReply({ ephemeral: false });
 
         const cleanQuery = interaction.options.getString("query", true).trim();
-        const searchQuery = encodeURIComponent(cleanQuery);
-        const searchUrl = `${MDN_URL}${searchQuery}/index.json`;
+        const searchUrl = `${MDN_URL}${cleanQuery}/index.json`;
 
         try {
             let hit = searchCache.get(searchUrl);
             if (!hit) {
+                client.logger.debug(`Fetching MDN search results for ${cleanQuery} hitting on ${searchUrl}...`);
                 const response = await fetch(searchUrl);
                 if (!response.ok)
                     throw new Error(
@@ -173,7 +173,7 @@ export default {
             );
             await interaction.editReply({
                 content:
-                    "❌ **Oups!** - Une erreur est survenue lors de la recherche dans la documentation de MDN.\nLa ressource n'existe probablement pas.",
+                    "❌ **Oups!** - Une erreur est survenue lors de la recherche dans la documentation de MDN... La ressource n'existe probablement pas.",
             });
         }
     },
