@@ -99,7 +99,7 @@ export default {
 
         const focusedOption = interaction.options.getFocused(true);
         const parts = focusedOption.value
-            .split(/\.|#/)
+            .split(/[\.#]/)
             .map((part) => part.toLowerCase());
 
         const candidates: MDNCandidate[] = [];
@@ -115,7 +115,7 @@ export default {
 
         await interaction.respond(
             candidates
-                .sort((one, other) => {
+                .toSorted((one, other) => {
                     if (one.matches.length !== other.matches.length) {
                         return other.matches.length - one.matches.length;
                     }
