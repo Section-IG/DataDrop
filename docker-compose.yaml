@@ -31,10 +31,12 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    command: node ./index.js | tee -a /var/log/datadrop/console.log
     volumes:
       - bot_logs:/var/log/datadrop/
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
 volumes:
   postgres:

@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile \
     && yarn env-gen \
     && yarn build \
     && yarn install --production \
-    && zip -r app.zip ./node_modules ./build ./yarn.lock ./.env ./entrypoint.sh
+    && zip -r app.zip ./node_modules ./build ./yarn.lock ./.env
 
 # ------------------------------------------------------------
 FROM node:lts-alpine AS app
@@ -22,7 +22,4 @@ COPY --from=build /app/app.zip .
 RUN unzip app.zip \
     && rm app.zip \
     && mv ./build/* . \
-    && rm -rf ./build \
-    && chmod +x ./entrypoint.sh
-
-ENTRYPOINT ["./entrypoint.sh"]
+    && rm -rf ./build
