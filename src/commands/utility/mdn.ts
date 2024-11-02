@@ -1,6 +1,9 @@
 // Copyright https://github.com/discordjs/discord-utils-bot
 import {
+    ActionRowBuilder,
     type AutocompleteInteraction,
+    ButtonBuilder,
+    ButtonStyle,
     type ChatInputCommandInteraction,
     Colors,
     EmbedBuilder,
@@ -31,8 +34,6 @@ type APIResult = {
 
 type Document = {
     mdn_url: string;
-    popularity: number;
-    score: number;
     summary: string;
     title: string;
 };
@@ -52,18 +53,15 @@ async function getMDNIndex() {
 }
 
 function sanitize(str: string): string {
-    const linkReplaceRegex = /\[(.+?)]\((.+?)\)/g;
-    const boldCodeBlockRegex = /`\*\*(.*)\*\*`/g;
-
     return str
         .replaceAll("||", "|\u200B|") // avoid spoiler
         .replaceAll("*", "\\*") // avoid bold/italic
         .replaceAll(/\s+/g, " ") // remove duplicate spaces
         .replaceAll(
-            linkReplaceRegex,
+            /\[(.+?)]\((.+?)\)/g,
             hyperlink("$1", hideLinkEmbed(`${MDN_URL}$2`)),
         ) // handle links
-        .replaceAll(boldCodeBlockRegex, bold(inlineCode("$1"))); // handle code blocks
+        .replaceAll(/`\*\*(.*)\*\*`/g, bold(inlineCode("$1"))); // handle code blocks
 }
 
 export default {
@@ -155,17 +153,23 @@ export default {
                 searchCache.set(searchUrl, hit);
             }
 
+            const url = `${MDN_URL}${hit.mdn_url}`;
             const embed = new EmbedBuilder()
                 .setColor(Colors.Purple)
-                .setURL(hit.mdn_url)
+                .setURL(url)
                 .setTitle(sanitize(hit.title))
                 .setDescription(sanitize(hit.summary))
-                .setFooter({
-                    text: `Popularité: ${hit.popularity} | Score: ${hit.score}`,
-                });
+                .setFooter({ text: 'MDN Web Docs', iconURL: 'https://developer.mozilla.org/favicon-48x48.png' })
+                .setTimestamp();
+            const button = new ButtonBuilder()
+                .setStyle(ButtonStyle.Link)
+                .setLabel("Voir plus")
+                .setURL(url);
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
             await interaction.editReply({
                 content: "✅ Voici le résultat de votre recherche!",
                 embeds: [embed],
+                components: [row]
             });
         } catch (err) {
             client.logger.error(
