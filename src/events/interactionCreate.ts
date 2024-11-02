@@ -1,5 +1,6 @@
 import {
     ActionRowBuilder,
+    type AutocompleteInteraction,
     ButtonBuilder,
     type ButtonInteraction,
     ButtonStyle,
@@ -30,7 +31,8 @@ async function interactionCreate(
 ) {
     if (
         interaction.isChatInputCommand() ||
-        interaction.isMessageContextMenuCommand()
+        interaction.isMessageContextMenuCommand() ||
+        interaction.isAutocomplete()
     ) {
         await handleCommandInteraction(client, interaction);
     } else if (isVerificationButton(interaction)) {
@@ -52,7 +54,8 @@ async function handleCommandInteraction(
     client: DatadropClient,
     interaction:
         | ChatInputCommandInteraction
-        | MessageContextMenuCommandInteraction,
+        | MessageContextMenuCommandInteraction
+        | AutocompleteInteraction,
 ) {
     const commandHandler = new CommandHandler(client);
     if (commandHandler.shouldExecute(interaction)) {
