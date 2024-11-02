@@ -3,20 +3,25 @@
 
 Discord bot built with Discord.JS for Section IODA guild.
 
+This application uses environment variables to build and run properly.
 The following environment variables must be filled in a `.env` file.
-This file is used when building the container to generate a production-ready .env file.
 ```dotenv
 NODE_ENV=development
-DISCORD_TOKEN=
 POSTGRES_DB=
 POSTGRES_USER=
+```
+An empty copy of this file is available as [#.env](./#.env).
+
+The following environment ones in `.env.<NODE_ENV>` file.
+```dotenv
+DISCORD_TOKEN=
 POSTGRES_PASSWORD=
 DATABASE_PORT=5432
 DATABASE_HOST=localhost
 DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${POSTGRES_DB}?schema=public
 SENDGRID_API_KEY=
 ```
-An empty copy of this file is available as [#.env](./#.env).
+An empty copy of this file is available as [#.env.development](./#.env.development).
 
 ## Deployment
 As the app is dockerized, you can deploy it on your server or locally on your machine.
