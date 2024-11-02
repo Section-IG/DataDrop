@@ -38,7 +38,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: dotenvx run -- yarn start
+    command: dotenvx run --convention=nextjs -- yarn start
     volumes:
       - bot_logs:/var/log/datadrop/
     depends_on:
