@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: node ./index.js | tee -a /var/log/datadrop/console.log
+    command: yarn tsx ./index.ts | tee -a /var/log/datadrop/console.log
     volumes:
       - bot_logs:/var/log/datadrop/
     depends_on:
@@ -41,7 +41,6 @@ services:
 volumes:
   postgres:
   bot_logs:
-
 
 networks:
   postgres-network:

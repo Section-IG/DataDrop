@@ -35,6 +35,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@types/node": "^20.12.7",
+		"tsx": "^4.19.2",
 		"typescript": "^5.4.4"
 	}
 }
