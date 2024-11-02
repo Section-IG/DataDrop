@@ -46,7 +46,9 @@ async function getMDNIndex() {
     if (!response.ok) throw new Error("Failed to fetch MDN index.");
 
     const data = await response.json();
-    indexCache.push(...data.map((entry) => ({ title: entry.title, url: entry.url })));
+    indexCache.push(
+        ...data.map((entry) => ({ title: entry.title, url: entry.url })),
+    );
 }
 
 function sanitize(str: string): string {
@@ -89,17 +91,23 @@ export default {
             try {
                 await getMDNIndex();
             } catch (err) {
-                client.logger.error(`Failed to fetch MDN index: ${getErrorMessage(err)}`);
+                client.logger.error(
+                    `Failed to fetch MDN index: ${getErrorMessage(err)}`,
+                );
             }
         }
 
         const focusedOption = interaction.options.getFocused(true);
-        const parts = focusedOption.value.split(/\.|#/).map((part) => part.toLowerCase());
+        const parts = focusedOption.value
+            .split(/\.|#/)
+            .map((part) => part.toLowerCase());
 
         const candidates: MDNCandidate[] = [];
         for (const entry of indexCache) {
             const lowerTitle = entry.title.toLowerCase();
-            const matches = parts.filter((phrase) => lowerTitle.includes(phrase));
+            const matches = parts.filter((phrase) =>
+                lowerTitle.includes(phrase),
+            );
             if (matches.length) {
                 candidates.push({ entry, matches });
             }
@@ -112,12 +120,15 @@ export default {
                         return other.matches.length - one.matches.length;
                     }
 
-                    const aMatches = one.matches.join('').length;
-                    const bMatches = other.matches.join('').length;
+                    const aMatches = one.matches.join("").length;
+                    const bMatches = other.matches.join("").length;
                     return bMatches - aMatches;
                 })
-                .map((candidate) => ({ name: candidate.entry.title, value: candidate.entry.url }))
-                .slice(0, 24) // 25 is the limit of choices for an autocomplete
+                .map((candidate) => ({
+                    name: candidate.entry.title,
+                    value: candidate.entry.url,
+                }))
+                .slice(0, 24), // 25 is the limit of choices for an autocomplete
         );
     },
 
@@ -135,7 +146,10 @@ export default {
             let hit = searchCache.get(searchUrl);
             if (!hit) {
                 const response = await fetch(searchUrl);
-                if (!response.ok) throw new Error("Erreur lors de la recherche dans la documentation de MDN.");
+                if (!response.ok)
+                    throw new Error(
+                        "Erreur lors de la recherche dans la documentation de MDN.",
+                    );
                 const result = (await response.json()) as APIResult;
                 hit = result.doc;
                 searchCache.set(searchUrl, hit);

@@ -14,9 +14,9 @@ type AuthorizationResponse = {
 
 export class CommandHandler<
     T extends
-    | ChatInputCommandInteraction
-    | MessageContextMenuCommandInteraction
-    | AutocompleteInteraction,
+        | ChatInputCommandInteraction
+        | MessageContextMenuCommandInteraction
+        | AutocompleteInteraction,
 > {
     readonly #client: DatadropClient;
 
@@ -60,7 +60,10 @@ export class CommandHandler<
         try {
             if (interaction.isAutocomplete() && command.autocomplete) {
                 await command.autocomplete(this.#client, interaction);
-            } else if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
+            } else if (
+                interaction.isChatInputCommand() ||
+                interaction.isMessageContextMenuCommand()
+            ) {
                 await command.execute(this.#client, interaction);
             }
         } catch (err) {
@@ -68,11 +71,14 @@ export class CommandHandler<
                 `Une erreur est survenue lors de l'exécution de la commande <${command.data.name}>: ${JSON.stringify(err)}`,
             );
 
-            if (!("deferred" in interaction)
-                || !("replied" in interaction)
-                || !("reply" in interaction)
-                || !("followUp" in interaction)
-                || !("editReply" in interaction)) return;
+            if (
+                !("deferred" in interaction) ||
+                !("replied" in interaction) ||
+                !("reply" in interaction) ||
+                !("followUp" in interaction) ||
+                !("editReply" in interaction)
+            )
+                return;
 
             const replyOptions = {
                 content:
