@@ -22,12 +22,12 @@ export async function readFilesFrom<T>(
                 continue;
             }
 
-            if (stats.isFile() && !file.endsWith(".js")) continue;
+            if (stats.isFile() && !file.endsWith(".ts")) continue;
 
             logger.debug(`Lecture du fichier ${filePath}`);
 
             const props = await import(filePath);
-            callback(file.replace(".js", ""), props.default as T);
+            callback(file.replace(".ts", ""), props.default as T);
         }
     } catch (err) {
         logger.error(getErrorMessage(err));
