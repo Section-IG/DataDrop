@@ -1,10 +1,12 @@
 x-env_file:
   &env-file
   env_file: ./.env
+
 x-network:
   &network
   networks:
     - postgres-network
+
 x-restart-policy:
   &restart-policy
   restart: always
@@ -26,12 +28,13 @@ services:
       interval: 1s
       timeout: 1s
       retries: 60
+
   bot:
     <<: [*env-file, *network, *restart-policy]
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: yarn tsx ./index.ts | tee -a /var/log/datadrop/console.log
+    command: dotenvx run -- yarn start
     volumes:
       - bot_logs:/var/log/datadrop/
     depends_on:
