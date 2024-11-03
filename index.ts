@@ -1,11 +1,11 @@
 import { GatewayIntentBits } from "discord.js";
-import * as dotenv from "dotenv";
+import * as dotenvx from "@dotenvx/dotenvx";
 
 import { readConfig } from "./src/config.js";
 import { DatadropClient } from "./src/datadrop.js";
 import type { Configuration } from "./src/models/Configuration.js";
 
-dotenv.config({ debug: Boolean(process.env.DEBUG), encoding: "utf-8" });
+dotenvx.config({ debug: Boolean(process.env.DEBUG), encoding: "utf-8" });
 
 let client: DatadropClient;
 readConfig()
