@@ -3,6 +3,9 @@
 	"version": "2.1.1",
 	"type": "module",
 	"main": "./build/index.js",
+	"prisma": {
+		"seed": "tsx prisma/seed.ts"
+	},
 	"scripts": {
 		"cu": "docker compose up --build",
 		"cd": "docker compose down",
@@ -10,7 +13,8 @@
 		"build": "rm -rf build/ && tsc",
 		"deploy:commands": "yarn build && node ./scripts/deploy-commands.cjs",
 		"lint": "biome check --write index.ts ./src ./scripts",
-		"env-gen": "node ./scripts/envgen.cjs"
+		"env-gen": "node ./scripts/envgen.cjs",
+		"prisma": "dotenvx run --convention=nextjs -- prisma"
 	},
 	"repository": {
 		"type": "git",
@@ -28,6 +32,7 @@
 		"@hunteroi/discord-selfrole": "^4.0.5",
 		"@hunteroi/discord-temp-channels": "^3.3.1",
 		"@hunteroi/discord-verification": "^1.5.2",
+		"@prisma/client": "^5.22.0",
 		"discord-sync-commands": "^0.5.2",
 		"discord.js": "^14.22.1",
 		"nodemailer": "^7.0.6",
@@ -37,6 +42,7 @@
 		"@biomejs/biome": "^2.2.4",
 		"@types/node": "^24.5.2",
 		"@types/nodemailer": "^7.0.1",
+		"prisma": "^5.22.0",
 		"tsx": "^4.20.5",
 		"typescript": "^5.9.2"
 	}

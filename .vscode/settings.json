@@ -6,11 +6,19 @@
     "javascript.preferences.importModuleSpecifier": "relative",
     "typescript.preferences.importModuleSpecifier": "relative",
     "files.exclude": {
-        "node_modules": true
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "node_modules": true,
+        "**/.idea": true
     },
     "npm.packageManager": "yarn",
     "files.eol": "\n",
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "typescript.enablePromptUseWorkspaceTsdk": true
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "explorerExclude.backup": {}
 }
