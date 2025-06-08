@@ -9,6 +9,7 @@ import {
 
 import type { DatadropClient } from "../datadrop.js";
 import type { AnnounceConfiguration, Event } from "../models/index.js";
+import { getErrorMessage } from '../helpers.js';
 
 export default {
     name: Events.GuildMemberAdd,
