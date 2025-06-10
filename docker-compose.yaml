@@ -13,9 +13,17 @@ x-restart-policy:
   &restart-policy
   restart: always
 
+x-logging:
+  &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
 services:
   database:
-    <<: [*env-file, *network, *restart-policy]
+    <<: [*env-file, *network, *restart-policy, *logging]
     build:
       context: .
       dockerfile: ./Database.Dockerfile
@@ -32,7 +40,7 @@ services:
       retries: 60
 
   bot:
-    <<: [*env-file, *network, *restart-policy]
+    <<: [*env-file, *network, *restart-policy, *logging]
     environment:
       - NODE_ENV=${NODE_ENV}
     build:
