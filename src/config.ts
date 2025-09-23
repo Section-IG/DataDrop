@@ -52,7 +52,7 @@ export async function readConfig(): Promise<Configuration> {
             version: `${environment}-v${packageInfo.version}`,
         };
         config.communicationServiceOptions.apiKey =
-            process.env.SENDGRID_API_KEY;
+            process.env.SMTP2GO_API_KEY;
 
         return config;
     } catch (err: unknown) {

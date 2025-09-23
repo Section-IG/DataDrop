@@ -1,5 +1,6 @@
 ﻿import {
     type ChatInputCommandInteraction,
+    MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
     codeBlock,
@@ -32,7 +33,7 @@ export default {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
             return;
         }

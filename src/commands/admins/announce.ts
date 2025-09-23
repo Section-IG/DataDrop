@@ -7,6 +7,7 @@ import {
     Colors,
     EmbedBuilder,
     InteractionContextType,
+    MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
     type TextChannel,
@@ -63,7 +64,7 @@ export default {
                 "Ceci est une preview de l'annonce. Voulez-vous l'envoyer?",
             components: [row],
             embeds: [embed],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral
         });
 
         try {

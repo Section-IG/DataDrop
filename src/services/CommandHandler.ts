@@ -2,7 +2,9 @@ import {
     type AutocompleteInteraction,
     ChannelType,
     type ChatInputCommandInteraction,
+    InteractionReplyOptions,
     type MessageContextMenuCommandInteraction,
+    MessageFlags,
 } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
@@ -68,7 +70,7 @@ export class CommandHandler<
         if ("reply" in interaction) {
             await interaction.reply({
                 content: "❌ **Oups!** - Cette commande n'existe pas.",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
         }
     }
@@ -77,7 +79,7 @@ export class CommandHandler<
         if ("reply" in interaction) {
             await interaction.reply({
                 content: error,
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
         }
     }
@@ -109,12 +111,12 @@ export class CommandHandler<
             return;
         }
 
-        const replyOptions = {
+        const replyOptions: InteractionReplyOptions = {
             content: "❌ **Oups!** - Une erreur est survenue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         };
         if (interaction.deferred) {
-            await interaction.editReply(replyOptions.content);
+            await interaction.editReply(replyOptions.content!);
         } else if (interaction.replied) {
             await interaction.followUp(replyOptions);
         } else {

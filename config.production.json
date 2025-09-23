@@ -157,8 +157,8 @@
     },
     "communicationServiceOptions": {
         "mailData": {
-            "from": "mdpdevti@henallux.be",
-            "templateId": "d-ae8dfdd7cc9c49f1af6e016ecbb4d856"
+            "from": "fctienoreplydiscord@henallux.be",
+            "templateId": "9131196"
         }
     }
 }

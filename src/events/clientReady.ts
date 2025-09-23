@@ -9,10 +9,10 @@ import type { Event } from "../models/Event.js";
 export default {
     name: Events.ClientReady,
     once: true,
-    execute: ready,
+    execute: clientReady,
 } as Event;
 
-async function ready(client: DatadropClient) {
+async function clientReady(client: DatadropClient) {
     const { config } = client;
     await registerRolesChannels(client, config);
     await registerDynamicChannels(client, config);

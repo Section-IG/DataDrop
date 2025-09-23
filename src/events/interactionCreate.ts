@@ -7,7 +7,10 @@ import {
     type ChatInputCommandInteraction,
     Events,
     type Interaction,
+    InteractionEditReplyOptions,
+    InteractionReplyOptions,
     type MessageContextMenuCommandInteraction,
+    MessageFlags,
     ModalBuilder,
     type ModalSubmitInteraction,
     type RepliableInteraction,
@@ -45,7 +48,7 @@ async function interactionCreate(
     ) {
         await interaction.reply({
             content: "Ce message ne t'était assurément pas destiné!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
     }
 }
@@ -75,7 +78,7 @@ async function handleVerificationModalSubmission(
     client: DatadropClient,
     interaction: ModalSubmitInteraction,
 ) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (await isAlreadyVerified(client, interaction)) return;
 
@@ -112,13 +115,13 @@ async function isAlreadyVerified(
     const userFromDatabase = await client.database.read(interaction.user.id);
     if (userFromDatabase?.activatedCode) {
         if (interaction.isRepliable()) {
-            const replyOptions = {
+            const replyOptions: InteractionReplyOptions = {
                 content:
                     "Tu as déjà lié ton compte Hénallux avec ton compte Discord!",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             };
             if (interaction.deferred) {
-                await interaction.editReply(replyOptions);
+                await interaction.editReply(replyOptions as InteractionEditReplyOptions);
             } else if (interaction.replied) {
                 await interaction.followUp(replyOptions);
             } else {
@@ -223,7 +226,7 @@ async function showVerificationButton(
         .setCustomId(`lacb${interaction.user.id}`)
         .setDisabled(
             content.includes(client.errorMessage) ||
-                content.includes(client.activeAccountMessage),
+            content.includes(client.activeAccountMessage),
         );
     const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(
         linkAccountButton,

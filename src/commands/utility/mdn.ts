@@ -134,7 +134,7 @@ export default {
         client: DatadropClient,
         interaction: ChatInputCommandInteraction,
     ) {
-        await interaction.deferReply({ ephemeral: false });
+        await interaction.deferReply();
 
         const cleanQuery = interaction.options.getString("query", true).trim();
         const searchUrl = `${MDN_URL}${cleanQuery}/index.json`;
