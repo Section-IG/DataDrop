@@ -116,8 +116,8 @@ export default class PostgresDatabaseService implements IDatabaseService {
         let sqlQuery = "SELECT * FROM Users";
         let nbArguments = 1;
         while (nbArguments <= argument.size * 2) {
-            if (!sqlQuery.includes("WHERE")) sqlQuery += " WHERE ";
-            else sqlQuery += " AND ";
+            if (sqlQuery.includes("WHERE")) sqlQuery += " AND ";
+            else sqlQuery += " WHERE ";
             sqlQuery += `$${nbArguments} = $${++nbArguments}`;
             nbArguments++;
         }
@@ -150,16 +150,18 @@ export default class PostgresDatabaseService implements IDatabaseService {
         const insertValues = userEntries
             .filter(([prop]) => insertColumns.includes(prop))
             .sort(([prop1], [prop2]) => this.#ascendingSort(prop1, prop2));
-        const updateColumns = [
-            "status",
-            "code",
-            "nbCodeCalled",
-            "nbVerifyCalled",
-            "activatedCode",
-            "activationTimestamp",
-        ].sort(this.#ascendingSort);
+        const updateColumns = new Set(
+            [
+                "status",
+                "code",
+                "nbCodeCalled",
+                "nbVerifyCalled",
+                "activatedCode",
+                "activationTimestamp",
+            ].sort(this.#ascendingSort),
+        );
         const updateValues = userEntries
-            .filter(([prop]) => updateColumns.includes(prop))
+            .filter(([prop]) => updateColumns.has(prop))
             .sort(([prop1], [prop2]) => this.#ascendingSort(prop1, prop2));
 
         const sqlQuery = `INSERT INTO Users (userId, data, createdAt, ${this.#listParameters(insertColumns)})

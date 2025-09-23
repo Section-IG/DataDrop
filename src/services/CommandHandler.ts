@@ -58,13 +58,13 @@ export class CommandHandler<
     #logUsage(interaction: T, command: Command, isAuthorized: boolean): void {
         let channelInfo: string;
         const channel = interaction.channel;
-        if (!channel) {
-            channelInfo = "dans un canal inconnu";
-        } else {
+        if (channel) {
             channelInfo =
                 channel.type === ChannelType.GuildText
                     ? `dans #${channel.name} (${channel.id})`
                     : "en DM";
+        } else {
+            channelInfo = "dans un canal inconnu";
         }
         const author = interaction.user;
         this.#client.logger.info(

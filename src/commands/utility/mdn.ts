@@ -55,7 +55,7 @@ async function getMDNIndex() {
 function sanitize(str: string): string {
     return str
         .replaceAll("||", "|\u200B|") // avoid spoiler
-        .replaceAll("*", "\\*") // avoid bold/italic
+        .replaceAll("*", String.raw`\*`) // avoid bold/italic
         .replaceAll(/\s+/g, " ") // remove duplicate spaces
         .replaceAll(
             /\[(.+?)]\((.+?)\)/g,

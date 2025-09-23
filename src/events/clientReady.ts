@@ -47,11 +47,9 @@ async function registerRolesChannels(
 
     await Promise.all([
         client.selfRoleManager.registerChannel(rolesChannelid, {
-            rolesToEmojis: [
-                ...[first, second, third, alumni, tutor, announce].map(
-                    (cfg) => ({ role: cfg.roleid, emoji: cfg.emote }),
-                ),
-            ],
+            rolesToEmojis: [first, second, third, alumni, tutor, announce].map(
+                (cfg) => ({ role: cfg.roleid, emoji: cfg.emote }),
+            ),
             message: {
                 ...message,
                 options: {

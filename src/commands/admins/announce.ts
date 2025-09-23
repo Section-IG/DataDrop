@@ -14,6 +14,7 @@ import {
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";
+import { getErrorMessage } from "../../helpers.js";
 import type { Command } from "../../models/Command.js";
 
 export default {
@@ -111,7 +112,7 @@ export default {
                 });
             }
         } catch (error) {
-            console.error(error);
+            client.logger.error(getErrorMessage(error));
             await interaction.editReply({
                 content:
                     "❌ **Oups!** - Aucune confirmation reçue, annulation...",
