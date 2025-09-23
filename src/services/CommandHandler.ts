@@ -2,7 +2,7 @@ import {
     type AutocompleteInteraction,
     ChannelType,
     type ChatInputCommandInteraction,
-    InteractionReplyOptions,
+    type InteractionReplyOptions,
     type MessageContextMenuCommandInteraction,
     MessageFlags,
 } from "discord.js";
@@ -16,9 +16,9 @@ type AuthorizationResponse = {
 
 export class CommandHandler<
     T extends
-    | ChatInputCommandInteraction
-    | MessageContextMenuCommandInteraction
-    | AutocompleteInteraction,
+        | ChatInputCommandInteraction
+        | MessageContextMenuCommandInteraction
+        | AutocompleteInteraction,
 > {
     readonly #client: DatadropClient;
 
@@ -26,6 +26,7 @@ export class CommandHandler<
         this.#client = client;
     }
 
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: parameter is intentionally unused as it's part of the interface contract
     shouldExecute(interaction: T): boolean {
         return true;
     }
@@ -37,11 +38,17 @@ export class CommandHandler<
             return;
         }
 
-        const authorizationResponse = await this.#checkAuthorization(interaction, command);
+        const authorizationResponse = await this.#checkAuthorization(
+            interaction,
+            command,
+        );
         this.#logUsage(interaction, command, !authorizationResponse.error);
 
         if (authorizationResponse.error) {
-            await this.#handleAuthorizationError(interaction, authorizationResponse.error);
+            await this.#handleAuthorizationError(
+                interaction,
+                authorizationResponse.error,
+            );
             return;
         }
 
@@ -66,7 +73,9 @@ export class CommandHandler<
     }
 
     async #handleUnknownCommand(interaction: T): Promise<void> {
-        this.#client.logger.error(`Commande inexistante employée: ${interaction.commandName}`);
+        this.#client.logger.error(
+            `Commande inexistante employée: ${interaction.commandName}`,
+        );
         if ("reply" in interaction) {
             await interaction.reply({
                 content: "❌ **Oups!** - Cette commande n'existe pas.",
@@ -75,7 +84,10 @@ export class CommandHandler<
         }
     }
 
-    async #handleAuthorizationError(interaction: T, error: string): Promise<void> {
+    async #handleAuthorizationError(
+        interaction: T,
+        error: string,
+    ): Promise<void> {
         if ("reply" in interaction) {
             await interaction.reply({
                 content: error,
@@ -88,7 +100,10 @@ export class CommandHandler<
         try {
             if (interaction.isAutocomplete() && command.autocomplete) {
                 await command.autocomplete(this.#client, interaction);
-            } else if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
+            } else if (
+                interaction.isChatInputCommand() ||
+                interaction.isMessageContextMenuCommand()
+            ) {
                 await command.execute(this.#client, interaction);
             }
         } catch (err) {
@@ -96,7 +111,11 @@ export class CommandHandler<
         }
     }
 
-    async #handleCommandError(interaction: T, command: Command, err: unknown): Promise<void> {
+    async #handleCommandError(
+        interaction: T,
+        command: Command,
+        err: unknown,
+    ): Promise<void> {
         this.#client.logger.error(
             `Une erreur est survenue lors de l'exécution de la commande <${command.data.name}>: ${JSON.stringify(err)}`,
         );
@@ -111,12 +130,13 @@ export class CommandHandler<
             return;
         }
 
-        const replyOptions: InteractionReplyOptions = {
-            content: "❌ **Oups!** - Une erreur est survenue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!",
+        const replyOptions: InteractionReplyOptions & { content: string } = {
+            content:
+                "❌ **Oups!** - Une erreur est survenue en essayant cette commande. Reporte-le à un membre du Staff s'il te plaît!",
             flags: MessageFlags.Ephemeral,
         };
         if (interaction.deferred) {
-            await interaction.editReply(replyOptions.content!);
+            await interaction.editReply(replyOptions.content);
         } else if (interaction.replied) {
             await interaction.followUp(replyOptions);
         } else {

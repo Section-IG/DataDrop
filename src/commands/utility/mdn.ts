@@ -4,14 +4,14 @@ import {
     type AutocompleteInteraction,
     ButtonBuilder,
     ButtonStyle,
+    bold,
     type ChatInputCommandInteraction,
     Colors,
     EmbedBuilder,
-    SlashCommandBuilder,
-    bold,
     hideLinkEmbed,
     hyperlink,
     inlineCode,
+    SlashCommandBuilder,
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";
@@ -142,7 +142,9 @@ export default {
         try {
             let hit = searchCache.get(searchUrl);
             if (!hit) {
-                client.logger.debug(`Fetching MDN search results for ${cleanQuery} hitting on ${searchUrl}...`);
+                client.logger.debug(
+                    `Fetching MDN search results for ${cleanQuery} hitting on ${searchUrl}...`,
+                );
                 const response = await fetch(searchUrl);
                 if (!response.ok)
                     throw new Error(
@@ -159,17 +161,22 @@ export default {
                 .setURL(url)
                 .setTitle(sanitize(hit.title))
                 .setDescription(sanitize(hit.summary))
-                .setFooter({ text: 'MDN Web Docs', iconURL: 'https://developer.mozilla.org/favicon-48x48.png' })
+                .setFooter({
+                    text: "MDN Web Docs",
+                    iconURL: "https://developer.mozilla.org/favicon-48x48.png",
+                })
                 .setTimestamp();
             const button = new ButtonBuilder()
                 .setStyle(ButtonStyle.Link)
                 .setLabel("Voir plus")
                 .setURL(url);
-            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                button,
+            );
             await interaction.editReply({
                 content: "✅ Voici le résultat de votre recherche!",
                 embeds: [embed],
-                components: [row]
+                components: [row],
             });
         } catch (err) {
             client.logger.error(

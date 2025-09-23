@@ -64,7 +64,7 @@ export default {
                 "Ceci est une preview de l'annonce. Voulez-vous l'envoyer?",
             components: [row],
             embeds: [embed],
-            flags: MessageFlags.Ephemeral
+            flags: MessageFlags.Ephemeral,
         });
 
         try {
@@ -110,7 +110,8 @@ export default {
                     components: [],
                 });
             }
-        } catch (e) {
+        } catch (error) {
+            console.error(error);
             await interaction.editReply({
                 content:
                     "❌ **Oups!** - Aucune confirmation reçue, annulation...",

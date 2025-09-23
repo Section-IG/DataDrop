@@ -1,9 +1,9 @@
 ﻿import {
     type ChatInputCommandInteraction,
+    codeBlock,
     MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
-    codeBlock,
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";

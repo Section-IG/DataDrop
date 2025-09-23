@@ -1,5 +1,5 @@
-import { GatewayIntentBits } from "discord.js";
 import * as dotenvx from "@dotenvx/dotenvx";
+import { GatewayIntentBits } from "discord.js";
 
 import { readConfig } from "./src/config.js";
 import { DatadropClient } from "./src/datadrop.js";

@@ -1,3 +1,4 @@
+import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 import type { Snowflake } from "discord.js";
 import {
     Client,
@@ -5,8 +6,6 @@ import {
     type PreparedStatement,
     type Value,
 } from "ts-postgres";
-
-import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 
 import { getErrorMessage } from "../helpers.js";
 import type { IDatabaseService } from "../models/IDatabaseService.js";
@@ -289,7 +288,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
                 value ? new Date(value) : null;
             const asInteger = (
                 value: string | undefined | null,
-            ): number | null => (value ? Number.parseInt(value) : null);
+            ): number | null => (value ? Number.parseInt(value, 10) : null);
             const user = {
                 userid: entity.get("userid")?.valueOf(),
                 data: JSON.parse(entity.get("data")?.toString() ?? "{}"),

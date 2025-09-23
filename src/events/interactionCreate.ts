@@ -7,8 +7,9 @@ import {
     type ChatInputCommandInteraction,
     Events,
     type Interaction,
-    InteractionEditReplyOptions,
-    InteractionReplyOptions,
+    type InteractionEditReplyOptions,
+    type InteractionReplyOptions,
+    italic,
     type MessageContextMenuCommandInteraction,
     MessageFlags,
     ModalBuilder,
@@ -16,7 +17,6 @@ import {
     type RepliableInteraction,
     TextInputBuilder,
     TextInputStyle,
-    italic,
 } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
@@ -121,7 +121,9 @@ async function isAlreadyVerified(
                 flags: MessageFlags.Ephemeral,
             };
             if (interaction.deferred) {
-                await interaction.editReply(replyOptions as InteractionEditReplyOptions);
+                await interaction.editReply(
+                    replyOptions as InteractionEditReplyOptions,
+                );
             } else if (interaction.replied) {
                 await interaction.followUp(replyOptions);
             } else {
@@ -226,7 +228,7 @@ async function showVerificationButton(
         .setCustomId(`lacb${interaction.user.id}`)
         .setDisabled(
             content.includes(client.errorMessage) ||
-            content.includes(client.activeAccountMessage),
+                content.includes(client.activeAccountMessage),
         );
     const buttonComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(
         linkAccountButton,

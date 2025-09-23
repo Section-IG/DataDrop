@@ -1,20 +1,5 @@
 import * as path from "node:path";
 import {
-    type ButtonInteraction,
-    Client,
-    type ClientEvents,
-    type ClientOptions,
-    Collection,
-    type GuildMember,
-    type GuildTextBasedChannel,
-    type Message,
-    type Role,
-    type Snowflake,
-    type StringSelectMenuInteraction,
-    type VoiceChannel,
-} from "discord.js";
-
-import {
     ConsoleLogger,
     type DefaultLogger,
     LogEventLevel,
@@ -35,6 +20,20 @@ import {
     VerificationManagerEvents,
 } from "@hunteroi/discord-verification";
 import { SMTP2GoService } from "@hunteroi/discord-verification/lib/services/SMTP2GoService.js";
+import {
+    type ButtonInteraction,
+    Client,
+    type ClientEvents,
+    type ClientOptions,
+    Collection,
+    type GuildMember,
+    type GuildTextBasedChannel,
+    type Message,
+    type Role,
+    type Snowflake,
+    type StringSelectMenuInteraction,
+    type VoiceChannel,
+} from "discord.js";
 
 import { readConfig } from "./config.js";
 import { getErrorMessage, readFilesFrom } from "./helpers.js";
@@ -216,7 +215,7 @@ export class DatadropClient extends Client {
         this.selfRoleManager.on(
             SelfRoleManagerEvents.interaction,
             async (
-                rte: RoleToEmojiData,
+                _: RoleToEmojiData,
                 interaction: StringSelectMenuInteraction | ButtonInteraction,
             ) => {
                 await interaction.editReply(
