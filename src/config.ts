@@ -1,5 +1,5 @@
 import packageInfo from "../package.json" with { type: "json" };
-import type { Configuration } from "./models/Configuration.js";
+import type { Configuration } from "./models/index.js";
 
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {

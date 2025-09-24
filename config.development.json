@@ -144,12 +144,11 @@
         "emote": "📢"
     },
     "communicationServiceOptions": {
-        "from": "noreply-discord@henallux.be",
+        "from": "tyree.tromp1@ethereal.email",
         "port": 587,
-        "host": "smtp.office365.com",
-        "tls": {
-            "rejectUnauthorized": false
-        },
+        "host": "smtp.ethereal.email",
+        "secure": false,
+        "service": "Ethereal",
         "debug": true,
         "logger": true
     }

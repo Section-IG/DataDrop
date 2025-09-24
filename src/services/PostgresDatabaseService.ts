@@ -7,12 +7,10 @@ import {
     type Value,
 } from "ts-postgres";
 
-import type { ConsoleLogger } from "@hunteroi/advanced-logger";
-
+import { getErrorMessage } from "../helpers.js";
 import type { IDatabaseService, User } from "../models/index.js";
-import { getErrorMessage } from '../helpers.js';
 
-export default class PostgresDatabaseService implements IDatabaseService {
+export class PostgresDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
     readonly #database: Client;
 

@@ -1,4 +1,2 @@
-import PostgresDatabaseService from "./PostgresDatabaseService.js";
-import SMTPService from "./SMTPService.js";
-
-export { PostgresDatabaseService, SMTPService };
+export { PostgresDatabaseService } from "./PostgresDatabaseService.js";
+export { SMTPService } from "./SMTPService.js";
