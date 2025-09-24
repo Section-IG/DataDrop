@@ -19,7 +19,7 @@ POSTGRES_PASSWORD=
 DATABASE_PORT=5432
 DATABASE_HOST=localhost
 DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${POSTGRES_DB}?schema=public
-SMTP2GO_API_KEY=
+MAILING_API_KEY=
 ```
 An empty copy of this file is available as [#.env.development](./#.env.development).
 
