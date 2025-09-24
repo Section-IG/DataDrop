@@ -7,12 +7,14 @@ import {
     Colors,
     EmbedBuilder,
     InteractionContextType,
+    MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
     type TextChannel,
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";
+import { getErrorMessage } from "../../helpers.js";
 import type { Command } from "../../models/Command.js";
 
 export default {
@@ -63,7 +65,7 @@ export default {
                 "Ceci est une preview de l'annonce. Voulez-vous l'envoyer?",
             components: [row],
             embeds: [embed],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
 
         try {
@@ -109,7 +111,8 @@ export default {
                     components: [],
                 });
             }
-        } catch (e) {
+        } catch (error) {
+            client.logger.error(getErrorMessage(error));
             await interaction.editReply({
                 content:
                     "❌ **Oups!** - Aucune confirmation reçue, annulation...",

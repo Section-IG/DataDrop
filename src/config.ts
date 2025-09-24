@@ -51,8 +51,7 @@ export async function readConfig(): Promise<Configuration> {
             ...json,
             version: `${environment}-v${packageInfo.version}`,
         };
-        config.communicationServiceOptions.apiKey =
-            process.env.SENDGRID_API_KEY;
+        config.communicationServiceOptions.apiKey = process.env.MAILING_API_KEY;
 
         return config;
     } catch (err: unknown) {

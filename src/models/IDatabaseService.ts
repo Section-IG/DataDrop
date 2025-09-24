@@ -1,6 +1,5 @@
-import type { Snowflake } from "discord.js";
-
 import type { IStoringSystem } from "@hunteroi/discord-verification";
+import type { Snowflake } from "discord.js";
 
 import type { User } from "./User.js";
 

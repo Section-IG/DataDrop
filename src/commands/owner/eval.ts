@@ -1,8 +1,9 @@
 ﻿import {
     type ChatInputCommandInteraction,
+    codeBlock,
+    MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
-    codeBlock,
 } from "discord.js";
 
 import type { DatadropClient } from "../../datadrop.js";
@@ -32,7 +33,7 @@ export default {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
             return;
         }

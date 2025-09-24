@@ -1,5 +1,6 @@
 import {
     type ChatInputCommandInteraction,
+    MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
 } from "discord.js";
@@ -24,7 +25,7 @@ export default {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
             return;
         }
@@ -33,7 +34,7 @@ export default {
         await client.reloadConfig();
         await interaction.reply({
             content: "Rechargement de la configuration en cours... 👌",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
     },
 } as Command;

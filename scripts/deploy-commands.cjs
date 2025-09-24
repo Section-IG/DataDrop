@@ -1,8 +1,9 @@
-const dotenv = require("dotenv");
+const dotenvx = require("@dotenvx/dotenvx");
 const { Client, Collection, REST, Routes } = require("discord.js");
 const path = require("node:path");
 const fsp = require("node:fs/promises");
 const synchronizeSlashCommands = require("discord-sync-commands");
+
 const { botId: botProdId } = require("../config.production.json");
 const { guildId, botId: botDevId } = require("../config.development.json");
 
@@ -65,7 +66,7 @@ async function main(args) {
     }
 
     const client = new Client({ intents: [] });
-    client.once("ready", () => console.log("Ready!"));
+    client.once("clientReady", () => console.log("Ready!"));
     client.once("error", console.error);
 
     const commands = new Collection();
@@ -90,7 +91,7 @@ async function main(args) {
     await client.destroy();
 }
 
-dotenv.config({ debug: Boolean(process.env.DEBUG), encoding: "utf-8" });
+dotenvx.config({ debug: Boolean(process.env.DEBUG), encoding: "utf-8" });
 if (!process.env.DISCORD_TOKEN) {
     console.error(
         "Error: Please provide a Discord token in the environment variable DISCORD_TOKEN.",

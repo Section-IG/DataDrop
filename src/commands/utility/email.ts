@@ -25,10 +25,7 @@ export default {
             "Affiche un message concernant l'envoi d'email à un.e professeur.e ou aux organisations étudiantes.",
         ),
 
-    async execute(
-        client: DatadropClient,
-        interaction: ChatInputCommandInteraction,
-    ) {
+    async execute(_: DatadropClient, interaction: ChatInputCommandInteraction) {
         const embed = new EmbedBuilder()
             .setTitle("Emails")
             .setColor("Random")

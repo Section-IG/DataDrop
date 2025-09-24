@@ -1,6 +1,5 @@
-import { ButtonStyle, Events, Role, bold, roleMention } from "discord.js";
-
 import type { RoleToEmojiData } from "@hunteroi/discord-selfrole";
+import { ButtonStyle, bold, Events, Role, roleMention } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
 import type { Configuration } from "../models/Configuration.js";
@@ -9,10 +8,10 @@ import type { Event } from "../models/Event.js";
 export default {
     name: Events.ClientReady,
     once: true,
-    execute: ready,
+    execute: clientReady,
 } as Event;
 
-async function ready(client: DatadropClient) {
+async function clientReady(client: DatadropClient) {
     const { config } = client;
     await registerRolesChannels(client, config);
     await registerDynamicChannels(client, config);
@@ -48,11 +47,9 @@ async function registerRolesChannels(
 
     await Promise.all([
         client.selfRoleManager.registerChannel(rolesChannelid, {
-            rolesToEmojis: [
-                ...[first, second, third, alumni, tutor, announce].map(
-                    (cfg) => ({ role: cfg.roleid, emoji: cfg.emote }),
-                ),
-            ],
+            rolesToEmojis: [first, second, third, alumni, tutor, announce].map(
+                (cfg) => ({ role: cfg.roleid, emoji: cfg.emote }),
+            ),
             message: {
                 ...message,
                 options: {

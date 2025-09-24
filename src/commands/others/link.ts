@@ -3,6 +3,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     type ChatInputCommandInteraction,
+    MessageFlags,
     SlashCommandBuilder,
 } from "discord.js";
 
@@ -25,7 +26,7 @@ export default {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Tu as déjà lié ton compte Hénallux avec ton compte Discord!",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
             });
             return;
         }
@@ -43,7 +44,7 @@ export default {
         await interaction.reply({
             content: `Pour lier ton compte, rien de plus simple! Il te suffit de cliquer sur le bouton ci-dessous et remplir le formulaire! Tu recevras un code par email qu'il faudra envoyer ici ensuite!\n⚠️ Nous conservons les informations soumises après utilisation. Si tu soumets tes informations, tu acceptes que celles-ci nous soient transmises et que nous les conservions durant toute la durée de ta présence sur le serveur!`,
             components: [buttonComponent],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
     },
 } as Command;
