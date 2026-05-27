@@ -1,0 +1,59 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [pg_cron]
+  schemas    = ["cron", "public"]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model job {
+  jobid    BigInt  @id @default(autoincrement())
+  schedule String
+  command  String
+  nodename String  @default("localhost")
+  nodeport Int     @default(dbgenerated("inet_server_port()"))
+  database String  @default(dbgenerated("current_database()"))
+  username String  @default(dbgenerated("CURRENT_USER"))
+  active   Boolean @default(true)
+  jobname  String?
+
+  @@unique([jobname, username], map: "jobname_username_uniq")
+  @@schema("cron")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model job_run_details {
+  jobid          BigInt?
+  runid          BigInt    @id @default(autoincrement())
+  job_pid        Int?
+  database       String?
+  username       String?
+  command        String?
+  status         String?
+  return_message String?
+  start_time     DateTime? @db.Timestamptz(6)
+  end_time       DateTime? @db.Timestamptz(6)
+
+  @@schema("cron")
+}
+
+model users {
+  userid              String    @id
+  data                String?   @unique
+  code                String?
+  activatedCode       String?
+  activationTimestamp Int?
+  username            String
+  status              Int
+  nbCodeCalled        Int       @default(0)
+  nbVerifyCalled      Int       @default(0)
+  createdAt           DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime  @updatedAt @db.Timestamp(6)
+  isDeleted           DateTime? @db.Timestamp(6)
+
+  @@schema("public")
+}

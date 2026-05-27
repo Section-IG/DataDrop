@@ -1,10 +1,10 @@
 import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 import type { Snowflake } from "discord.js";
 import {
-    Client,
+    type Client,
+    connect,
     type DatabaseError,
     type PreparedStatement,
-    type Value,
 } from "ts-postgres";
 
 import { getErrorMessage } from "../helpers.js";
@@ -12,7 +12,7 @@ import type { IDatabaseService, User } from "../models/index.js";
 
 export class PostgresDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
-    readonly #database: Client;
+    #database!: Client;
 
     /**
      * Creates an instance of DatabaseService.
@@ -21,7 +21,13 @@ export class PostgresDatabaseService implements IDatabaseService {
      */
     constructor(logger: ConsoleLogger) {
         this.#logger = logger;
-        this.#database = new Client({
+    }
+
+    /**
+     * @inherited
+     */
+    public async start(): Promise<void> {
+        this.#database = await connect({
             user: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             host: process.env.DATABASE_HOST,
@@ -29,13 +35,6 @@ export class PostgresDatabaseService implements IDatabaseService {
             database: process.env.POSTGRES_DB,
         });
         this.#listenToDatabaseEvents();
-    }
-
-    /**
-     * @inherited
-     */
-    public async start(): Promise<void> {
-        await this.#database.connect();
 
         await this.#database.query(`CREATE TABLE IF NOT EXISTS Migrations (
             id serial PRIMARY KEY,
@@ -104,7 +103,7 @@ export class PostgresDatabaseService implements IDatabaseService {
      */
     public async readBy(
         argument: // biome-ignore lint/suspicious/noExplicitAny: DB values can be of any type
-            Map<string, any> | ((user: User, index: string | number) => boolean),
+        Map<string, any> | ((user: User, index: string | number) => boolean),
     ): Promise<User | undefined | null> {
         if (!(argument instanceof Map))
             throw new Error("Method not implemented.");
@@ -230,9 +229,6 @@ export class PostgresDatabaseService implements IDatabaseService {
     }
 
     #listenToDatabaseEvents() {
-        this.#database.on("connect", () =>
-            this.#logger.info("Connexion établie avec la base de données!"),
-        );
         this.#database.on("end", () =>
             this.#logger.info("Connexion fermée avec la base de données!"),
         );
@@ -266,7 +262,7 @@ export class PostgresDatabaseService implements IDatabaseService {
     }
 
     // biome-ignore lint/suspicious/noExplicitAny: DB values can be of any type
-    #deconstructValues(values: [string, any][]): Value[] {
+    #deconstructValues(values: [string, any][]): any[] {
         return values.flatMap(([, v]) =>
             v instanceof Object && typeof v !== "bigint"
                 ? JSON.stringify(v)
@@ -276,15 +272,16 @@ export class PostgresDatabaseService implements IDatabaseService {
 
     async #executeStatement(
         statement: PreparedStatement,
-        values: Value[] = [],
+        // biome-ignore lint/suspicious/noExplicitAny: DB values can be of any type
+        values: any[] = [],
         isSelect = true,
     ): Promise<User | undefined | null> {
         const notFoundMessage = "User not found";
         try {
-            const entities = await statement.execute(values);
+            const result = await statement.execute(values);
             if (!isSelect) return null;
 
-            const entity = [...entities].pop();
+            const entity = result.rows.at(-1);
             if (!entity) throw new Error(notFoundMessage);
 
             const asDate = (value: string | undefined | null): Date | null =>
