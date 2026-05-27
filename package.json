@@ -27,23 +27,23 @@
 	},
 	"homepage": "https://github.com/section-IG/DataDrop#readme",
 	"dependencies": {
-		"@dotenvx/dotenvx": "^1.51.0",
+		"@dotenvx/dotenvx": "^1.69.1",
 		"@hunteroi/advanced-logger": "^0.2.0",
 		"@hunteroi/discord-selfrole": "^4.0.5",
 		"@hunteroi/discord-temp-channels": "^3.3.1",
 		"@hunteroi/discord-verification": "^1.5.2",
-		"@prisma/client": "^5.22.0",
+		"@prisma/client": "^7.8.0",
 		"discord-sync-commands": "^0.5.2",
-		"discord.js": "^14.22.1",
-		"nodemailer": "^7.0.6",
+		"discord.js": "^14.26.4",
+		"nodemailer": "^8.0.9",
 		"ts-postgres": "1.3.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.2.4",
-		"@types/node": "^24.5.2",
-		"@types/nodemailer": "^7.0.1",
-		"prisma": "^5.22.0",
-		"tsx": "^4.20.5",
-		"typescript": "^5.9.2"
+		"@biomejs/biome": "^2.4.16",
+		"@types/node": "^25.9.1",
+		"@types/nodemailer": "^8.0.0",
+		"prisma": "^7.8.0",
+		"tsx": "^4.22.3",
+		"typescript": "^6.0.3"
 	}
 }
