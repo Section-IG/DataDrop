@@ -144,9 +144,12 @@
         "emote": "📢"
     },
     "communicationServiceOptions": {
-        "mailData": {
-            "from": "fctienoreplydiscord@henallux.be",
-            "templateId": "9131196"
-        }
+        "from": "tyree.tromp1@ethereal.email",
+        "port": 587,
+        "host": "smtp.ethereal.email",
+        "secure": false,
+        "service": "Ethereal",
+        "debug": true,
+        "logger": true
     }
 }

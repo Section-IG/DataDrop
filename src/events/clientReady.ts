@@ -2,8 +2,7 @@ import type { RoleToEmojiData } from "@hunteroi/discord-selfrole";
 import { ButtonStyle, bold, Events, Role, roleMention } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
-import type { Configuration } from "../models/Configuration.js";
-import type { Event } from "../models/Event.js";
+import type { Configuration, Event } from "../models/index.js";
 
 export default {
     name: Events.ClientReady,

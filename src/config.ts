@@ -1,5 +1,5 @@
 import packageInfo from "../package.json" with { type: "json" };
-import type { Configuration } from "./models/Configuration.js";
+import type { Configuration } from "./models/index.js";
 
 // should be Partial<Configuration> but codebase not ready yet
 const defaultConfig: Configuration = {
@@ -29,8 +29,10 @@ const defaultConfig: Configuration = {
     tutor: { roleid: "", emote: "" },
     announce: { roleid: "", emote: "", channelid: "" },
     communicationServiceOptions: {
-        apiKey: "",
-        mailData: { from: "", templateId: "" },
+        auth: { user: "", pass: "" },
+        from: "",
+        port: 587,
+        host: "",
     },
 };
 
@@ -51,7 +53,10 @@ export async function readConfig(): Promise<Configuration> {
             ...json,
             version: `${environment}-v${packageInfo.version}`,
         };
-        config.communicationServiceOptions.apiKey = process.env.MAILING_API_KEY;
+        config.communicationServiceOptions.auth = {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+        };
 
         return config;
     } catch (err: unknown) {

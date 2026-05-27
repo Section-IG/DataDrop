@@ -3,5 +3,15 @@
         "ms-azuretools.vscode-docker",
         "gamunu.vscode-yarn",
         "biomejs.biome",
+        "oouo-diogo-perdigao.docthis",
+        "dotenv.dotenv-vscode",
+        "github.vscode-github-actions",
+        "prisma.prisma",
+        "richie5um2.vscode-sort-json",
+        "rilut.ts-extract-interface",
+        "redhat.vscode-yaml",
+        "anthropic.claude-code",
+        "arcanis.vscode-zipfs",
+        "codescene.codescene-vscode",
     ]
 }

@@ -156,9 +156,10 @@
         "emote": "📢"
     },
     "communicationServiceOptions": {
-        "mailData": {
-            "from": "fctienoreplydiscord@henallux.be",
-            "templateId": "9131196"
-        }
+        "from": "noreply-discord@henallux.be",
+        "host": "smtp.office365.com",
+        "port": 587,
+        "secure": true,
+        "service": "Outlook365"
     }
 }

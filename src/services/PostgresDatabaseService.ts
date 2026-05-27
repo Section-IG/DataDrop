@@ -8,10 +8,9 @@ import {
 } from "ts-postgres";
 
 import { getErrorMessage } from "../helpers.js";
-import type { IDatabaseService } from "../models/IDatabaseService.js";
-import type { User } from "../models/User.js";
+import type { IDatabaseService, User } from "../models/index.js";
 
-export default class PostgresDatabaseService implements IDatabaseService {
+export class PostgresDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
     readonly #database: Client;
 
@@ -105,7 +104,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
      */
     public async readBy(
         argument: // biome-ignore lint/suspicious/noExplicitAny: DB values can be of any type
-        Map<string, any> | ((user: User, index: string | number) => boolean),
+            Map<string, any> | ((user: User, index: string | number) => boolean),
     ): Promise<User | undefined | null> {
         if (!(argument instanceof Map))
             throw new Error("Method not implemented.");
@@ -208,7 +207,7 @@ export default class PostgresDatabaseService implements IDatabaseService {
     async #runMigrations(): Promise<void> {
         await this.#runMigration("User soft delete", async () => {
             await this.#database.query(
-                "ALTER TABLE Users ADD IF NOT EXISTS isDeleted timestamp;",
+                "ALTER TABLE Users ADD COLUMN IF NOT EXISTS isDeleted timestamp;",
             );
         });
     }
@@ -218,8 +217,10 @@ export default class PostgresDatabaseService implements IDatabaseService {
             "SELECT * FROM Migrations WHERE name = $1",
             [name],
         );
-        const migration = [...result].pop();
-        if (!migration) {
+        this.#logger.verbose(
+            `Running migration "${name}" with pre-query returning ${JSON.stringify(result)}`,
+        );
+        if (result && result.rows.length === 0) {
             await this.#database.query(
                 "INSERT INTO Migrations (name) VALUES($1);",
                 [name],
