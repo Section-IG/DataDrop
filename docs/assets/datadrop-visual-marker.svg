@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">DataDrop Visual Marker</title>
+  <desc id="desc">A branded banner with the DataDrop name, bot and web nodes, and the theme of reliable multi-entrypoint delivery.</desc>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0f1d" />
+      <stop offset="60%" stop-color="#111f3d" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+    <style>
+      .name { fill: #f8fbff; font: 800 72px Arial, sans-serif; letter-spacing: 2px; }
+      .tag { fill: #cbd5e1; font: 400 24px Arial, sans-serif; }
+      .label { fill: #eff6ff; font: 700 22px Arial, sans-serif; }
+      .small { fill: #cbd5e1; font: 400 18px Arial, sans-serif; }
+    </style>
+  </defs>
+  <rect width="1200" height="640" rx="36" fill="url(#g1)" />
+  <circle cx="970" cy="110" r="160" fill="#38bdf8" opacity="0.10" />
+  <circle cx="225" cy="520" r="220" fill="#34d399" opacity="0.10" />
+
+  <rect x="68" y="68" width="1064" height="504" rx="28" fill="#091120" opacity="0.72" stroke="#2f4b76" stroke-width="2" />
+  <rect x="92" y="92" width="164" height="12" rx="6" fill="url(#accent)" />
+
+  <text x="92" y="210" class="name">DataDrop</text>
+  <text x="94" y="258" class="tag">Reliable bot and web delivery across shared identity, config, and compliance flows</text>
+
+  <g transform="translate(96 330)">
+    <rect width="230" height="120" rx="18" fill="#12213f" stroke="#38bdf8" stroke-width="2" />
+    <text x="24" y="44" class="label">Bot entrypoint</text>
+    <text x="24" y="76" class="small">Commands, events, transitions</text>
+  </g>
+
+  <g transform="translate(350 330)">
+    <rect width="230" height="120" rx="18" fill="#12213f" stroke="#34d399" stroke-width="2" />
+    <text x="24" y="44" class="label">Web entrypoint</text>
+    <text x="24" y="76" class="small">OAuth, admin UX, user flows</text>
+  </g>
+
+  <g transform="translate(604 330)">
+    <rect width="230" height="120" rx="18" fill="#12213f" stroke="#f59e0b" stroke-width="2" />
+    <text x="24" y="44" class="label">Shared domain</text>
+    <text x="24" y="76" class="small">Identity, config, compliance</text>
+  </g>
+
+  <g transform="translate(858 330)">
+    <rect width="230" height="120" rx="18" fill="#12213f" stroke="#a78bfa" stroke-width="2" />
+    <text x="24" y="44" class="label">Trust layer</text>
+    <text x="24" y="76" class="small">Audit, SLOs, retries, DLQ</text>
+  </g>
+
+  <path d="M320 390 H350" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+  <path d="M574 390 H604" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+  <path d="M828 390 H858" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+
+  <text x="92" y="520" class="small">Use this as the project banner in docs/README and related spec pages.</text>
+</svg>
