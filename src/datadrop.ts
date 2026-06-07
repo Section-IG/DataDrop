@@ -34,7 +34,6 @@ import {
     type VoiceChannel,
 } from "discord.js";
 
-import { readConfig } from "./config.js";
 import { getErrorMessage, readFilesFrom } from "./helpers.js";
 import type {
     Command,
@@ -43,7 +42,7 @@ import type {
     IDatabaseService,
     User,
 } from "./models/index.js";
-import { PostgresDatabaseService, SMTPService } from "./services/index.js";
+import { PrismaDatabaseService, SMTPService } from "./services/index.js";
 
 export class DatadropClient extends Client {
     #config: Configuration;
@@ -74,7 +73,7 @@ export class DatadropClient extends Client {
         });
         this.tempChannelsManager = new TempChannelsManager(this);
 
-        this.database = new PostgresDatabaseService(this.logger);
+        this.database = new PrismaDatabaseService(this.logger);
         const communicationService = new SMTPService(
             config.communicationServiceOptions,
         );
@@ -105,7 +104,18 @@ export class DatadropClient extends Client {
     }
 
     async reloadConfig(): Promise<void> {
-        this.#config = await readConfig();
+        const configFromDatabase = await this.database.readConfiguration(
+            this.#config.guildId,
+        );
+
+        if (!configFromDatabase) {
+            this.logger.warn(
+                `Aucune configuration trouvée en base pour la guilde ${this.#config.guildId}.`,
+            );
+            return;
+        }
+
+        this.#config = configFromDatabase;
     }
 
     #listenToVerificationEvents(): void {
@@ -410,6 +420,22 @@ export class DatadropClient extends Client {
             await this.#bindCommands();
 
             await this.database?.start();
+            const configFromDatabase = await this.database.readConfiguration(
+                this.#config.guildId,
+            );
+
+            if (configFromDatabase) {
+                this.#config = configFromDatabase;
+                this.logger.info(
+                    `Configuration de la guilde ${this.#config.guildId} chargée depuis la base de données.`,
+                );
+            } else {
+                await this.database.writeConfiguration(this.#config);
+                this.logger.info(
+                    `Configuration de la guilde ${this.#config.guildId} initialisée en base de données depuis la configuration de bootstrap.`,
+                );
+            }
+
             this.login();
         } catch (error) {
             this.logger.error(

@@ -1,2 +1,2 @@
-export { PostgresDatabaseService } from "./PostgresDatabaseService.js";
+export { PrismaDatabaseService } from "./PrismaDatabaseService.js";
 export { SMTPService } from "./SMTPService.js";

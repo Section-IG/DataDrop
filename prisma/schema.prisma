@@ -57,3 +57,12 @@ model users {
 
   @@schema("public")
 }
+
+model guild_configurations {
+  guildid   String   @id
+  data      String
+  createdat DateTime @default(now()) @db.Timestamp(6)
+  updatedat DateTime @updatedAt @db.Timestamp(6)
+
+  @@schema("public")
+}
