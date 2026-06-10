@@ -4,11 +4,17 @@ import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-  },
-  datasource: {
-    url: process.env["DATABASE_URL"],
-  },
+    schema: "prisma/schema.prisma",
+    migrations: {
+        path: "prisma/migrations",
+    },
+    datasource: {
+        url: process.env["DATABASE_URL"],
+    },
+    experimental: {
+        externalTables: true,
+    },
+    tables: {
+        external: ["cron.job", "cron.job_run_details"],
+    },
 });

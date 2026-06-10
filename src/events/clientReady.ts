@@ -11,7 +11,18 @@ export default {
 } as Event;
 
 async function clientReady(client: DatadropClient) {
-    const { config } = client;
+    const guildId = client.guilds.cache.first()?.id;
+    if (!guildId) {
+        client.logger.error("Aucune guilde trouvée lors du démarrage.");
+        return;
+    }
+    const config = await client.getConfig(guildId);
+    if (!config) {
+        client.logger.error(
+            `Aucune configuration trouvée pour la guilde ${guildId}.`,
+        );
+        return;
+    }
     await registerRolesChannels(client, config);
     await registerDynamicChannels(client, config);
 

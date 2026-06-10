@@ -34,6 +34,7 @@ import {
     type VoiceChannel,
 } from "discord.js";
 
+import { readConfig } from "./config.js";
 import { getErrorMessage, readFilesFrom } from "./helpers.js";
 import type {
     Command,
@@ -45,77 +46,23 @@ import type {
 import { PrismaDatabaseService, SMTPService } from "./services/index.js";
 
 export class DatadropClient extends Client {
-    #config: Configuration;
-    readonly database: IDatabaseService;
-    readonly logger: DefaultLogger;
+    declare database: IDatabaseService;
+    declare logger: DefaultLogger;
     readonly commands: Collection<string, Command>;
-    readonly selfRoleManager: InteractionsSelfRoleManager;
-    readonly tempChannelsManager: TempChannelsManager;
-    readonly verificationManager: VerificationManager<User>;
+    declare selfRoleManager: InteractionsSelfRoleManager;
+    declare tempChannelsManager: TempChannelsManager;
+    declare verificationManager: VerificationManager<User>;
 
     public readonly errorMessage = "Je n'ai pas su t'envoyer le code!";
     public readonly activeAccountMessage = "ton compte est déjà vérifié!";
 
-    constructor(options: ClientOptions, config: Configuration) {
+    constructor(options: ClientOptions) {
         super(options);
-
-        this.#config = config;
-
-        this.logger = new ConsoleLogger({
-            minLevel: LogEventLevel[config.minLevel.toLowerCase()],
-            includeTimestamp: config.includeTimestamp,
-        });
         this.commands = new Collection();
-
-        this.selfRoleManager = new InteractionsSelfRoleManager(this, {
-            channelsMessagesFetchLimit: 10,
-            deleteAfterUnregistration: false,
-        });
-        this.tempChannelsManager = new TempChannelsManager(this);
-
-        this.database = new PrismaDatabaseService(this.logger);
-        const communicationService = new SMTPService(
-            config.communicationServiceOptions,
-        );
-        this.verificationManager = new VerificationManager(
-            this,
-            this.database,
-            communicationService,
-            {
-                codeGenerationOptions: { length: 6 },
-                maxNbCodeCalledBeforeResend: 3,
-                errorMessage: () => this.errorMessage,
-                pendingMessage: (user: User) =>
-                    `Ton code de vérification vient de t'être envoyé, ${user.username}`,
-                alreadyPendingMessage: (user: User) =>
-                    `${user.username}, tu as déjà un code en attente!`,
-                alreadyActiveMessage: (user: User) =>
-                    `${user.username}, ${this.activeAccountMessage}`,
-                validCodeMessage: (user: User, code: string) =>
-                    `Le code ${code} est valide. Bienvenue ${user.username}!`,
-                invalidCodeMessage: (_, code: string) =>
-                    `Le code ${code} est invalide!`,
-            },
-        );
     }
 
-    get config(): Configuration {
-        return this.#config;
-    }
-
-    async reloadConfig(): Promise<void> {
-        const configFromDatabase = await this.database.readConfiguration(
-            this.#config.guildId,
-        );
-
-        if (!configFromDatabase) {
-            this.logger.warn(
-                `Aucune configuration trouvée en base pour la guilde ${this.#config.guildId}.`,
-            );
-            return;
-        }
-
-        this.#config = configFromDatabase;
+    async getConfig(guildId: Snowflake): Promise<Configuration | null> {
+        return this.database.readConfiguration(guildId);
     }
 
     #listenToVerificationEvents(): void {
@@ -132,10 +79,14 @@ export class DatadropClient extends Client {
                 );
 
                 if (isVerified) {
-                    const guild = await this.guilds.fetch(this.#config.guildId);
+                    const guildId = this.guilds.cache.first()?.id;
+                    if (!guildId) return;
+                    const config = await this.getConfig(guildId);
+                    if (!config) return;
+                    const guild = await this.guilds.fetch(guildId);
                     const member = await guild.members.fetch(userid);
                     await member.roles.add(
-                        this.#config.verifiedRoleId,
+                        config.verifiedRoleId,
                         `Compte Hénallux vérifié! ${user.data.email}`,
                     );
                 }
@@ -411,6 +362,44 @@ export class DatadropClient extends Client {
     }
 
     async start(): Promise<void> {
+        const bootstrapConfig = await readConfig();
+
+        this.logger = new ConsoleLogger({
+            minLevel: LogEventLevel[bootstrapConfig.minLevel.toLowerCase()],
+            includeTimestamp: bootstrapConfig.includeTimestamp,
+        });
+
+        this.database = new PrismaDatabaseService(this.logger);
+
+        const communicationService = new SMTPService(
+            bootstrapConfig.communicationServiceOptions,
+        );
+        this.selfRoleManager = new InteractionsSelfRoleManager(this, {
+            channelsMessagesFetchLimit: 10,
+            deleteAfterUnregistration: false,
+        });
+        this.tempChannelsManager = new TempChannelsManager(this);
+        this.verificationManager = new VerificationManager(
+            this,
+            this.database,
+            communicationService,
+            {
+                codeGenerationOptions: { length: 6 },
+                maxNbCodeCalledBeforeResend: 3,
+                errorMessage: () => this.errorMessage,
+                pendingMessage: (user: User) =>
+                    `Ton code de vérification vient de t'être envoyé, ${user.username}`,
+                alreadyPendingMessage: (user: User) =>
+                    `${user.username}, tu as déjà un code en attente!`,
+                alreadyActiveMessage: (user: User) =>
+                    `${user.username}, ${this.activeAccountMessage}`,
+                validCodeMessage: (user: User, code: string) =>
+                    `Le code ${code} est valide. Bienvenue ${user.username}!`,
+                invalidCodeMessage: (_, code: string) =>
+                    `Le code ${code} est invalide!`,
+            },
+        );
+
         try {
             this.#listenToSelfRoleEvents();
             this.#listenToTempChannelsEvents();
@@ -419,20 +408,19 @@ export class DatadropClient extends Client {
             await this.#bindEvents();
             await this.#bindCommands();
 
-            await this.database?.start();
-            const configFromDatabase = await this.database.readConfiguration(
-                this.#config.guildId,
-            );
+            await this.database.start();
 
-            if (configFromDatabase) {
-                this.#config = configFromDatabase;
+            const existingConfig = await this.database.readConfiguration(
+                bootstrapConfig.guildId,
+            );
+            if (!existingConfig) {
+                await this.database.writeConfiguration(bootstrapConfig);
                 this.logger.info(
-                    `Configuration de la guilde ${this.#config.guildId} chargée depuis la base de données.`,
+                    `Configuration de la guilde ${bootstrapConfig.guildId} initialisée en base de données depuis la configuration de bootstrap.`,
                 );
             } else {
-                await this.database.writeConfiguration(this.#config);
                 this.logger.info(
-                    `Configuration de la guilde ${this.#config.guildId} initialisée en base de données depuis la configuration de bootstrap.`,
+                    `Configuration de la guilde ${bootstrapConfig.guildId} trouvée en base de données.`,
                 );
             }
 

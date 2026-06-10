@@ -1,4 +1,4 @@
-import { Events, type GuildMember } from "discord.js";
+import { Events, type GuildMember, type PartialGuildMember } from "discord.js";
 
 import type { DatadropClient } from "../datadrop.js";
 import { getErrorMessage } from "../helpers.js";
@@ -9,9 +9,11 @@ export default {
     execute: guildMemberRemove,
 } as Event;
 
-async function guildMemberRemove(client: DatadropClient, member: GuildMember) {
-    if (member.user.bot) return;
-    if (member.guild.id !== client.config.guildId) return;
+async function guildMemberRemove(
+    client: DatadropClient,
+    member: GuildMember | PartialGuildMember,
+) {
+    if (member.user?.bot) return;
     client.logger.info(
         `L'utilisateur <${member.displayName} a quitté le serveur.`,
     );

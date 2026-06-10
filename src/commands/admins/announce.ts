@@ -69,7 +69,11 @@ export default {
         });
 
         try {
-            const { announce } = client.config;
+            const guildId = interaction.guildId;
+            if (!guildId) return;
+            const config = await client.getConfig(guildId);
+            if (!config) return;
+            const { announce } = config;
             const confirmation = await response.awaitMessageComponent({
                 filter: (i) => i.user.id === interaction.user.id,
                 time: 30_000,

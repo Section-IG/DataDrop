@@ -1,4 +1,5 @@
 import type { ConsoleLogger } from "@hunteroi/advanced-logger";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import type { Snowflake } from "discord.js";
 
@@ -15,7 +16,11 @@ export class PrismaDatabaseService implements IDatabaseService {
 
     constructor(logger: ConsoleLogger) {
         this.#logger = logger;
-        this.#database = new PrismaClient();
+        this.#database = new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: process.env.DATABASE_URL,
+            }),
+        });
     }
 
     public async start(): Promise<void> {
@@ -83,7 +88,9 @@ export class PrismaDatabaseService implements IDatabaseService {
     }
 
     public async write(user: User): Promise<void> {
-        this.#logger.verbose(`Ecriture de l'utilisateur ${JSON.stringify(user)}`);
+        this.#logger.verbose(
+            `Ecriture de l'utilisateur ${JSON.stringify(user)}`,
+        );
 
         try {
             await this.#database.users.upsert({
@@ -149,13 +156,16 @@ export class PrismaDatabaseService implements IDatabaseService {
     public async readConfiguration(
         guildId: Snowflake,
     ): Promise<Configuration | null> {
-        this.#logger.verbose(`Lecture de la configuration de guilde ${guildId}`);
+        this.#logger.verbose(
+            `Lecture de la configuration de guilde ${guildId}`,
+        );
 
         try {
-            const rows = await this.#database.$queryRaw<
-                Array<{ data: string }>
-            >`SELECT data FROM "GuildConfigurations" WHERE "guildId" = ${guildId} LIMIT 1`;
-            const entity = rows.at(-1);
+            const entity = await this.#database.guild_configurations.findUnique(
+                {
+                    where: { guildid: guildId },
+                },
+            );
             if (!entity) return null;
 
             return fromPersistedConfiguration(
@@ -173,12 +183,16 @@ export class PrismaDatabaseService implements IDatabaseService {
         );
 
         try {
-            await this.#database.$executeRaw`
-                INSERT INTO "GuildConfigurations" ("guildId", data, "createdAt")
-                VALUES (${config.guildId}, ${JSON.stringify(toPersistedConfiguration(config))}, NOW())
-                ON CONFLICT ("guildId")
-                DO UPDATE SET data = EXCLUDED.data, "updatedAt" = NOW();
-            `;
+            await this.#database.guild_configurations.upsert({
+                where: { guildid: config.guildId },
+                create: {
+                    guildid: config.guildId,
+                    data: JSON.stringify(toPersistedConfiguration(config)),
+                },
+                update: {
+                    data: JSON.stringify(toPersistedConfiguration(config)),
+                },
+            });
         } catch (error) {
             this.#logger.error(getErrorMessage(error));
         }

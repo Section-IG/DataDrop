@@ -6,5 +6,7 @@ COPY . .
 
 RUN apk --no-cache add curl \
     && yarn install --frozen-lockfile \
-    && yarn env-gen \
-    && curl -fsS https://dotenvx.sh/install.sh | sh
+    && yarn build \
+    && yarn prisma generate \
+    && curl -fsS https://dotenvx.sh/install.sh | sh \
+    && chmod +x /app/scripts/entrypoint.sh

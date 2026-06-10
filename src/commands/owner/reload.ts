@@ -20,8 +20,10 @@ export default {
         interaction: ChatInputCommandInteraction,
     ) {
         // double check sur l'identité juste pour la sécurité
-        const { ownerIds } = client.config;
-        if (!ownerIds.includes(interaction.user.id)) {
+        const guildId = interaction.guildId;
+        if (!guildId) return;
+        const config = await client.getConfig(guildId);
+        if (!config?.ownerIds.includes(interaction.user.id)) {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
@@ -30,10 +32,10 @@ export default {
             return;
         }
 
-        client.logger.info("Rechargement de la configuration en cours...");
-        await client.reloadConfig();
+        client.logger.info("Vérification de la configuration...");
         await interaction.reply({
-            content: "Rechargement de la configuration en cours... 👌",
+            content:
+                "✅ La configuration est chargée dynamiquement depuis la base de données à chaque interaction.",
             flags: MessageFlags.Ephemeral,
         });
     },
