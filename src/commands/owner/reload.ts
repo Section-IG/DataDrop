@@ -32,10 +32,26 @@ export default {
             return;
         }
 
-        client.logger.info("Vérification de la configuration...");
+        client.logger.info("Invalidation du cache de configuration...");
+        await client.database.invalidateConfiguration(guildId);
+
+        client.logger.info(
+            "Rechargement de la configuration depuis la base de données...",
+        );
+        const reloadedConfig = await client.getConfig(guildId);
+
+        if (!reloadedConfig) {
+            await interaction.reply({
+                content:
+                    "❌ Impossible de recharger la configuration. Vérifiez que la configuration existe en base de données.",
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
         await interaction.reply({
             content:
-                "✅ La configuration est chargée dynamiquement depuis la base de données à chaque interaction.",
+                "✅ Cache invalidé et configuration rechargée depuis la base de données.",
             flags: MessageFlags.Ephemeral,
         });
     },

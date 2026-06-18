@@ -2,6 +2,8 @@ import type { ConsoleLogger } from "@hunteroi/advanced-logger";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import type { Snowflake } from "discord.js";
+import type { RedisClientType } from "redis";
+import { createClient } from "redis";
 
 import {
     fromPersistedConfiguration,
@@ -13,6 +15,7 @@ import type { Configuration, IDatabaseService, User } from "../models/index.js";
 export class PrismaDatabaseService implements IDatabaseService {
     readonly #logger: ConsoleLogger;
     readonly #database: PrismaClient;
+    readonly #cache: RedisClientType;
 
     constructor(logger: ConsoleLogger) {
         this.#logger = logger;
@@ -21,17 +24,30 @@ export class PrismaDatabaseService implements IDatabaseService {
                 connectionString: process.env.DATABASE_URL,
             }),
         });
+
+        this.#cache = createClient({
+            url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379",
+        });
+        this.#cache.on("error", (error: unknown) => {
+            this.#logger.error(`Redis error: ${getErrorMessage(error)}`);
+        });
     }
 
     public async start(): Promise<void> {
         await this.#database.$connect();
+        await this.#cache.connect();
 
         this.#logger.info("Connexion Prisma ouverte avec la base de donnees.");
+        this.#logger.info(
+            "Connexion Redis ouverte pour la mise en cache des configurations.",
+        );
     }
 
     public async stop(): Promise<void> {
+        this.#cache.destroy();
         await this.#database.$disconnect();
 
+        this.#logger.info("Connexion Redis fermee.");
         this.#logger.info("Connexion Prisma fermee avec la base de donnees.");
     }
 
@@ -161,6 +177,17 @@ export class PrismaDatabaseService implements IDatabaseService {
         );
 
         try {
+            const key = this.#cacheKey(guildId);
+            const cached = await this.#cache.get(key);
+            if (cached) {
+                this.#logger.verbose(
+                    `Configuration de guilde ${guildId} trouvée dans le cache Redis.`,
+                );
+                return fromPersistedConfiguration(
+                    JSON.parse(cached) as Record<string, unknown>,
+                );
+            }
+
             const entity = await this.#database.guild_configurations.findUnique(
                 {
                     where: { guildid: guildId },
@@ -168,6 +195,7 @@ export class PrismaDatabaseService implements IDatabaseService {
             );
             if (!entity) return null;
 
+            await this.#cache.set(key, entity.data);
             return fromPersistedConfiguration(
                 JSON.parse(entity.data) as Record<string, unknown>,
             );
@@ -193,9 +221,50 @@ export class PrismaDatabaseService implements IDatabaseService {
                     data: JSON.stringify(toPersistedConfiguration(config)),
                 },
             });
+            await this.invalidateConfiguration(config.guildId);
         } catch (error) {
             this.#logger.error(getErrorMessage(error));
         }
+    }
+
+    public async invalidateConfiguration(guildId: Snowflake): Promise<void> {
+        this.#logger.verbose(
+            `Invalidation du cache de configuration de guilde ${guildId}`,
+        );
+
+        try {
+            await this.#cache.del(this.#cacheKey(guildId));
+        } catch (error) {
+            this.#logger.error(getErrorMessage(error));
+        }
+    }
+
+    public async warmUpConfigurationCache(): Promise<void> {
+        this.#logger.info(
+            "Chargement du cache Redis pour les configurations de guildes...",
+        );
+
+        try {
+            const entities =
+                await this.#database.guild_configurations.findMany();
+            await Promise.all(
+                entities.map((entity) =>
+                    this.#cache.set(
+                        this.#cacheKey(entity.guildid),
+                        entity.data,
+                    ),
+                ),
+            );
+            this.#logger.info(
+                `Cache Redis initialisé avec ${entities.length} configuration(s).`,
+            );
+        } catch (error) {
+            this.#logger.error(getErrorMessage(error));
+        }
+    }
+
+    #cacheKey(guildId: Snowflake): string {
+        return `guild:configuration:${guildId}`;
     }
 
     #mapDatabaseUser(entity: {

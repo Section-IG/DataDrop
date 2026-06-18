@@ -409,6 +409,7 @@ export class DatadropClient extends Client {
             await this.#bindCommands();
 
             await this.database.start();
+            await this.database.warmUpConfigurationCache();
 
             const existingConfig = await this.database.readConfiguration(
                 bootstrapConfig.guildId,

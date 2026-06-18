@@ -36,6 +36,7 @@
 		"discord-sync-commands": "^0.5.2",
 		"discord.js": "^14.26.4",
 		"nodemailer": "^8.0.10",
+		"redis": "^5.4.0",
 		"ts-postgres": "2.0.4"
 	},
 	"devDependencies": {

@@ -36,4 +36,14 @@ export type IDatabaseService = {
      * Persists a guild configuration.
      */
     writeConfiguration: (config: Configuration) => Promise<void>;
+
+    /**
+     * Invalidates any cached configuration for a guild.
+     */
+    invalidateConfiguration: (guildId: Snowflake) => Promise<void>;
+
+    /**
+     * Warm up the cache with all guild configurations from storage.
+     */
+    warmUpConfigurationCache: () => Promise<void>;
 } & IStoringSystem<User>;
