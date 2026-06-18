@@ -20,8 +20,10 @@ export default {
         interaction: ChatInputCommandInteraction,
     ) {
         // double check sur l'identité juste pour la sécurité
-        const { ownerIds } = client.config;
-        if (!ownerIds.includes(interaction.user.id)) {
+        const guildId = interaction.guildId;
+        if (!guildId) return;
+        const config = await client.getConfig(guildId);
+        if (!config?.ownerIds.includes(interaction.user.id)) {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",
@@ -30,10 +32,26 @@ export default {
             return;
         }
 
-        client.logger.info("Rechargement de la configuration en cours...");
-        await client.reloadConfig();
+        client.logger.info("Invalidation du cache de configuration...");
+        await client.database.invalidateConfiguration(guildId);
+
+        client.logger.info(
+            "Rechargement de la configuration depuis la base de données...",
+        );
+        const reloadedConfig = await client.getConfig(guildId);
+
+        if (!reloadedConfig) {
+            await interaction.reply({
+                content:
+                    "❌ Impossible de recharger la configuration. Vérifiez que la configuration existe en base de données.",
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
         await interaction.reply({
-            content: "Rechargement de la configuration en cours... 👌",
+            content:
+                "✅ Cache invalidé et configuration rechargée depuis la base de données.",
             flags: MessageFlags.Ephemeral,
         });
     },

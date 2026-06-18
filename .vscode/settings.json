@@ -1,16 +1,22 @@
 {
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
-    "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single",
-    "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
+    "js/ts.preferences.quoteStyle": "single",
+    "js/ts.preferences.importModuleSpecifier": "relative",
     "files.exclude": {
-        "node_modules": true
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/CVS": false,
+        "**/.DS_Store": false,
+        "**/Thumbs.db": false,
+        "node_modules": false,
+        "**/.idea": false
     },
     "npm.packageManager": "yarn",
     "files.eol": "\n",
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "typescript.enablePromptUseWorkspaceTsdk": true
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+    "explorerExclude.backup": {}
 }

@@ -28,8 +28,10 @@ export default {
         interaction: ChatInputCommandInteraction,
     ) {
         // double check sur l'identité juste pour la sécurité
-        const { ownerIds } = client.config;
-        if (!ownerIds.includes(interaction.user.id)) {
+        const guildId = interaction.guildId;
+        if (!guildId) return;
+        const config = await client.getConfig(guildId);
+        if (!config?.ownerIds.includes(interaction.user.id)) {
             await interaction.reply({
                 content:
                     "❌ **Oups!** - Vous n'êtes pas autorisé à utiliser cette commande.",

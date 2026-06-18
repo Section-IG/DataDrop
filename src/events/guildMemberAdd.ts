@@ -22,13 +22,15 @@ async function guildMemberAdd(client: DatadropClient, member: GuildMember) {
         `L'utilisateur <${member.displayName} a rejoint le serveur.`,
     );
 
+    const config = await client.getConfig(member.guild.id);
+    if (!config) return;
     const {
         announce,
         informationsChannelid,
         faqChannelid,
         rolesChannelid,
         comiteeChannelid,
-    } = client.config;
+    } = config;
     const annoncesRole = await member.guild.roles.fetch(announce.roleid);
 
     const userFromDatabase = await client.database.read(member.id);

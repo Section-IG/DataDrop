@@ -148,22 +148,28 @@ export class CommandHandler<
         interaction: T,
         command: Command,
     ): Promise<AuthorizationResponse> {
-        const { ownerIds, communitymanagerRoleid, adminRoleid } =
-            this.#client.config;
-
+        const guildId = interaction.guildId;
         const member = await interaction.guild?.members.fetch(
             interaction.user.id,
         );
-        if (!member) {
+        if (!member || !guildId) {
             return {
                 error: "❌ **Oups!** - Je n'ai pas pu récupérer vos informations de membre. Réessayez plus tard.",
             };
         }
 
+        const config = await this.#client.getConfig(guildId);
+        if (!config) {
+            return {
+                error: "❌ **Oups!** - Ce serveur n'est pas configuré.",
+            };
+        }
+
+        const { ownerIds, communitymanagerRoleid, adminRoleid } = config;
         const canBypassAuthorization =
             ownerIds.includes(interaction.user.id) ||
-            member?.roles.cache.has(communitymanagerRoleid) ||
-            member?.roles.cache.has(adminRoleid);
+            member.roles.cache.has(communitymanagerRoleid) ||
+            member.roles.cache.has(adminRoleid);
         if (command.ownerOnly && !canBypassAuthorization) {
             return {
                 error: "❌ **Oups!** - Cette commande est réservée à un nombre limité de personnes dont vous ne faites pas partie.",

@@ -43,69 +43,26 @@ import type {
     IDatabaseService,
     User,
 } from "./models/index.js";
-import { PostgresDatabaseService, SMTPService } from "./services/index.js";
+import { PrismaDatabaseService, SMTPService } from "./services/index.js";
 
 export class DatadropClient extends Client {
-    #config: Configuration;
-    readonly database: IDatabaseService;
-    readonly logger: DefaultLogger;
+    declare database: IDatabaseService;
+    declare logger: DefaultLogger;
     readonly commands: Collection<string, Command>;
-    readonly selfRoleManager: InteractionsSelfRoleManager;
-    readonly tempChannelsManager: TempChannelsManager;
-    readonly verificationManager: VerificationManager<User>;
+    declare selfRoleManager: InteractionsSelfRoleManager;
+    declare tempChannelsManager: TempChannelsManager;
+    declare verificationManager: VerificationManager<User>;
 
     public readonly errorMessage = "Je n'ai pas su t'envoyer le code!";
     public readonly activeAccountMessage = "ton compte est déjà vérifié!";
 
-    constructor(options: ClientOptions, config: Configuration) {
+    constructor(options: ClientOptions) {
         super(options);
-
-        this.#config = config;
-
-        this.logger = new ConsoleLogger({
-            minLevel: LogEventLevel[config.minLevel.toLowerCase()],
-            includeTimestamp: config.includeTimestamp,
-        });
         this.commands = new Collection();
-
-        this.selfRoleManager = new InteractionsSelfRoleManager(this, {
-            channelsMessagesFetchLimit: 10,
-            deleteAfterUnregistration: false,
-        });
-        this.tempChannelsManager = new TempChannelsManager(this);
-
-        this.database = new PostgresDatabaseService(this.logger);
-        const communicationService = new SMTPService(
-            config.communicationServiceOptions,
-        );
-        this.verificationManager = new VerificationManager(
-            this,
-            this.database,
-            communicationService,
-            {
-                codeGenerationOptions: { length: 6 },
-                maxNbCodeCalledBeforeResend: 3,
-                errorMessage: () => this.errorMessage,
-                pendingMessage: (user: User) =>
-                    `Ton code de vérification vient de t'être envoyé, ${user.username}`,
-                alreadyPendingMessage: (user: User) =>
-                    `${user.username}, tu as déjà un code en attente!`,
-                alreadyActiveMessage: (user: User) =>
-                    `${user.username}, ${this.activeAccountMessage}`,
-                validCodeMessage: (user: User, code: string) =>
-                    `Le code ${code} est valide. Bienvenue ${user.username}!`,
-                invalidCodeMessage: (_, code: string) =>
-                    `Le code ${code} est invalide!`,
-            },
-        );
     }
 
-    get config(): Configuration {
-        return this.#config;
-    }
-
-    async reloadConfig(): Promise<void> {
-        this.#config = await readConfig();
+    async getConfig(guildId: Snowflake): Promise<Configuration | null> {
+        return this.database.readConfiguration(guildId);
     }
 
     #listenToVerificationEvents(): void {
@@ -122,10 +79,14 @@ export class DatadropClient extends Client {
                 );
 
                 if (isVerified) {
-                    const guild = await this.guilds.fetch(this.#config.guildId);
+                    const guildId = this.guilds.cache.first()?.id;
+                    if (!guildId) return;
+                    const config = await this.getConfig(guildId);
+                    if (!config) return;
+                    const guild = await this.guilds.fetch(guildId);
                     const member = await guild.members.fetch(userid);
                     await member.roles.add(
-                        this.#config.verifiedRoleId,
+                        config.verifiedRoleId,
                         `Compte Hénallux vérifié! ${user.data.email}`,
                     );
                 }
@@ -401,6 +362,44 @@ export class DatadropClient extends Client {
     }
 
     async start(): Promise<void> {
+        const bootstrapConfig = await readConfig();
+
+        this.logger = new ConsoleLogger({
+            minLevel: LogEventLevel[bootstrapConfig.minLevel.toLowerCase()],
+            includeTimestamp: bootstrapConfig.includeTimestamp,
+        });
+
+        this.database = new PrismaDatabaseService(this.logger);
+
+        const communicationService = new SMTPService(
+            bootstrapConfig.communicationServiceOptions,
+        );
+        this.selfRoleManager = new InteractionsSelfRoleManager(this, {
+            channelsMessagesFetchLimit: 10,
+            deleteAfterUnregistration: false,
+        });
+        this.tempChannelsManager = new TempChannelsManager(this);
+        this.verificationManager = new VerificationManager(
+            this,
+            this.database,
+            communicationService,
+            {
+                codeGenerationOptions: { length: 6 },
+                maxNbCodeCalledBeforeResend: 3,
+                errorMessage: () => this.errorMessage,
+                pendingMessage: (user: User) =>
+                    `Ton code de vérification vient de t'être envoyé, ${user.username}`,
+                alreadyPendingMessage: (user: User) =>
+                    `${user.username}, tu as déjà un code en attente!`,
+                alreadyActiveMessage: (user: User) =>
+                    `${user.username}, ${this.activeAccountMessage}`,
+                validCodeMessage: (user: User, code: string) =>
+                    `Le code ${code} est valide. Bienvenue ${user.username}!`,
+                invalidCodeMessage: (_, code: string) =>
+                    `Le code ${code} est invalide!`,
+            },
+        );
+
         try {
             this.#listenToSelfRoleEvents();
             this.#listenToTempChannelsEvents();
@@ -409,7 +408,23 @@ export class DatadropClient extends Client {
             await this.#bindEvents();
             await this.#bindCommands();
 
-            await this.database?.start();
+            await this.database.start();
+            await this.database.warmUpConfigurationCache();
+
+            const existingConfig = await this.database.readConfiguration(
+                bootstrapConfig.guildId,
+            );
+            if (!existingConfig) {
+                await this.database.writeConfiguration(bootstrapConfig);
+                this.logger.info(
+                    `Configuration de la guilde ${bootstrapConfig.guildId} initialisée en base de données depuis la configuration de bootstrap.`,
+                );
+            } else {
+                this.logger.info(
+                    `Configuration de la guilde ${bootstrapConfig.guildId} trouvée en base de données.`,
+                );
+            }
+
             this.login();
         } catch (error) {
             this.logger.error(

@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import packageInfo from "../package.json" with { type: "json" };
 import type { Configuration } from "./models/index.js";
 
@@ -41,26 +44,56 @@ export async function readConfig(): Promise<Configuration> {
         const environment = (
             process.env.NODE_ENV || "development"
         ).toLowerCase();
+        const jsonPath = join(import.meta.dirname, "..", `config.${environment}.json`);
+        const json = JSON.parse(await readFile(jsonPath, "utf-8"));
 
-        const json = JSON.parse(process.env.CONFIG ?? "{}");
-        for (const prop in json) {
-            if (/regex/i.exec(prop)) {
-                json[prop] = new RegExp(json[prop]);
-            }
-        }
-
-        const config = {
-            ...json,
-            version: `${environment}-v${packageInfo.version}`,
-        };
-        config.communicationServiceOptions.auth = {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        };
-
-        return config;
+        return fromRawConfiguration(json);
     } catch (err: unknown) {
         console.error(err);
         return defaultConfig;
     }
+}
+
+export function toPersistedConfiguration(
+    config: Configuration,
+): Record<string, unknown> {
+    const { version: _, dynamicChannelPrefixRegex, communicationServiceOptions, ...rest } =
+        config;
+    const { auth: __, ...smtpOptions } = communicationServiceOptions;
+
+    return {
+        ...rest,
+        dynamicChannelPrefixRegex: dynamicChannelPrefixRegex.source,
+        communicationServiceOptions: smtpOptions,
+    };
+}
+
+export function fromPersistedConfiguration(
+    persisted: Record<string, unknown>,
+): Configuration {
+    return fromRawConfiguration(persisted);
+}
+
+function fromRawConfiguration(raw: Record<string, unknown>): Configuration {
+    const environment = (process.env.NODE_ENV || "development").toLowerCase();
+    const dynamicChannelPrefixRegex =
+        typeof raw.dynamicChannelPrefixRegex === "string"
+            ? new RegExp(raw.dynamicChannelPrefixRegex)
+            : defaultConfig.dynamicChannelPrefixRegex;
+    const communicationServiceOptions = {
+        ...defaultConfig.communicationServiceOptions,
+        ...(raw.communicationServiceOptions as Record<string, unknown>),
+        auth: {
+            user: process.env.SMTP_USER ?? "",
+            pass: process.env.SMTP_PASS ?? "",
+        },
+    };
+
+    return {
+        ...defaultConfig,
+        ...(raw as Partial<Configuration>),
+        dynamicChannelPrefixRegex,
+        communicationServiceOptions,
+        version: `${environment}-v${packageInfo.version}`,
+    };
 }

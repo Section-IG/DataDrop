@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">DataDrop Issue 93 Feature Map</title>
+  <desc id="desc">A visual summary of the epic broken into delivery foundation, identity, admin configuration, compliance, and user features.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020" />
+      <stop offset="100%" stop-color="#16233f" />
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d2a4b" />
+      <stop offset="100%" stop-color="#10192f" />
+    </linearGradient>
+    <style>
+      .title { fill: #f4f7ff; font: 700 54px Arial, sans-serif; letter-spacing: 1px; }
+      .subtitle { fill: #c7d2fe; font: 400 22px Arial, sans-serif; }
+      .section { fill: #ffffff; font: 700 28px Arial, sans-serif; }
+      .item { fill: #dbe7ff; font: 400 20px Arial, sans-serif; }
+      .chip { fill: #67e8f9; font: 700 18px Arial, sans-serif; }
+      .small { fill: #9fb4e6; font: 400 16px Arial, sans-serif; }
+    </style>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)" />
+  <circle cx="1180" cy="150" r="180" fill="#2563eb" opacity="0.18" />
+  <circle cx="210" cy="760" r="240" fill="#14b8a6" opacity="0.12" />
+  <text x="70" y="95" class="title">DataDrop Issue 93</text>
+  <text x="70" y="135" class="subtitle">Feature map grouped by implementation phase and product area</text>
+
+  <g transform="translate(60 190)">
+    <rect width="1270" height="620" rx="34" fill="url(#card)" stroke="#31466f" stroke-width="2"/>
+
+    <g transform="translate(36 38)">
+      <text class="section" x="0" y="0">Phase 0 - Foundation</text>
+      <text class="item" x="0" y="38">#104 delivery pipeline, #111 Prisma ORM, #71 logging</text>
+      <text class="small" x="0" y="68">Stabilize platform before shipping product flows.</text>
+    </g>
+
+    <g transform="translate(36 160)">
+      <text class="section" x="0" y="0">Phase 1 - Reliability</text>
+      <text class="item" x="0" y="38">#135 audit trail, #136 stale-write detection, #132 locking, #140 dead-letter, #139 SLOs</text>
+      <text class="small" x="0" y="68">Make writes observable, conflict-safe, and recoverable.</text>
+    </g>
+
+    <g transform="translate(36 282)">
+      <text class="section" x="0" y="0">Phase 2 - Identity</text>
+      <text class="item" x="0" y="38">#128 global verification, #130 email uniqueness, #131 manual verify guard, #129 onboarding, #133 reverification</text>
+      <text class="small" x="0" y="68">Identity rules are shared across bot and web entrypoints.</text>
+    </g>
+
+    <g transform="translate(36 404)">
+      <text class="section" x="0" y="0">Phase 3 - Admin</text>
+      <text class="item" x="0" y="38">#90-#92 role/channel controls and command/web config surfaces</text>
+      <text class="small" x="0" y="68">Guild configuration becomes structured and role-aware.</text>
+    </g>
+
+    <g transform="translate(690 38)">
+      <text class="section" x="0" y="0">Phase 4 - Compliance</text>
+      <text class="item" x="0" y="38">#137 delete/deactivate, #138 evidence retention, #77 staff contact, #68 ban appeal</text>
+      <text class="small" x="0" y="68">Separate user lifecycle flows from moderation records.</text>
+    </g>
+
+    <g transform="translate(690 160)">
+      <text class="section" x="0" y="0">Phase 5 - Growth</text>
+      <text class="item" x="0" y="38">#72 yearly reset, #70 server generation, #74 stats, #73 leaderboard, #69, #94</text>
+      <text class="small" x="0" y="68">Ship automation and reporting after the core is stable.</text>
+    </g>
+
+    <g transform="translate(690 334)">
+      <rect width="520" height="150" rx="22" fill="#0f172a" stroke="#67e8f9" stroke-width="2"/>
+      <text x="26" y="44" class="chip">Role/Target split</text>
+      <text x="26" y="80" class="item">Admin: bot + web</text>
+      <text x="26" y="112" class="item">Bot owner: platform/ops</text>
+      <text x="26" y="144" class="item">User: bot + web + shared</text>
+    </g>
+
+    <g transform="translate(690 520)">
+      <text class="small" x="0" y="0">Completed work is intentionally shown as context, not backlog.</text>
+      <text class="small" x="0" y="28">The epic checklist should now point only to live GitHub issues.</text>
+    </g>
+  </g>
+</svg>

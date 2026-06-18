@@ -1,6 +1,7 @@
 import type { IStoringSystem } from "@hunteroi/discord-verification";
 import type { Snowflake } from "discord.js";
 
+import type { Configuration } from "./Configuration.js";
 import type { User } from "./User.js";
 
 export type IDatabaseService = {
@@ -25,4 +26,24 @@ export type IDatabaseService = {
      *
      */
     undoDelete: (userid: Snowflake) => Promise<void>;
+
+    /**
+     * Reads a guild configuration.
+     */
+    readConfiguration: (guildId: Snowflake) => Promise<Configuration | null>;
+
+    /**
+     * Persists a guild configuration.
+     */
+    writeConfiguration: (config: Configuration) => Promise<void>;
+
+    /**
+     * Invalidates any cached configuration for a guild.
+     */
+    invalidateConfiguration: (guildId: Snowflake) => Promise<void>;
+
+    /**
+     * Warm up the cache with all guild configurations from storage.
+     */
+    warmUpConfigurationCache: () => Promise<void>;
 } & IStoringSystem<User>;
