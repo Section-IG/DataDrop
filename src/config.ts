@@ -15,6 +15,8 @@ const defaultConfig: Configuration = {
     delegatesRoleid: "",
     professorRoleid: "",
     verifiedRoleId: "",
+    pseudoToChangeRoleId: "",
+    roleToSelectRoleId: "",
     informationsChannelid: "",
     faqChannelid: "",
     comiteeChannelid: "",
