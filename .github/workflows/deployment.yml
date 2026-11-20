@@ -4,14 +4,29 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    concurrency: deployment
 
     steps:
+      - name: Connect to the VPN
+        uses: DrakeXorn/softether-client-action@6ce32709587e6b938fcf852ad38ec95b5e5680a6
+        with:
+          server: ${{ secrets.VPN_SERVER }}
+          port: ${{ secrets.VPN_PORT }}
+          hub: ${{ secrets.VPN_HUB }}
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          server_ca: ${{ secrets.VPN_SERVER_CA }}
+
       - name: Deploy bot to production
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
         with:
           host: '${{ secrets.SSH_HOST }}'
           username: '${{ secrets.SSH_USERNAME }}'
